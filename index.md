@@ -10,9 +10,8 @@ title: Home
 a {text-decoration: none;} a:hover {text-decoration: underline;}
 </style>
 
-# KT CyberMath • Statistics
-
-Welcome. This site hosts my homework for the Statistics course.
+# Konstantinos Tziakouris • Statistics • Cybersecurity
+A collection of assignments and research for the Statistics course, academic year 2025–2026.
 
 ## Homework feed
 <ul>
