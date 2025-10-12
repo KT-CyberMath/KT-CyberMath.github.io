@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Homework 2 — Dataset and Distributions</title>
+  <style>
+    :root{
+      --accent-a:#0d83ff;   /* new color set so it is not identical to HW1 */
+      --accent-b:#0654b5;
+      --ink:#222;
+      --muted:#666;
+      --line:#e6e6e6;
+      --card:#ffffff;
+      --bg:#f7f9fc;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+    .page-header{
+      padding:56px 20px 42px 20px;
+      background-image:linear-gradient(120deg,var(--accent-a),var(--accent-b));
+      color:#fff;text-align:center;
+    }
+    .page-header h1{margin:0 0 6px 0;font-size:34px;letter-spacing:0.2px;}
+    .page-header p{margin:0;font-size:16px;opacity:.95}
+    .wrap{max-width:920px;margin:24px auto;padding:0 18px 28px 18px;}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+    h2,h3{text-align:center;margin:10px 0 12px 0;letter-spacing:.2px}
+    p{text-align:justify;margin:10px 0}
+    .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 16px 0}
+    table{border-collapse:collapse;width:100%;margin:10px 0}
+    th,td{border:1px solid var(--line);padding:10px;text-align:center}
+    th{background:#f2f5f9}
+    .note{font-size:14px;color:var(--muted)}
+    .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:18px;text-align:center;color:var(--muted);font-size:14px}
+    a{color:var(--accent-b);text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>Homework 2 — Dataset and Distributions</h1>
+    <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025&nbsp;–&nbsp;2026</p>
+  </header>
+
+  <main class="wrap">
+
+    <section class="card">
+      <h2>Introduction</h2>
+      <p>
+        This page explains what a dataset and a distribution are, shows a very small example dataset created for the assignment, and computes three univariate distributions. A short bivariate view is added at the end as an extra step.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>What a Dataset Is</h2>
+      <p>
+        A dataset is a structured collection of observations. Each row represents one observation and each column represents a variable that describes that observation. Datasets make information analyzable and reproducible, because values and definitions are explicit.
+      </p>
+      <h2>What a Distribution Is</h2>
+      <p>
+        A distribution describes how the values of a variable are spread across its possible outcomes. For categorical variables it tells how often each category appears. For numerical variables it summarizes the frequency of values and helps describe location and spread.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Example Dataset</h2>
+      <p class="meta">Five synthetic login events collected from a small system</p>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Device</th>
+            <th>Login window</th>
+            <th>Failed logins</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>U01</td><td>Desktop</td><td>Morning</td><td>0</td></tr>
+          <tr><td>U02</td><td>Mobile</td><td>Evening</td><td>1</td></tr>
+          <tr><td>U03</td><td>Desktop</td><td>Afternoon</td><td>0</td></tr>
+          <tr><td>U04</td><td>Mobile</td><td>Evening</td><td>2</td></tr>
+          <tr><td>U05</td><td>Desktop</td><td>Morning</td><td>3</td></tr>
+        </tbody>
+      </table>
+      <p class="note">
+        Variables: Device (categorical), Login window (categorical), Failed logins (numeric, counts).
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Univariate Distributions</h2>
+
+      <h3>Distribution of the Login window</h3>
+      <table>
+        <thead><tr><th>Category</th><th>Count</th><th>Percent</th></tr></thead>
+        <tbody>
+          <tr><td>Morning</td><td>2</td><td>40%</td></tr>
+          <tr><td>Afternoon</td><td>1</td><td>20%</td></tr>
+          <tr><td>Evening</td><td>2</td><td>40%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Logins concentrate in Morning and Evening with the same share. Afternoon appears less often in this sample.
+      </p>
+
+      <h3>Distribution of the Device</h3>
+      <table>
+        <thead><tr><th>Category</th><th>Count</th><th>Percent</th></tr></thead>
+        <tbody>
+          <tr><td>Desktop</td><td>3</td><td>60%</td></tr>
+          <tr><td>Mobile</td><td>2</td><td>40%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Desktop is slightly more common than Mobile in these observations.
+      </p>
+
+      <h3>Distribution of Failed logins</h3>
+      <table>
+        <thead><tr><th>Value</th><th>Count</th><th>Percent</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>2</td><td>40%</td></tr>
+          <tr><td>1</td><td>1</td><td>20%</td></tr>
+          <tr><td>2</td><td>1</td><td>20%</td></tr>
+          <tr><td>3</td><td>1</td><td>20%</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Summary for the numeric variable: mean 1.2 and median 1. The sample is small, yet it already shows that most sessions have few or no failures and a single session reached three failures.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Bivariate Glimpse</h2>
+      <p>
+        As a quick two-variable view, consider the rate of at least one failure by device. Desktop shows one case with a failure out of three sessions. Mobile shows failures in both sessions. With more data this comparison would inform risk by platform.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Conclusion</h2>
+      <p>
+        The dataset provides a clear structure for analysis. Distributions translate that structure into evidence about typical behavior and unusual events. Even a small sample can guide attention, while a larger one would allow stronger conclusions and automation through standard statistical tools or simple classifiers.
+      </p>
+
+      <div class="footer">
+        2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025&nbsp;–&nbsp;2026 · October 2025
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
