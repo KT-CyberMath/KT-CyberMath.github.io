@@ -18,6 +18,7 @@ A collection of assignments and research for the Statistics course, academic yea
   {% for post in site.posts %}
     <li>
       <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <a href="/homework2.html">Homework 2 — Κατανομή & Κρυπτογράφηση (Ιθάκη)</a>
       <small> — {{ post.date | date: "%B %Y" }}</small>
     </li>
   {% endfor %}
