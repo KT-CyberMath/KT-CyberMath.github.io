@@ -15,11 +15,11 @@ A collection of assignments and research for the Statistics course, academic yea
 
 ## Homework feed
 <ul>
-  {% for post in site.posts %}
-    <li>
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <a href="/homework2.html">Homework 2 — Κατανομή & Κρυπτογράφηση (Ιθάκη)</a>
-      <small> — {{ post.date | date: "%B %Y" }}</small>
-    </li>
-  {% endfor %}
+  <li>
+    <a href="/homework1/homework1.html">Homework 1 — Statistics & Cybersecurity</a>
+  </li>
+  <li>
+    <a href="/homework2.html">Homework 2 — Dataset, Distribution & Caesar Cipher (Ithaca)</a>
+  </li>
 </ul>
+
