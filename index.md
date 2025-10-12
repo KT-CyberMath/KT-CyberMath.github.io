@@ -14,7 +14,7 @@ a {text-decoration: none;} a:hover {text-decoration: underline;}
 A collection of assignments and research for the Statistics course, academic year 2025–2026.
 
 ## Homework feed
-<ul>
+<ul style="list-style-type: disc; margin-left: 25px; line-height: 1.6;">
   <li>
     <a href="/homework1/homework1.html">Homework 1 — Statistics & Cybersecurity</a>
   </li>
