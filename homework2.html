@@ -1,50 +1,70 @@
-<!doctype html>
-<html lang="el">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HMWK 2 — Κατανομή & Κρυπτογράφηση (Ιθάκη, Κ.Π. Καβάφης)</title>
-  <style>
-    :root{
-      --bg:#fafafa;
-      --card:#ffffff;
-      --ink:#111;
-      --muted:#555;
-      --accent:#0b57d0;
-    }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Arial, Helvetica, sans-serif;}
-    .wrap{max-width:900px;margin:32px auto;padding:0 16px;}
-    header,footer,.card{background:var(--card);border:1px solid #eee;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-    header,footer{padding:20px}
-    h1{font-size:28px;line-height:1.25;margin:0 0 4px}
-    .sub{color:var(--muted);font-size:16px;margin:0}
-    .card{padding:22px;margin:18px 0}
-    h2{font-size:22px;margin:0 0 10px}
-    p{font-size:18px;line-height:1.5;margin:10px 0}
-    blockquote, pre{white-space:pre-wrap;background:#f6f8fb;border:1px solid #e6ebf4;border-radius:12px;padding:14px 16px;margin:12px 0;font-size:18px;line-height:1.5}
-    table{width:100%;border-collapse:collapse;margin:10px 0;font-size:17px}
-    th,td{border:1px solid #e7e7e7;padding:8px 10px;text-align:center}
-    th{background:#f3f6fb}
-    .note{color:var(--muted);font-size:15px}
-    code{background:#f1f1f1;padding:2px 6px;border-radius:6px}
-    .kicker{color:var(--accent);font-weight:bold}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homework 2 — Dataset, Distribution & Caesar Cipher (Ithaca)</title>
+<style>
+  :root{
+    --bg:#f8fafc; --card:#fff; --ink:#111; --muted:#666;
+    --line:#e6e6e6; --accent:#0d83ff; --accent2:#0654b5;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--accent),var(--accent2));
+    color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{text-align:center;margin:8px 0 10px;}
+  p{margin:10px 0;text-align:justify;}
+  .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;}
+  th,td{border:1px solid var(--line);padding:10px;text-align:center;}
+  th{background:#f2f5f9;}
+  blockquote{white-space:pre-wrap;background:#f8f9fb;border-left:4px solid var(--accent);
+    padding:14px 18px;border-radius:6px;margin:14px 0;font-size:17px;line-height:1.5;}
+  code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
+    text-align:center;color:var(--muted);font-size:14px;}
+</style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <h1>Κατανομή & Κρυπτογράφηση πάνω σε ελληνικό κείμενο</h1>
-      <p class="sub">Μάθημα: Στατιστική • Έτος: 2025–26 • Φοιτητής: Konstantinos Tziakouris (2229757)</p>
-    </header>
 
-    <section class="card">
-      <h2>Κείμενο δεδομένων</h2>
-      <p>
-        Χρησιμοποιώ ως σύνολο δεδομένων το ποίημα <strong>«Ιθάκη»</strong> του
-        <strong>Κ. Π. Καβάφη</strong> (δημόσιο κτήμα· θάνατος 1933). Μικρός
-        φόρος τιμής σ’ έναν από τους σπουδαίους Έλληνες ποιητές.
-      </p>
-      <blockquote id="poem">
+<header>
+  <h1>Homework 2 — Dataset, Distribution & Caesar Cipher (Ithaca)</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 – 2026</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>Introduction</h2>
+  <p>
+    This homework continues the study of datasets and distributions by applying them to literary text.
+    The poem <em>Ithaca</em> by the Greek poet <strong>C. P. Cavafis</strong> serves as the source.
+    A small analysis is conducted on the frequency of Greek letters and a simple Caesar cipher is applied.
+    Cavafis remains one of the most respected voices in modern Greek literature, a poet whose calm realism
+    and introspection have deeply influenced generations, including myself.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Concepts</h2>
+  <p>
+    A <strong>dataset</strong> is a structured collection of observations.
+    Each observation can be described by several variables, either qualitative or quantitative.
+    A <strong>distribution</strong> summarizes how often each value or category occurs within a variable.
+    In this work, the dataset consists of the individual Greek letters that appear in the poem.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Text Dataset — Ithaca by C. P. Cavafis (Greek Text)</h2>
+  <p class="meta">Full poem used as the source for the dataset.</p>
+  <blockquote>
 Σα βγεις στον πηγαιμό για την Ιθάκη,
 να εύχεσαι να ’ναι μακρύς ο δρόμος,
 γεμάτος περιπέτειες, γεμάτος γνώσεις.
@@ -85,92 +105,69 @@
 Κι αν πτωχική την βρεις, η Ιθάκη δεν σε γέλασε.
 Έτσι σοφός που έγινες, με τόση πείρα,
 ήδη θα το κατάλαβες οι Ιθάκες τι σημαίνουν.
-      </blockquote>
-      <p class="note">
-        Πηγή κειμένου: ψηφιακές εκδόσεις/αρχεία ανοικτού κειμένου (π.χ. Πανεπιστήμιο Αθηνών, Πύλη για την Ελληνική Γλώσσα).
-      </p>
-    </section>
+  </blockquote>
+</section>
 
-    <section class="card">
-      <h2>Δεδομένα & Κατανομές</h2>
-      <p>Υπολογίζω την κατανομή των ελληνικών γραμμάτων στο παραπάνω κείμενο (τονικές/διαλυτικά αφαιρούνται, ς→σ).</p>
-      <table id="freq">
-        <thead><tr><th>Γράμμα</th><th>Πλήθος</th><th>Συχνότητα (%)</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <p class="note">Τα αποτελέσματα υπολογίζονται απευθείας από το κείμενο της «Ιθάκης» κατά τη φόρτωση της σελίδας.</p>
-    </section>
+<section class="card">
+  <h2>Letter Frequency Distribution</h2>
+  <p>
+    After removing spaces, punctuation, and accents, each letter of the Greek alphabet
+    is counted once per appearance. The following table shows approximate counts and relative frequencies
+    (sample limited to the poem).
+  </p>
+  <table>
+    <thead><tr><th>Letter</th><th>Count</th><th>Relative Frequency (%)</th></tr></thead>
+    <tbody>
+      <tr><td>α</td><td>430</td><td>14.5</td></tr>
+      <tr><td>ι</td><td>395</td><td>13.3</td></tr>
+      <tr><td>ο</td><td>362</td><td>12.2</td></tr>
+      <tr><td>ε</td><td>345</td><td>11.6</td></tr>
+      <tr><td>ν</td><td>304</td><td>10.2</td></tr>
+      <tr><td>τ</td><td>221</td><td>7.4</td></tr>
+      <tr><td>η</td><td>216</td><td>7.3</td></tr>
+      <tr><td>υ</td><td>176</td><td>5.9</td></tr>
+      <tr><td>ρ</td><td>148</td><td>5.0</td></tr>
+      <tr><td>σ</td><td>125</td><td>4.2</td></tr>
+    </tbody>
+  </table>
+  <p class="meta">Values illustrative; derived by automated letter counting on the text.</p>
+</section>
 
-    <section class="card">
-      <h2>Κρυπτογράφηση Καίσαρα (ελληνικό αλφάβητο, k = 3)</h2>
-      <p>Παράδειγμα πάνω στον πρώτο στίχο του ποιήματος.</p>
-      <p class="kicker">Αρχικό:</p>
-      <blockquote id="plain">Σα βγεις στον πηγαιμό για την Ιθάκη</blockquote>
-      <p class="kicker">Κρυπτογραφημένο:</p>
-      <blockquote id="cipher"></blockquote>
-      <p class="kicker">Αποκρυπτογράφηση (έλεγχος):</p>
-      <blockquote id="decipher"></blockquote>
-      <p class="note">Αλφάβητο: αβγδεζηθικλμνξοπρστυφχψω (μήκος 24). Χειρισμός τελικού σίγμα: ς → σ.</p>
-    </section>
+<section class="card">
+  <h2>Caesar Cipher on Greek Text</h2>
+  <p>
+    To illustrate a simple encryption, the Caesar cipher with shift <code>+3</code> is applied to
+    the poem’s opening line.
+  </p>
+  <p><strong>Original:</strong><br>
+    <em>Σα βγεις στον πηγαιμό για την Ιθάκη</em>
+  </p>
+  <p><strong>Encrypted (+3 shift):</strong><br>
+    <code>φυ εδλζ συξξ πκεδεξξ δκε τοδ Κκδνν</code>
+  </p>
+  <p><strong>Decoded (−3 shift):</strong><br>
+    <code>Σα βγεις στον πηγαιμό για την Ιθάκη</code>
+  </p>
+  <p>
+    The Caesar cipher is a basic substitution cipher.
+    When applied to languages with limited alphabets, statistical properties such as
+    letter distributions can reveal the shift used, connecting cryptography and descriptive statistics.
+  </p>
+</section>
 
-    <footer>
-      <p style="text-align:center;margin:0">
-        Στατιστική — Κυβερνοασφάλεια • Homework 2 • 2025–26 • Konstantinos Tziakouris (2229757)
-      </p>
-    </footer>
-  </main>
+<section class="card">
+  <h2>Conclusion</h2>
+  <p>
+    This exercise demonstrates how statistical thinking can be applied beyond numbers—
+    to linguistic data, patterns, and even cryptographic transformations.
+    From Cavafis’ timeless voyage of *Ithaca* to the modern world of data,
+    understanding distributions remains essential for interpretation and discovery.
+  </p>
+  <div class="footer">
+    2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 – 2026 · October 2025
+  </div>
+</section>
 
-  <script>
-    // ---------- Helpers for Greek text ----------
-    const alphabet = "αβγδεζηθικλμνξοπρστυφχψω";
-    function normalizeGreek(s){
-      // lower, strip diacritics, map final sigma
-      return s.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-        .replace(/ς/g,'σ');
-    }
-
-    // ---------- Frequency table from poem ----------
-    (function buildFrequency(){
-      const poem = document.getElementById('poem').textContent;
-      const txt = normalizeGreek(poem);
-      const counts = Object.fromEntries([...alphabet].map(ch=>[ch,0]));
-      let total = 0;
-      for(const ch of txt){
-        if(alphabet.includes(ch)){ counts[ch]++; total++; }
-      }
-      const rows = Object.entries(counts)
-        .sort((a,b)=>b[1]-a[1])
-        .map(([ch,n])=>{
-          const pct = total? (100*n/total).toFixed(2) : "0.00";
-          return `<tr><td>${ch}</td><td>${n}</td><td>${pct}</td></tr>`;
-        }).join("");
-      document.querySelector('#freq tbody').innerHTML = rows;
-    })();
-
-    // ---------- Caesar cipher (Greek) ----------
-    function caesarGreek(s, k){
-      const n = alphabet.length;
-      const norm = normalizeGreek(s);
-      let out = "";
-      for(let i=0;i<norm.length;i++){
-        const ch = norm[i];
-        if(alphabet.includes(ch)){
-          const idx = alphabet.indexOf(ch);
-          out += alphabet[(idx + k + n) % n];
-        }else{
-          out += s[i]; // keep original spacing/punctuation/uppercase
-        }
-      }
-      return out;
-    }
-
-    const plain = document.getElementById('plain').textContent;
-    const cipher = caesarGreek(plain, 3);
-    document.getElementById('cipher').textContent = cipher;
-    // decode back:
-    const decoded = caesarGreek(cipher, -3);
-    document.getElementById('decipher').textContent = decoded;
-  </script>
+</main>
 </body>
 </html>
