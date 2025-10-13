@@ -4,26 +4,10 @@ title: Home
 ---
 
 <style>
-.page-header {
-  background-image: url('https://upload.wikimedia.org/wikipedia/commons/1/13/Math_formulae_and_geometry_on_marble_texture.jpg');
-  background-size: cover;
-  background-position: center;
-  color: #ffffff;
-  text-shadow: 0px 0px 6px rgba(0,0,0,0.6);
-}
-
-/* keep your fonts and layout exactly as before */
-.project-name, .project-tagline, .main-content {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.main-content p {
-  line-height: 1.45;
-}
-
-/* keep your link styles too */
-a {text-decoration: none;}
-a:hover {text-decoration: underline;}
+.page-header {background-image: linear-gradient(120deg, #0aa2a9, #057d83);}
+.project-name, .project-tagline, .main-content {font-family: Arial, Helvetica, sans-serif;}
+.main-content p {line-height: 1.45;}
+a {text-decoration: none;} a:hover {text-decoration: underline;}
 </style>
 
 # Konstantinos Tziakouris • Statistics • Cybersecurity
