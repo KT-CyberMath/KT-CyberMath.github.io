@@ -1,0 +1,182 @@
+---
+layout: default
+title: Homework 3 — RSA on Greek Text (Kavafis)
+---
+
+<style>
+  .main-content { font-family: Arial, Helvetica, sans-serif; line-height: 1.45; }
+  h1, h2, h3 { margin-top: 1.2em; }
+  code, pre { background: #f6f8fa; padding: .2em .4em; border-radius: 4px; }
+  .note { background:#fff9e6; border:1px solid #f0e1a6; padding:10px; border-radius:6px; }
+  .box { border:1px solid #e5e5e5; border-radius:6px; padding:14px; }
+  .grid { display:grid; gap:14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  table { border-collapse: collapse; width:100%; }
+  th, td { border:1px solid #ddd; padding:6px 8px; text-align:left; }
+  th { background:#f2f2f2; }
+  .small { color:#666; font-size:.95em; }
+  .center { text-align:center; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+</style>
+
+<h1>Homework 3 — RSA on Greek Text (Κ. Π. Καβάφης)</h1>
+<p class="small">Konstantinos Tziakouris • Statistics • AY 2025–2026</p>
+
+<div class="note">
+  <strong>Goal.</strong> Repeat the HW2 exercise using RSA (very small primes) on a short Greek text.
+  Show the idea of decoding by leveraging the alphabet’s distribution, and present a clear,
+  practical algorithm. Keep it simple and explain each step.
+</div>
+
+<h2>1) Short tribute &amp; text choice</h2>
+<p>
+  I use a short excerpt from <em>«Ιθάκη»</em> by Κωνσταντίνος Π. Καβάφης — one of the great
+  Greek poets. His work was a favorite of mine growing up, and it is perfect here because it
+  is in Greek and has a recognizable letter distribution.
+</p>
+
+<div class="box">
+  <strong>Excerpt (Greek plaintext)</strong>
+  <pre class="mono" id="plaintext">Σαν βγεις στον πηγαιμό για την Ιθάκη,
+να εύχεσαι να ’ναι μακρύς ο δρόμος.</pre>
+  <p class="small">Two short lines only (to keep the demo small and readable).</p>
+</div>
+
+<h2>2) RSA setup (tiny numbers for didactics)</h2>
+<div class="grid">
+  <div class="box">
+    <h3>Parameters</h3>
+    <ul>
+      <li>Choose primes: <code>p = 29</code>, <code>q = 31</code></li>
+      <li><code>n = p·q = 899</code></li>
+      <li><code>φ(n) = (p−1)(q−1) = 28·30 = 840</code></li>
+      <li>Public exponent: <code>e = 17</code> (coprime with 840)</li>
+      <li>Private exponent <code>d</code> is the modular inverse of 17 mod 840.<br>
+          From the extended Euclid steps: <code>d = 593</code> because <code>17·593 ≡ 1 (mod 840)</code>.
+      </li>
+    </ul>
+    <p class="small">These tiny values are only for demonstration. Real RSA uses large primes.</p>
+  </div>
+  <div class="box">
+    <h3>Encoding letters</h3>
+    <p>We map Greek letters to numbers 1…24 (monotonic Greek alphabet), ignore accents/tonos,
+       drop spaces and punctuation for the core demo.</p>
+    <table>
+      <tr><th>Α</th><td>1</td><th>Β</th><td>2</td><th>Γ</th><td>3</td><th>Δ</th><td>4</td><th>Ε</th><td>5</td><th>Ζ</th><td>6</td></tr>
+      <tr><th>Η</th><td>7</td><th>Θ</th><td>8</td><th>Ι</th><td>9</td><th>Κ</th><td>10</td><th>Λ</th><td>11</td><th>Μ</th><td>12</td></tr>
+      <tr><th>Ν</th><td>13</td><th>Ξ</th><td>14</td><th>Ο</th><td>15</td><th>Π</th><td>16</td><th>Ρ</th><td>17</td><th>Σ</th><td>18</td></tr>
+      <tr><th>Τ</th><td>19</td><th>Υ</th><td>20</td><th>Φ</th><td>21</td><th>Χ</th><td>22</td><th>Ψ</th><td>23</td><th>Ω</th><td>24</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2>3) The math behind decoding (from class)</h2>
+<p>
+By definition, the encryption is <code>C = M^e mod N</code>.  
+To recover <code>M</code> from <code>C</code>, since <code>d = e^{-1} (mod φ(N))</code>, we have:
+</p>
+<pre class="mono">M^(e·d) = C^d (mod N)
+M^(1 + k·φ(N)) = C^d (mod N)  for some integer k
+M · (M^φ(N))^k = C^d (mod N)
+</pre>
+<p>
+Using Euler’s Theorem (<code>M^φ(N) ≡ 1 (mod N)</code> when <code>M</code> and <code>N</code> are coprime), it follows that
+<code>M = C^d (mod N)</code>. This matches the derivation the professor shared.
+</p>
+
+<h2>4) Practical algorithm (frequency-aided)</h2>
+<ol>
+  <li>Normalize the Greek text (uppercase, strip accents, keep only Greek letters).</li>
+  <li>Map each letter to 1…24 and encrypt with <code>(n, e)</code> to get integers <code>C</code>.</li>
+  <li>To decode, compute <code>M = C^d mod n</code> and map back to letters.</li>
+  <li>Compute the **letter frequency** of the ciphertext and compare to Greek baseline to sanity-check decoding.</li>
+</ol>
+
+<h2>5) Demo (in-page JavaScript, small sample)</h2>
+<div class="box">
+  <button id="btnRun">Encrypt &amp; Decrypt</button>
+  <p class="small">Outputs (toy example, tiny primes):</p>
+  <pre class="mono" id="out"></pre>
+</div>
+
+<script>
+(function () {
+  // RSA toy params
+  const p = 29, q = 31, n = p*q;        // 899
+  const phi = (p-1)*(q-1);              // 840
+  const e = 17, d = 593;                // 17*d ≡ 1 (mod 840)
+
+  // Greek mapping (tonos stripped)
+  const alphabet = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ"; // 24 letters
+  const toNum = ch => alphabet.indexOf(ch) + 1;         // 1..24, 0 if not found
+  const toChar = n => alphabet[n-1] || "";
+
+  function normalizeGreek(s){
+    return s.toUpperCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g,"") // strip accents
+            .replace(/[^Α-Ω]/g,""); // keep only Greek letters
+  }
+
+  function modPow(base, exp, mod){
+    let res = 1n, b = BigInt(base), e = BigInt(exp), m = BigInt(mod);
+    while (e > 0n){
+      if (e & 1n) res = (res*b) % m;
+      b = (b*b) % m;
+      e >>= 1n;
+    }
+    return res;
+  }
+
+  function encryptNums(nums){ return nums.map(x => Number(modPow(x, e, n))); }
+  function decryptNums(nums){ return nums.map(c => Number(modPow(c, d, n))); }
+
+  function freq(nums){
+    const f = new Map();
+    nums.forEach(v => f.set(v, (f.get(v)||0)+1));
+    return [...f.entries()].sort((a,b)=>b[1]-a[1]);
+  }
+
+  const sample = document.getElementById('plaintext').textContent.trim();
+  document.getElementById('btnRun').onclick = () => {
+    const clean = normalizeGreek(sample);
+    const nums = [...clean].map(toNum).filter(x => x>0);
+    const C = encryptNums(nums);
+    const M = decryptNums(C);
+    const text = M.map(toChar).join("");
+
+    const cf = freq(C).slice(0,8).map(([v,c])=>`C=${v} : ${c}`).join("\n");
+    const mf = freq(M).slice(0,8).map(([v,c])=>`${toChar(v)} : ${c}`).join("\n");
+
+    document.getElementById('out').textContent =
+`Plain (normalized):
+${clean}
+
+Numeric (M):
+${nums.join(" ")}
+
+Cipher (C):
+${C.join(" ")}
+
+Decoded numeric (M):
+${M.join(" ")}
+
+Decoded text:
+${text}
+
+Top ciphertext counts:
+${cf}
+
+Top decoded-letter counts:
+${mf}
+`;
+  };
+})();
+</script>
+
+<h2>6) What to hand in</h2>
+<ul>
+  <li>Link to this page on your homepage.</li>
+  <li>Make sure the <em>Encrypt &amp; Decrypt</em> demo runs and the decoded text matches the original Greek (after normalization).</li>
+  <li>Add 3–4 sentences explaining why frequency checks help (Greek has distinctive letter frequencies; mismatches suggest wrong key or mapping).</li>
+</ul>
+
+<p class="small center">© 2025–2026 • Konstantinos Tziakouris</p>
