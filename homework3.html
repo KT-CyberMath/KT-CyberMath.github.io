@@ -1,156 +1,203 @@
----
-layout: default
-title: Homework 3 — RSA Encryption & Language Distribution
----
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homework 3 — RSA Encryption & Language Distribution</title>
 <style>
-.page-header {
-  background: linear-gradient(135deg, #e9f2fa, #cde7ff);
-  background-size: cover;
-  background-position: center;
-  color: #1a1a1a;
-  text-shadow: none;
-}
-.project-name, .project-tagline, .main-content {
-  font-family: Arial, Helvetica, sans-serif;
-}
-.main-content p {
-  line-height: 1.6;
-  color: #333;
-}
-a {
-  text-decoration: none;
-  color: #0a548c;
-}
-a:hover {
-  text-decoration: underline;
-}
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: .75rem 0;
-}
-th, td {
-  border: 1px solid #ddd;
-  padding: 6px 8px;
-  text-align: center;
-}
-th {
-  background: #f3f6fb;
-}
-.small {
-  color: #666;
-  font-size: .9rem;
-}
-.note {
-  background: #fffef2;
-  border: 1px solid #f1e6b3;
-  padding: 8px 10px;
-  border-radius: 8px;
-  margin: .6rem 0;
-}
-hr {
-  border: 0;
-  border-top: 1px solid #e5e5e5;
-  margin: 1.25rem 0;
-}
-canvas {
-  border: 1px solid #eee;
-  margin-top: 10px;
-  border-radius: 8px;
-}
+  :root{
+    --bg:#f8fafc; --card:#fff; --ink:#111; --muted:#666;
+    --line:#e6e6e6; --accent:#0d83ff; --accent2:#0654b5;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--accent),var(--accent2));
+    color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{text-align:center;margin:8px 0 10px;}
+  p{margin:10px 0;text-align:justify;}
+  .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;}
+  th,td{border:1px solid var(--line);padding:10px;text-align:center;}
+  th{background:#f2f5f9;}
+  blockquote{white-space:pre-wrap;background:#f8f9fb;border-left:4px solid var(--accent);
+    padding:14px 18px;border-radius:6px;margin:14px 0;font-size:17px;line-height:1.5;}
+  code, pre code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  pre{background:#f8f9fb;border:1px solid var(--line);border-radius:8px;padding:12px;overflow:auto;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
+    text-align:center;color:var(--muted);font-size:14px;}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin:8px 0 12px;}
+  .controls input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;}
+  .btn{background:var(--accent2);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;}
+  .btn:hover{filter:brightness(0.95);}
+  .io{width:100%;}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
 </style>
+</head>
+<body>
 
+<header>
+  <h1>Homework 3 — RSA Encryption & Language Distribution</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 – 2026</p>
+</header>
 
-<h1>Homework 3 — RSA Encryption &amp; Language Distribution</h1>
-<p class="small">Konstantinos Tziakouris • Statistics (Cybersecurity) • A.Y. 2025 – 2026</p>
-<hr>
+<main class="wrap">
 
-<h2>1) Introduction</h2>
-<p>
-This homework extends the idea of text analysis and substitution ciphers by introducing the
-<strong>RSA encryption scheme</strong>. We build on the earlier Caesar-cipher exercise and study how letter
-frequencies behave under a true modular-arithmetic cipher. The work combines
-basic <em>number theory</em>, <em>probability</em>, and <em>linguistic statistics</em>.
-</p>
+  <section class="card">
+    <h2>Introduction</h2>
+    <p>
+      This homework connects <strong>cryptography</strong> with <strong>statistical analysis of language</strong>.
+      We move from the distribution-based reasoning used with Caesar cipher to the
+      number-theoretic mechanism of <strong>RSA</strong>. A short Greek text from C. P. Cavafis is used
+      to illustrate encoding, encryption, decryption, and how frequency patterns behave.
+    </p>
+  </section>
 
-<h2>2) RSA algorithm overview</h2>
-<p>
-RSA is based on modular exponentiation using a public and private key pair.
-For demonstration we use tiny primes, following the classroom example.
-</p>
+  <section class="card">
+    <h2>RSA Overview (Toy Numbers for Didactics)</h2>
+    <p class="meta">Small primes are used purely for demonstration; real RSA uses very large primes.</p>
+    <table>
+      <thead><tr><th>Step</th><th>Value / Formula</th></tr></thead>
+      <tbody>
+        <tr><td>Choose primes</td><td><em>p</em> = 29, <em>q</em> = 31</td></tr>
+        <tr><td>Modulus</td><td><em>N</em> = p·q = 899</td></tr>
+        <tr><td>Euler totient</td><td>φ(N) = (p−1)(q−1) = 28·30 = 840</td></tr>
+        <tr><td>Public exponent</td><td><em>e</em> = 17 (gcd(17, 840) = 1)</td></tr>
+        <tr><td>Private exponent</td><td><em>d</em> = 593 since 17·593 ≡ 1 (mod 840)</td></tr>
+      </tbody>
+    </table>
+    <p class="meta">Encryption: <code>C = M<sup>e</sup> mod N</code> • Decryption: <code>M = C<sup>d</sup> mod N</code> • By Euler’s theorem, this round-trip recovers M.</p>
+  </section>
 
-<table>
-<thead><tr><th>Step</th><th>Formula / Value</th></tr></thead>
-<tbody>
-<tr><td>Choose primes</td><td><em>p</em>=29, <em>q</em>=31</td></tr>
-<tr><td>Compute modulus</td><td><em>N</em>=p·q = 899</td></tr>
-<tr><td>Euler totient</td><td>φ(N)=(p−1)(q−1)=840</td></tr>
-<tr><td>Choose public exponent</td><td><em>e</em>=17 (coprime with 840)</td></tr>
-<tr><td>Find private exponent</td><td><em>d</em>=593 since 17·593 ≡ 1 (mod 840)</td></tr>
-</tbody>
-</table>
+  <section class="card">
+    <h2>Greek Letter Encoding</h2>
+    <p>
+      For the demo we normalize Greek text by removing accents and mapping ς→σ, then map letters to numbers.
+      One simple mapping is Α→1, Β→2, …, Ω→24 (monotonic 24-letter alphabet).
+    </p>
+    <table>
+      <thead><tr><th>Α</th><th>Β</th><th>Γ</th><th>Δ</th><th>Ε</th><th>Ζ</th><th>Η</th><th>Θ</th><th>Ι</th><th>Κ</th><th>Λ</th><th>Μ</th></tr></thead>
+      <tbody><tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th>Ν</th><th>Ξ</th><th>Ο</th><th>Π</th><th>Ρ</th><th>Σ</th><th>Τ</th><th>Υ</th><th>Φ</th><th>Χ</th><th>Ψ</th><th>Ω</th></tr></thead>
+      <tbody><tr><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td></tr></tbody>
+    </table>
+  </section>
 
-<p>
-Encryption and decryption:
-<code>C = M<sup>e</sup> mod N</code>, <code>M = C<sup>d</sup> mod N</code>.
-Euler’s theorem ensures correctness because
-<code>M<sup>φ(N)</sup> ≡ 1 (mod N)</code> for coprime <em>M,N</em>.
-</p>
+  <section class="card">
+    <h2>Worked Example</h2>
+    <p><strong>Plain letter:</strong> ‘Α’ → M = 1 (using Α→1 mapping)</p>
+    <p><strong>Encrypt:</strong> C = 1<sup>17</sup> mod 899 = 1</p>
+    <p><strong>Decrypt:</strong> M = 1<sup>593</sup> mod 899 = 1 → ‘Α’</p>
+    <p class="meta">With real text, we process each normalized Greek letter to a number, encrypt, and later decrypt back to letters.</p>
+  </section>
 
-<div class="note">
-<strong>Tip.</strong> Small numbers are used here only for illustration.
-Real RSA implementations employ primes hundreds of digits long.
-</div>
+  <section class="card">
+    <h2>Plain vs Cipher: Frequency Discussion</h2>
+    <p>
+      In Caesar cipher, plaintext letter frequencies leak into ciphertext, enabling frequency attack.
+      In RSA, ciphertext values are residues modulo N from exponentiation; they <em>do not</em> preserve the plaintext’s letter frequency pattern.
+      Hence, frequency analysis that works for Caesar does not apply to RSA.
+    </p>
+    <table>
+      <thead><tr><th>Metric</th><th>Caesar</th><th>RSA (toy)</th></tr></thead>
+      <tbody>
+        <tr><td>Mapping</td><td>Shift on alphabet</td><td>Modular exponentiation</td></tr>
+        <tr><td>Frequency pattern</td><td>Mostly preserved</td><td>Destroyed / scrambled</td></tr>
+        <tr><td>Attack</td><td>Frequency analysis effective</td><td>Factoring/number theory (keys required)</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-<h2>3) Encoding and frequency study</h2>
-<p>
-We take the short Greek line from Καβάφης <em>«Ιθάκη»</em> and encode letters
-using A → 1, B → 2 … Ω → 24 (ς → σ). The ciphertext numbers are computed with (<em>e</em>, <em>N</em>) and
-then decoded using <em>d</em>. Finally, letter frequencies of the plaintext and ciphertext are compared.
-</p>
+  <section class="card">
+    <h2>Interactive Demo (Tiny RSA)</h2>
+    <p class="meta">Uppercase Latin demo for clarity. The key is the same toy pair: N=899, e=17, d=593.</p>
+    <div class="controls">
+      <label>Plaintext:&nbsp;<input id="pt" class="io" value="ITHAKI"></label>
+      <button class="btn" id="enc">Encrypt</button>
+    </div>
+    <div class="controls">
+      <label>Cipher (numbers):&nbsp;<input id="ct" class="io" placeholder="e.g., 587-..."></label>
+      <button class="btn" id="dec">Decrypt</button>
+    </div>
+    <pre class="mono" id="out"></pre>
+  </section>
 
-<table>
-<thead><tr><th>Greek Letter</th><th>Plain freq (%)</th><th>Cipher freq (%)</th></tr></thead>
-<tbody>
-<tr><td>Α</td><td>13.8</td><td>–</td></tr>
-<tr><td>Ι</td><td>12.9</td><td>–</td></tr>
-<tr><td>Ο</td><td>12.1</td><td>≈ uniform 0–5</td></tr>
-<tr><td>Ε</td><td>11.4</td><td>≈ uniform 0–5</td></tr>
-<tr><td>Ν</td><td>9.8</td><td>≈ uniform 0–5</td></tr>
-</tbody>
-</table>
+  <section class="card">
+    <h2>Greek Text (Data Source)</h2>
+    <p class="meta">Excerpt from C. P. Cavafis — «Ιθάκη» (normalized when used programmatically).</p>
+    <blockquote id="ithaki">
+Σα βγεις στον πηγαιμό για την Ιθάκη,
+να εύχεσαι να ’ναι μακρύς ο δρόμος,
+γεμάτος περιπέτειες, γεμάτος γνώσεις.
+Τους Λαιστρυγόνας και τους Κύκλωπας,
+τον θυμωμένο Ποσειδώνα μη φοβάσαι,
+τέτοια στον δρόμο σου ποτέ σου δεν θα βρεις,
+αν μένει η σκέψη σου υψηλή, αν εκλεκτή
+συγκίνηση το πνεύμα και το σώμα σου αγγίζει.
+    </blockquote>
+    <p class="meta">Tribute: Cavafis is a major modern Greek poet; his “Ithaca” is a classic on journey and learning.</p>
+  </section>
 
-<p>
-Unlike Caesar cipher, RSA produces outputs that are uniformly distributed modulo N and
-destroy frequency patterns. Therefore, frequency analysis fails—demonstrating
-the strength of modular arithmetic encryption.
-</p>
+  <section class="card">
+    <h2>Conclusion</h2>
+    <p>
+      The exercise shows a clear contrast: <em>descriptive statistics</em> enable attacks on simple substitution ciphers,
+      but <em>number-theoretic</em> encryption like RSA resists such methods. Language distributions remain valuable for
+      classical cryptanalysis, while modern cryptography relies on hard arithmetic problems.
+    </p>
+    <div class="footer">
+      2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 – 2026
+    </div>
+  </section>
 
-<h2>4) Worked toy example</h2>
-<p>
-Take <code>M = 65</code> (letter ‘A’). Encrypt: <code>C = 65<sup>17</sup> mod 899 = 587</code>.  
-Decrypt: <code>M = 587<sup>593</sup> mod 899 = 65</code> → ‘A’. The round-trip confirms the algorithm.
-</p>
+</main>
 
-<h2>5) Algorithm summary (pseudocode)</h2>
-<pre>
-Input: message M (integers), keys (e, d, N)
-for each block x in M:
-    encrypt: c = x^e mod N
-    decrypt: m = c^d mod N
-output ciphertext C and recovered message
-</pre>
+<script>
+(function(){
+  const N = 899, e = 17, d = 593;
 
-<h2>6) Interpretation</h2>
-<p>
-The exercise highlights the difference between <em>statistical ciphers</em>
-and <em>number-theoretic encryption</em>. While Caesar can be reversed by analyzing
-letter distribution, RSA cannot because ciphertext values behave like random numbers.
-Still, probability remains relevant: its security relies on the difficulty of factoring N into p and q.
-</p>
+  function modPow(base, exp, mod){
+    let r = 1n, b = BigInt(base % mod), E = BigInt(exp), M = BigInt(mod);
+    while(E > 0n){ if(E & 1n) r = (r*b)%M; b = (b*b)%M; E >>= 1n; }
+    return Number(r);
+  }
 
-<hr>
-<p class="small center">
-2229757 Konstantinos Tziakouris • Homework 3 • Statistics A.Y. 2025–2026
-</p>
+  function toNums(s){ return s.toUpperCase().replace(/[^A-Z]/g,'').split('').map(ch => ch.charCodeAt(0)-65); }
+  function toText(nums){ return nums.map(n => String.fromCharCode((n%26)+65)).join(''); }
+
+  const $ = id => document.getElementById(id);
+
+  $('enc').onclick = () => {
+    const m = toNums($('pt').value);
+    const c = m.map(M => modPow(M, e, N));
+    $('ct').value = c.join('-');
+    $('out').textContent =
+`Plain (A=0..Z=25):
+${m.join(' ')}
+
+Cipher (C = M^e mod N):
+${c.join(' ')}`;
+  };
+
+  $('dec').onclick = () => {
+    const raw = $('ct').value.trim(); if(!raw){ $('out').textContent=''; return; }
+    const nums = raw.split('-').map(x => parseInt(x,10)).filter(x => !Number.isNaN(x));
+    const m = nums.map(C => modPow(C, d, N));
+    $('out').textContent =
+`Decoded numeric (M):
+${m.join(' ')}
+
+Decoded text:
+${toText(m)}`;
+  };
+})();
+</script>
+
+</body>
+</html>
