@@ -6,43 +6,44 @@
   <title>Homework 4 — Law of Large Numbers</title>
 
   <style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.6;
+    margin: 0;
+  }
+
   .page-header {
-    background: linear-gradient(135deg, #f8f9fb, #e8ecf1);
-    border-bottom: 1px solid #d4d7dd;
-    color: #1e1e1e;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dcdcdc;
     text-align: center;
-    padding: 2.2rem 1rem 1.8rem;
+    padding: 2rem 1rem 1.5rem;
   }
 
   .project-name {
-    font-size: 2.1rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    color: #1f1f1f;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000000;
+    margin: 0;
   }
 
   .project-tagline {
     font-size: 1rem;
-    color: #5a5a5a;
+    color: #333333;
     margin-top: 0.3rem;
   }
 
-  /* Main Content */
   .main-content {
     max-width: 800px;
     margin: 0 auto;
     background: #ffffff;
     padding: 2rem 2.5rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-    margin-top: -1rem;
-    color: #222;
-    line-height: 1.65;
   }
 
   h1, h2 {
-    color: #2c3e50;
-    font-weight: 600;
+    color: #000000;
+    font-weight: bold;
     margin-top: 1.8rem;
   }
 
@@ -52,66 +53,76 @@
   }
 
   h2 {
-    font-size: 1.35rem;
-    border-left: 4px solid #b0b7c3;
-    padding-left: 0.6rem;
+    font-size: 1.3rem;
+    border-left: 4px solid #000000;
+    padding-left: 0.5rem;
     margin-bottom: 0.6rem;
   }
 
   a {
-    color: #3c5a9a;
-    text-decoration: none;
-  }
-  a:hover {
+    color: #000000;
     text-decoration: underline;
   }
 
-  /* Tables */
   table {
     border-collapse: collapse;
     width: 100%;
     margin: 1rem 0;
-    border-radius: 8px;
-    overflow: hidden;
   }
 
   th, td {
-    border: 1px solid #e2e2e2;
+    border: 1px solid #000000;
     padding: 8px 10px;
     text-align: center;
   }
 
   th {
-    background: #f5f7fa;
-    color: #2c3e50;
-    font-weight: 600;
+    background: #f8f8f8;
+    color: #000000;
   }
 
-  /* Notes */
   .note {
-    background: #fdfdfd;
-    border-left: 4px solid #b0b7c3;
+    background: #f9f9f9;
+    border-left: 4px solid #000000;
     padding: 0.9rem 1.1rem;
     border-radius: 4px;
     margin: 1.2rem 0;
     font-size: 0.95rem;
-    color: #333;
+    color: #000000;
   }
 
-  /* Footer */
   .small {
     text-align: center;
-    color: #777;
+    color: #000000;
     font-size: 0.9rem;
     margin-top: 2rem;
     padding-top: 0.8rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #000000;
   }
 
   canvas {
-    border: 1px solid #eee;
+    border: 1px solid #000000;
     margin-top: 10px;
-    border-radius: 8px;
+    border-radius: 4px;
+  }
+
+  button {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  button:hover {
+    background-color: #333333;
+  }
+
+  input {
+    border: 1px solid #000000;
+    border-radius: 3px;
+    padding: 4px;
   }
   </style>
 </head>
@@ -127,13 +138,14 @@
 
     <h2>1) Introduction</h2>
     <p>
-      This homework demonstrates the <strong>Law of Large Numbers (LLN)</strong>, a cornerstone of probability theory.
-      It states that as the number of trials increases, the empirical mean of random outcomes approaches the theoretical expectation.
+      This homework demonstrates the <strong>Law of Large Numbers (LLN)</strong>, one of the
+      most fundamental results in probability. It states that as the number of trials
+      increases, the empirical mean of repeated random outcomes approaches the theoretical expectation.
     </p>
 
     <h2>2) Concept</h2>
     <p>
-      For independent random variables \(X_1, X_2, \dots, X_n\) with expected value \(E[X]\),
+      For independent random variables X₁, X₂, …, Xₙ with expected value E[X],
       the sample mean is:
     </p>
 
@@ -142,7 +154,7 @@
     <p>
       According to the LLN:
       <code>limₙ→∞ f(n) = E[X]</code>.
-      In other words, as we increase the number of observations, the average of the results tends to stabilize around the true probability.
+      As n increases, the average of the observations tends to stabilize around the true probability.
     </p>
 
     <div class="note">
@@ -152,10 +164,10 @@
 
     <h2>3) Simulation setup</h2>
     <p>
-      We simulate <strong>m</strong> independent trajectories, each with <strong>n</strong> trials.
+      We simulate <strong>m</strong> independent trajectories, each of <strong>n</strong> trials.
       Each trial is a Bernoulli random variable (1 for success, 0 for failure)
-      with probability p of success.
-      The program computes f(n) for each run and plots how the sample mean approaches p.
+      with probability p of success. The program computes f(n) for each run
+      and shows how the sample mean approaches p.
     </p>
 
     <div class="note">
@@ -185,14 +197,14 @@
         const ctx=document.getElementById('lln').getContext('2d');
         const w=ctx.canvas.width,h=ctx.canvas.height,pad=30;
         ctx.clearRect(0,0,w,h);
-        ctx.strokeStyle="#ddd";
+        ctx.strokeStyle="#000000";
         ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();
-        // reference line at p
         const yp=h-pad-(h-2*pad)*p;
-        ctx.strokeStyle="#999";ctx.beginPath();ctx.moveTo(pad,yp);ctx.lineTo(w-pad,yp);ctx.stroke();
+        ctx.strokeStyle="#555555";
+        ctx.beginPath();ctx.moveTo(pad,yp);ctx.lineTo(w-pad,yp);ctx.stroke();
         for(let r=0;r<m;r++){
           let heads=0;ctx.beginPath();
-          ctx.strokeStyle=`hsl(${r*60},30%,35%)`;
+          ctx.strokeStyle="#000000";
           for(let t=1;t<=n;t++){
             heads+=rand(p);
             const f=heads/t;
@@ -208,15 +220,16 @@
 
     <h2>5) Interpretation</h2>
     <p>
-      Each colored trajectory represents one repetition of the experiment.
+      Each line represents one repetition of the experiment.
       Initially, relative frequencies fluctuate strongly, but as n grows, all trajectories stabilize near p.
-      This visualizes how empirical frequencies converge to the expected value, validating the Law of Large Numbers.
+      This demonstrates how empirical frequencies converge to the true probability as predicted by the LLN.
     </p>
 
     <h2>6) Conclusion</h2>
     <p>
-      The LLN confirms that randomness smooths out with repetition.
-      In statistics and cybersecurity analytics, this principle ensures that averages based on large datasets yield reliable estimates of true probabilities.
+      The Law of Large Numbers confirms that randomness smooths out with repetition.
+      It forms the theoretical foundation of statistical inference, ensuring that averages from large samples
+      are reliable estimates of true probabilities.
     </p>
 
     <footer class="small">
