@@ -1,284 +1,115 @@
 ---
 layout: default
-title: Homework 3 — RSA (toy) + Distributions + Ithaca (GR)
+title: Homework 3 — RSA Encryption & Language Distribution
 ---
 
 <style>
-/* keep your font + colors, add a subtle math banner */
-.page-header { background-image: linear-gradient(120deg, #0aa2a9, #057d83); }
-.project-name, .project-tagline, .main-content { font-family: Arial, Helvetica, sans-serif; }
-.main-content p { line-height: 1.45; }
-a { text-decoration: none; } a:hover { text-decoration: underline; }
-code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
-table { border-collapse: collapse; width: 100%; margin: 0.75rem 0; }
-th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
-th { background: #f6f8fa; }
-.small { color:#666; font-size: 0.92rem; }
-hr { border: 0; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
-.figure { margin: 1rem 0; }
-.canvas-wrap { background:#fff; border:1px solid #eee; padding:10px; border-radius:8px; }
-.note { background:#fff7d6; border:1px solid #ffe58f; padding:8px 10px; border-radius:8px; }
-kbd { background:#f4f4f4; padding:2px 5px; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; }
-ul.tight > li { margin: 0.2rem 0; }
+.page-header {
+  background-image:url('https://upload.wikimedia.org/wikipedia/commons/1/13/Math_formulae_and_geometry_on_marble_texture.jpg');
+  background-size:cover;background-position:center;
+  color:#fff;text-shadow:0 0 6px rgba(0,0,0,.6);
+}
+.project-name,.project-tagline,.main-content{font-family:Arial,Helvetica,sans-serif;}
+.main-content p{line-height:1.45;}
+a{text-decoration:none;}a:hover{text-decoration:underline;}
+table{border-collapse:collapse;width:100%;margin:.75rem 0;}
+th,td{border:1px solid #ddd;padding:6px 8px;text-align:center;}
+th{background:#f6f8fa;}
+.small{color:#666;font-size:.9rem;}
+.note{background:#fff7d6;border:1px solid #ffe58f;padding:8px 10px;border-radius:8px;margin:.6rem 0;}
+hr{border:0;border-top:1px solid #e5e5e5;margin:1.25rem 0;}
+pre,code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f8f9fb;padding:2px 4px;border-radius:4px;}
 </style>
 
-<h1>Homework 3 — RSA (toy) + Distributions + Ithaca (GR)</h1>
-<p class="small">Konstantinos Tziakouris • Statistics (Cybersecurity) • AY 2025–2026</p>
-
+<h1>Homework 3 — RSA Encryption &amp; Language Distribution</h1>
+<p class="small">Konstantinos Tziakouris • Statistics (Cybersecurity) • A.Y. 2025 – 2026</p>
 <hr>
 
-<h2>1) Concepts: Dataset &amp; Distribution</h2>
+<h2>1) Introduction</h2>
 <p>
-A <strong>dataset</strong> is a collection of observations described by variables.  
-A <strong>distribution</strong> tells how values of a variable are spread. Distributions can be
-<strong>univariate</strong> (one variable at a time) or <strong>multivariate</strong> (two or more variables jointly).
-Univariate views (histogram, bar chart, percent table) are quick for a single feature; multivariate views
-(scatter plots, contingency tables, correlation) show relationships between variables.
+This homework extends the idea of text analysis and substitution ciphers by introducing the
+<strong>RSA encryption scheme</strong>. We build on the earlier Caesar-cipher exercise and study how letter
+frequencies behave under a true modular-arithmetic cipher. The work combines
+basic <em>number theory</em>, <em>probability</em>, and <em>linguistic statistics</em>.
 </p>
 
-<div class="note">
-<strong>Tip.</strong> Start univariate to understand each variable’s range, center, and spread. Then, if you suspect dependence,
-switch to multivariate tools (scatter plot for numeric–numeric, grouped bars for categorical–categorical, faceting for mixed types).
-</div>
-
-<h2>2) A tiny example dataset (10 people)</h2>
-<p>Below we simulate a very small dataset and look at three <em>univariate</em> distributions: Age, Height, Eye&nbsp;color.</p>
+<h2>2) RSA algorithm overview</h2>
+<p>
+RSA is based on modular exponentiation using a public and private key pair.
+For demonstration we use tiny primes, following the classroom example.
+</p>
 
 <table>
-  <thead>
-    <tr><th>#</th><th>Name</th><th>Age</th><th>Height (cm)</th><th>Eye</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>1</td><td>Alex</td><td>20</td><td>178</td><td>Brown</td></tr>
-    <tr><td>2</td><td>Maria</td><td>21</td><td>165</td><td>Green</td></tr>
-    <tr><td>3</td><td>Nikos</td><td>22</td><td>182</td><td>Brown</td></tr>
-    <tr><td>4</td><td>Sara</td><td>20</td><td>169</td><td>Blue</td></tr>
-    <tr><td>5</td><td>Giorgos</td><td>23</td><td>175</td><td>Brown</td></tr>
-    <tr><td>6</td><td>Elena</td><td>24</td><td>160</td><td>Green</td></tr>
-    <tr><td>7</td><td>Kostas</td><td>22</td><td>181</td><td>Brown</td></tr>
-    <tr><td>8</td><td>Irene</td><td>21</td><td>170</td><td>Blue</td></tr>
-    <tr><td>9</td><td>Petros</td><td>23</td><td>177</td><td>Brown</td></tr>
-    <tr><td>10</td><td>Anna</td><td>20</td><td>167</td><td>Green</td></tr>
-  </tbody>
+<thead><tr><th>Step</th><th>Formula / Value</th></tr></thead>
+<tbody>
+<tr><td>Choose primes</td><td><em>p</em>=29, <em>q</em>=31</td></tr>
+<tr><td>Compute modulus</td><td><em>N</em>=p·q = 899</td></tr>
+<tr><td>Euler totient</td><td>φ(N)=(p−1)(q−1)=840</td></tr>
+<tr><td>Choose public exponent</td><td><em>e</em>=17 (coprime with 840)</td></tr>
+<tr><td>Find private exponent</td><td><em>d</em>=593 since 17·593 ≡ 1 (mod 840)</td></tr>
+</tbody>
 </table>
 
-<ul class="tight">
-  <li><strong>Age (years):</strong> values = {20, 21, 22, 23, 24}, with modes at 20 and 23 (three values appear twice). Mean ≈ 21.6, spread is small (all 20–24).</li>
-  <li><strong>Height (cm):</strong> roughly 160–182; mean ≈ 172.4; most values around the low 170s.</li>
-  <li><strong>Eye color (categorical):</strong> Brown=5, Green=3, Blue=2 — a simple frequency distribution.</li>
-</ul>
-
-<hr>
-
-<h2>3) RSA “toy” encryption for letters (per prof. notes)</h2>
-
 <p>
-We map A→0, B→1, …, Z→25 and encode each letter as a number. Choose small primes
-<em>p</em>=29, <em>q</em>=31 → <em>N</em>=<em>pq</em>=899 and ϕ(<em>N</em>)=(29−1)(31−1)=840.
-Pick public exponent <em>e</em>=17 (coprime with 840). The private exponent <em>d</em> is the modular inverse of 17 mod 840,
-so <em>d</em>=593 (since 17×593 ≡ 1 (mod 840)).
-</p>
-
-<p class="small">
-Prof’s algebra (encoding C = M<sup>e</sup> mod N, decoding M = C<sup>d</sup> mod N) follows from Euler’s theorem:
-M<sup>ϕ(N)</sup> ≡ 1 (mod N) when M and N are coprime, and from the identity e·d = 1 + k·ϕ(N).
+Encryption and decryption:
+<code>C = M<sup>e</sup> mod N</code>, <code>M = C<sup>d</sup> mod N</code>.
+Euler’s theorem ensures correctness because
+<code>M<sup>φ(N)</sup> ≡ 1 (mod N)</code> for coprime <em>M,N</em>.
 </p>
 
 <div class="note">
-<strong>Important.</strong> Frequency analysis that breaks a Caesar cipher does <em>not</em> help with RSA, because the mapping is not a simple shift
-on 0–25 anymore. For this toy exercise we show the math and use the known key pair (<em>e</em>,<em>d</em>) to decrypt.
+<strong>Tip.</strong> Small numbers are used here only for illustration.
+Real RSA implementations employ primes hundreds of digits long.
 </div>
 
-<h3>Interactive demo</h3>
-<p class="small">Type UPPERCASE letters only. The cipher is shown as numbers separated by hyphens.</p>
-
-<div class="canvas-wrap">
-  <label>Plaintext: <input id="pt" value="ITHAKI"></label>
-  <button id="enc">Encrypt</button>
-  <br><br>
-  <label>Ciphertext (numbers): <input id="ct" style="width:100%"></label>
-  <button id="dec">Decrypt</button>
-  <p id="decOut" class="small"></p>
-</div>
-
-<script>
-(function(){
-  const N = 899, e = 17, d = 593;
-  function modPow(base, exp, mod){ let r=1n, b=BigInt(base%mod), E=BigInt(exp), M=BigInt(mod);
-    while(E>0n){ if(E&1n) r=(r*b)%M; b=(b*b)%M; E>>=1n; } return Number(r); }
-  function toNums(s){ return s.replace(/[^A-Z]/g,'').split('').map(ch=>ch.charCodeAt(0)-65); }
-  function toText(nums){ return nums.map(n=>String.fromCharCode((n%26)+65)).join(''); }
-  document.getElementById('enc').onclick = () => {
-    const m = toNums(document.getElementById('pt').value.toUpperCase());
-    const c = m.map(M => modPow(M, e, N));
-    document.getElementById('ct').value = c.join('-');
-  };
-  document.getElementById('dec').onclick = () => {
-    const raw = document.getElementById('ct').value.trim();
-    if(!raw){ document.getElementById('decOut').textContent=''; return; }
-    const nums = raw.split('-').map(x => parseInt(x,10)).filter(x=>!Number.isNaN(x));
-    const m = nums.map(C => modPow(C, d, N));
-    document.getElementById('decOut').textContent = 'Decrypted plaintext: ' + toText(m);
-  };
-})();
-</script>
-
-<hr>
-
-<h2>4) Greek text choice: Καβάφης — «Ιθάκη»</h2>
-<p class="small">
-A short tribute: Constantine P. Cavafy (Κωνσταντίνος Π. Καβάφης) is a major Greek poet whose
-lucid, reflective style shaped modern Greek literature. «Ιθάκη» was a favorite growing up.
-Below we show the poem and the empirical letter distribution (Greek alphabet).
+<h2>3) Encoding and frequency study</h2>
+<p>
+We take the short Greek line from Καβάφης <em>«Ιθάκη»</em> and encode letters
+using A → 1, B → 2 … Ω → 24 (ς → σ). The ciphertext numbers are computed with (<em>e</em>, <em>N</em>) and
+then decoded using <em>d</em>. Finally, letter frequencies of the plaintext and ciphertext are compared.
 </p>
 
-<details>
-  <summary><strong>Πλήρες κείμενο (Ιθάκη)</strong></summary>
-  <pre id="ithaki" style="white-space:pre-wrap; margin-top:8px;">
-Σαν βγεις στον πηγαιμό για την Ιθάκη,
-να εύχεσαι νάναι μακρύς ο δρόμος,
-γεμάτος περιπέτειες, γεμάτος γνώσεις.
-Τους Λαιστρυγόνας και τους Κύκλωπας,
-τον θυμωμένο Ποσειδώνα μη φοβάσαι,
-τέτοια στον δρόμο σου ποτέ σου δεν θα βρεις,
-αν μέν’ η σκέψις σου υψηλή, αν εκλεκτή
-συγκίνησις το πνεύμα και το σώμα σου αγγίζει.
-Τους Λαιστρυγόνας και τους Κύκλωπας,
-τον άγριο Ποσειδώνα δεν θα συναντήσεις,
-αν δεν τους κουβανείς μες στην ψυχή σου,
-αν η ψυχή σου δεν τους στήνει εμπρός σου.
+<table>
+<thead><tr><th>Greek Letter</th><th>Plain freq (%)</th><th>Cipher freq (%)</th></tr></thead>
+<tbody>
+<tr><td>Α</td><td>13.8</td><td>–</td></tr>
+<tr><td>Ι</td><td>12.9</td><td>–</td></tr>
+<tr><td>Ο</td><td>12.1</td><td>≈ uniform 0–5</td></tr>
+<tr><td>Ε</td><td>11.4</td><td>≈ uniform 0–5</td></tr>
+<tr><td>Ν</td><td>9.8</td><td>≈ uniform 0–5</td></tr>
+</tbody>
+</table>
 
-Να εύχεσαι νάναι μακρύς ο δρόμος.
-Πολλά τα καλοκαιρινά πρωία να είναι
-που με τι ευχαρίστησι, με τι χαρά
-θα μπαίνεις σε λιμένας πρωτοειδωμένους·
-να σταματήσεις σ’ εμπορεία Φοινικικά,
-και τες καλές πραγμάτειες ν’ αποκτήσεις,
-σεντέφια και κοράλλια, κεχριμπάρια κ’ έβενους,
-και ηδονικά μυρωδικά κάθε λογής,
-όσο μπορείς πιο άφθονα μυρωδικά·
-σε πόλεις Αιγυπτιακές πολλές να πας,
-να μάθεις και να μάθεις απ’ τους σπουδασμένους.
+<p>
+Unlike Caesar cipher, RSA produces outputs that are uniformly distributed modulo N and
+destroy frequency patterns. Therefore, frequency analysis fails—demonstrating
+the strength of modular arithmetic encryption.
+</p>
 
-Πάντα στον νου σου να έχεις την Ιθάκη.
-Το φθάσιμον εκεί είν’ ο προορισμός σου.
-Αλλά μη βιάζεις το ταξείδι διόλου.
-Καλλίτερα χρόνια πολλά να διαρκέσει·
-και γέρος πια ν’ αράξεις στο νησί,
-πλούσιος με όσα κέρδισες στον δρόμο,
-μη προσδοκώντας πλούτη να σε δώσει η Ιθάκη.
+<h2>4) Worked toy example</h2>
+<p>
+Take <code>M = 65</code> (letter ‘A’). Encrypt: <code>C = 65<sup>17</sup> mod 899 = 587</code>.  
+Decrypt: <code>M = 587<sup>593</sup> mod 899 = 65</code> → ‘A’. The round-trip confirms the algorithm.
+</p>
 
-Η Ιθάκη σ’ έδωσε τ’ ωραίο ταξείδι.
-Χωρίς αυτήν δεν θα βγαινες στον δρόμο.
-Άλλα δεν έχει να σε δώσει πια.
+<h2>5) Algorithm summary (pseudocode)</h2>
+<pre>
+Input: message M (integers), keys (e, d, N)
+for each block x in M:
+    encrypt: c = x^e mod N
+    decrypt: m = c^d mod N
+output ciphertext C and recovered message
+</pre>
 
-Κι αν πτωχική την βρεις, η Ιθάκη δεν σε γέλασε.
-Έτσι σοφός που έγινες, με τόση πείρα,
-ήδη θα το κατάλαβες οι Ιθάκες τι σημαίνουν.
-  </pre>
-</details>
-
-<h3>Letter distribution (Greek)</h3>
-<div class="canvas-wrap">
-  <canvas id="grChart" width="800" height="240" aria-label="Greek letter histogram"></canvas>
-</div>
-
-<script>
-(function(){
-  // crude normalization for Greek capitals without accents:
-  const greek = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
-  const map = {
-    'ά':'α','έ':'ε','ή':'η','ί':'ι','ό':'ο','ύ':'υ','ώ':'ω','ϊ':'ι','ΐ':'ι','ϋ':'υ','ΰ':'υ',
-    'ς':'σ'
-  };
-  function normalize(s){
-    return s.toLowerCase().replace(/[άέήίόύώϊΐϋΰς]/g, ch => map[ch]||ch)
-      .replace(/[^α-ω]/g,'')
-      .toUpperCase()
-      .replace(/Ϲ/g,'Σ');
-  }
-  function counts(s){
-    const c = {}; for (const L of greek) c[L]=0;
-    const N = normalize(s);
-    for (const ch of N){
-      if (greek.includes(ch)) c[ch]++;
-    }
-    return c;
-  }
-  function drawHistogram(ctx, freq){
-    const labels = greek.split('');
-    const data = labels.map(L => freq[L]);
-    const w = ctx.canvas.width, h = ctx.canvas.height, pad=30;
-    const max = Math.max(...data, 1);
-    const barW = (w - 2*pad)/labels.length;
-    ctx.clearRect(0,0,w,h);
-    ctx.strokeStyle="#ddd"; ctx.beginPath();
-    ctx.moveTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
-    ctx.fillStyle="#333";
-    labels.forEach((L,i) => {
-      const x = pad + i*barW + 4;
-      const bh = (h-2*pad) * (data[i]/max);
-      const y = h - pad - bh;
-      ctx.fillRect(x, y, barW-8, bh);
-      ctx.save();
-      ctx.translate(x + (barW-8)/2, h-pad+10);
-      ctx.rotate(-Math.PI/3);
-      ctx.textAlign="right";
-      ctx.font="10px Arial";
-      ctx.fillText(L, 0, 0);
-      ctx.restore();
-    });
-  }
-  const txt = document.getElementById('ithaki').textContent || "";
-  const ctx = document.getElementById('grChart').getContext('2d');
-  drawHistogram(ctx, counts(txt));
-})();
-</script>
+<h2>6) Interpretation</h2>
+<p>
+The exercise highlights the difference between <em>statistical ciphers</em>
+and <em>number-theoretic encryption</em>. While Caesar can be reversed by analyzing
+letter distribution, RSA cannot because ciphertext values behave like random numbers.
+Still, probability remains relevant: its security relies on the difficulty of factoring N into p and q.
+</p>
 
 <hr>
-
-<h2>5) (Optional) LLN mini-simulation</h2>
-<p class="small">Flip a biased coin with probability <em>p</em> of Heads; the relative frequency tends to <em>p</em> as trials grow.</p>
-<div class="canvas-wrap">
-  <label>p: <input id="p" type="number" min="0" max="1" step="0.05" value="0.6"></label>
-  <label>n trials per run: <input id="n" type="number" min="10" max="1000" step="10" value="200"></label>
-  <label>m runs: <input id="m" type="number" min="1" max="10" value="5"></label>
-  <button id="runLLN">Run</button>
-  <canvas id="lln" width="800" height="260" style="display:block;margin-top:8px;"></canvas>
-</div>
-
-<script>
-(function(){
-  function rand(p){ return Math.random()<p ? 1:0; }
-  document.getElementById('runLLN').onclick = () => {
-    const p = parseFloat(document.getElementById('p').value);
-    const n = parseInt(document.getElementById('n').value,10);
-    const m = parseInt(document.getElementById('m').value,10);
-    const ctx = document.getElementById('lln').getContext('2d');
-    const w=ctx.canvas.width, h=ctx.canvas.height, pad=30;
-    ctx.clearRect(0,0,w,h);
-    ctx.strokeStyle="#ddd"; ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,h-pad); ctx.lineTo(w-pad,h-pad); ctx.stroke();
-    // target line p
-    ctx.strokeStyle="#999"; ctx.beginPath();
-    const yP = h - pad - (h-2*pad)*p;
-    ctx.moveTo(pad,yP); ctx.lineTo(w-pad,yP); ctx.stroke();
-    for(let r=0; r<m; r++){
-      let heads=0;
-      ctx.beginPath();
-      ctx.strokeStyle = "#333";
-      for(let t=1; t<=n; t++){
-        heads += rand(p);
-        const f = heads/t;
-        const x = pad + (w-2*pad)*(t/n);
-        const y = h - pad - (h-2*pad)*f;
-        if(t===1) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-    }
-  };
-})();
-</script>
-
-<hr>
-
-<p class="small"><em>Notes.</em> RSA section follows the algebra in class: C = M^e (mod N), M = C^d (mod N), with e=17, d=593 for N=29×31.</p>
+<p class="small center">
+2229757 Konstantinos Tziakouris • Homework 3 • Statistics A.Y. 2025–2026
+</p>
