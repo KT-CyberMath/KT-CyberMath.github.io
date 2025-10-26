@@ -15,13 +15,9 @@ A collection of assignments and research for the Statistics course, academic yea
 
 ## Homework feed
 <ul style="list-style-type: disc; margin-left: 25px; line-height: 1.6;">
-  <li>
-    <a href="/homework1/homework1.html">Homework 1 — Statistics & Cybersecurity</a>
-  </li>
-  <li>
-    <a href="/homework2.html">Homework 2 — Dataset, Distribution & Caesar Cipher (Ithaca)</a>
-  </li>
-  <li>
-    <a href="/homework3.html">Homework 3 — RSA (toy) + Distributions + Ithaca (GR)</a>
-  </li>
+  <li><a href="/homework1/homework1.html">Homework 1 — Statistics & Cybersecurity</a></li>
+  <li><a href="/homework2.html">Homework 2 — Dataset, Distribution & Caesar Cipher (Ithaca)</a></li>
+  <li><a href="/homework3.html">Homework 3 — RSA Encryption & Language Distribution</a></li>
+  <li><a href="/homework4.html">Homework 4 — Law of Large Numbers Simulation</a></li>
 </ul>
+
