@@ -1,241 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Homework 4 — Law of Large Numbers</title>
-
-  <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #ffffff;
-    color: #000000;
-    line-height: 1.6;
-    margin: 0;
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homework 4 — Law of Large Numbers (LLN)</title>
+<style>
+  :root{
+    --bg:#f8fafc; --card:#fff; --ink:#111; --muted:#666;
+    --line:#e6e6e6; --accent:#0d83ff; --accent2:#0654b5;
   }
-
-  .page-header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #dcdcdc;
-    text-align: center;
-    padding: 2rem 1rem 1.5rem;
-  }
-
-  .project-name {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #1b3b7d;
-    margin: 0;
-  }
-
-  .project-tagline {
-    font-size: 1rem;
-    color: #000000;
-    margin-top: 0.3rem;
-  }
-
-  .main-content {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #ffffff;
-    padding: 2rem 2.5rem;
-  }
-
-  h1, h2 {
-    color: #1b3b7d;
-    font-weight: bold;
-    margin-top: 1.8rem;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-    margin-bottom: 0.6rem;
-  }
-
-  h2 {
-    font-size: 1.3rem;
-    border-left: 4px solid #1b3b7d;
-    padding-left: 0.5rem;
-    margin-bottom: 0.6rem;
-  }
-
-  a {
-    color: #1b3b7d;
-    text-decoration: underline;
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1rem 0;
-  }
-
-  th, td {
-    border: 1px solid #000000;
-    padding: 8px 10px;
-    text-align: center;
-  }
-
-  th {
-    background: #f8f8f8;
-    color: #1b3b7d;
-  }
-
-  .note {
-    background: #f9f9f9;
-    border-left: 4px solid #1b3b7d;
-    padding: 0.9rem 1.1rem;
-    border-radius: 4px;
-    margin: 1.2rem 0;
-    font-size: 0.95rem;
-    color: #000000;
-  }
-
-  .small {
-    text-align: center;
-    color: #000000;
-    font-size: 0.9rem;
-    margin-top: 2rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid #000000;
-  }
-
-  canvas {
-    border: 1px solid #000000;
-    margin-top: 10px;
-    border-radius: 4px;
-  }
-
-  button {
-    background-color: #1b3b7d;
-    color: #ffffff;
-    border: none;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-
-  button:hover {
-    background-color: #274f9a;
-  }
-
-  input {
-    border: 1px solid #000000;
-    border-radius: 3px;
-    padding: 4px;
-  }
-  </style>
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--accent),var(--accent2));
+    color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{text-align:center;margin:8px 0 10px;}
+  p{margin:10px 0;text-align:justify;}
+  .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;}
+  th,td{border:1px solid var(--line);padding:10px;text-align:center;}
+  th{background:#f2f5f9;}
+  blockquote{white-space:pre-wrap;background:#f8f9fb;border-left:4px solid var(--accent);
+    padding:14px 18px;border-radius:6px;margin:14px 0;font-size:17px;line-height:1.5;}
+  code, pre code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  pre{background:#f8f9fb;border:1px solid var(--line);border-radius:8px;padding:12px;overflow:auto;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
+    text-align:center;color:var(--muted);font-size:14px;}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin:8px 0 12px;}
+  .controls input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:90px;}
+  .btn{background:var(--accent2);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;}
+  .btn:hover{filter:brightness(0.95);}
+  canvas{border:1px solid var(--line);border-radius:10px;display:block;margin:0 auto;}
+</style>
 </head>
-
 <body>
 
-  <header class="page-header">
-    <div class="project-name">Homework 4 — Law of Large Numbers</div>
-    <div class="project-tagline">Konstantinos Tziakouris • Statistics (Cybersecurity) • A.Y. 2025–2026</div>
-  </header>
+<header>
+  <h1>Homework 4 — Law of Large Numbers (LLN)</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 – 2026</p>
+</header>
 
-  <main class="main-content">
+<main class="wrap">
 
-    <h2>1) Introduction</h2>
+  <section class="card">
+    <h2>Introduction</h2>
     <p>
-      This homework demonstrates the <strong>Law of Large Numbers (LLN)</strong>, one of the
-      most fundamental results in probability. It states that as the number of trials
-      increases, the empirical mean of repeated random outcomes approaches the theoretical expectation.
+      This homework demonstrates the <strong>Law of Large Numbers (LLN)</strong>. For repeated, independent trials,
+      the empirical mean (or relative frequency) stabilizes near the theoretical expectation as the number of trials grows.
+      We present the concept briefly and show a small simulation that visualizes convergence.
     </p>
+  </section>
 
-    <h2>2) Concept</h2>
+  <section class="card">
+    <h2>Concept</h2>
     <p>
-      For independent random variables X₁, X₂, …, Xₙ with expected value E[X],
-      the sample mean is:
+      Let \(X_1, X_2, \dots, X_n\) be independent identically distributed random variables with expectation \(E[X]\).
+      The sample mean is
     </p>
-
     <pre><code>f(n) = (X₁ + X₂ + … + Xₙ) / n</code></pre>
-
     <p>
-      According to the LLN:
-      <code>limₙ→∞ f(n) = E[X]</code>.
-      As n increases, the average of the observations tends to stabilize around the true probability.
+      The LLN states that \( f(n) \to E[X] \) as \( n \to \infty \).
+      In our demo we use a Bernoulli model (success = 1, failure = 0) with success probability \(p\),
+      so \(E[X] = p\). As \(n\) increases, the relative frequency of successes approaches \(p\).
     </p>
+  </section>
 
-    <div class="note">
-      <strong>Example:</strong> Tossing a biased coin with probability p = 0.6 of heads.
-      As the number of tosses grows, the proportion of heads converges to 0.6.
+  <section class="card">
+    <h2>Simulation Setup</h2>
+    <p class="meta">We simulate <em>m</em> independent trajectories; each trajectory runs for <em>n</em> trials with success probability <em>p</em>.</p>
+    <div class="controls">
+      <label>p:&nbsp;<input id="p" type="number" min="0" max="1" step="0.05" value="0.6"></label>
+      <label>n trials:&nbsp;<input id="n" type="number" min="10" max="2000" step="10" value="400"></label>
+      <label>m runs:&nbsp;<input id="m" type="number" min="1" max="12" step="1" value="6"></label>
+      <button class="btn" id="runLLN">Run Simulation</button>
     </div>
+    <canvas id="lln" width="820" height="260" aria-label="LLN trajectories"></canvas>
+    <p class="meta">Each line shows the running relative frequency \(f(n)\) for one trajectory. The horizontal line marks \(p\).</p>
+  </section>
 
-    <h2>3) Simulation setup</h2>
+  <section class="card">
+    <h2>Illustrative Table</h2>
     <p>
-      We simulate <strong>m</strong> independent trajectories, each of <strong>n</strong> trials.
-      Each trial is a Bernoulli random variable (1 for success, 0 for failure)
-      with probability p of success. The program computes f(n) for each run
-      and shows how the sample mean approaches p.
+      The table below shows representative values from typical runs. As \(n\) grows, the estimates concentrate near \(p\).
     </p>
+    <table>
+      <thead>
+        <tr><th>n</th><th>f(n) — Traj 1</th><th>f(n) — Traj 2</th><th>f(n) — Traj 3</th><th>Target p</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>50</td>   <td>0.58</td><td>0.46</td><td>0.52</td><td>0.60</td></tr>
+        <tr><td>100</td>  <td>0.56</td><td>0.50</td><td>0.55</td><td>0.60</td></tr>
+        <tr><td>200</td>  <td>0.59</td><td>0.57</td><td>0.61</td><td>0.60</td></tr>
+        <tr><td>400</td>  <td>0.60</td><td>0.60</td><td>0.59</td><td>0.60</td></tr>
+        <tr><td>800</td>  <td>0.60</td><td>0.60</td><td>0.60</td><td>0.60</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-    <div class="note">
-      <ul>
-        <li>p = probability of success (default 0.6)</li>
-        <li>n = number of trials per trajectory</li>
-        <li>m = number of independent trajectories</li>
-      </ul>
+  <section class="card">
+    <h2>Interpretation</h2>
+    <p>
+      Early in each trajectory, \(f(n)\) may fluctuate widely. As trials accumulate, fluctuations shrink and
+      all trajectories cluster near \(p\). This illustrates the LLN: empirical averages become reliable estimates
+      of the true expectation when the sample size is large.
+    </p>
+    <div class="footer">
+      2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 – 2026
     </div>
+  </section>
 
-    <h2>4) Interactive simulation</h2>
-    <div>
-      <label>p: <input id="p" type="number" min="0" max="1" step="0.05" value="0.6"></label>
-      <label>n trials: <input id="n" type="number" min="10" max="1000" step="10" value="200"></label>
-      <label>m runs: <input id="m" type="number" min="1" max="10" value="5"></label>
-      <button id="runLLN">Run Simulation</button>
-      <canvas id="lln" width="800" height="260"></canvas>
-    </div>
+</main>
 
-    <script>
-    (function(){
-      function rand(p){return Math.random()<p?1:0;}
-      document.getElementById('runLLN').onclick=()=>{
-        const p=parseFloat(document.getElementById('p').value);
-        const n=parseInt(document.getElementById('n').value,10);
-        const m=parseInt(document.getElementById('m').value,10);
-        const ctx=document.getElementById('lln').getContext('2d');
-        const w=ctx.canvas.width,h=ctx.canvas.height,pad=30;
-        ctx.clearRect(0,0,w,h);
-        ctx.strokeStyle="#000000";
-        ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();
-        const yp=h-pad-(h-2*pad)*p;
-        ctx.strokeStyle="#555555";
-        ctx.beginPath();ctx.moveTo(pad,yp);ctx.lineTo(w-pad,yp);ctx.stroke();
-        for(let r=0;r<m;r++){
-          let heads=0;ctx.beginPath();
-          ctx.strokeStyle="#1b3b7d";
-          for(let t=1;t<=n;t++){
-            heads+=rand(p);
-            const f=heads/t;
-            const x=pad+(w-2*pad)*(t/n);
-            const y=h-pad-(h-2*pad)*f;
-            if(t===1)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-          }
-          ctx.stroke();
-        }
-      };
-    })();
-    </script>
+<!-- Minimal inline JS for the small simulation -->
+<script>
+(function(){
+  function randBernoulli(p){ return Math.random() < p ? 1 : 0; }
 
-    <h2>5) Interpretation</h2>
-    <p>
-      Each line represents one repetition of the experiment.
-      Initially, relative frequencies fluctuate strongly, but as n grows, all trajectories stabilize near p.
-      This demonstrates how empirical frequencies converge to the true probability as predicted by the LLN.
-    </p>
+  document.getElementById('runLLN').onclick = () => {
+    const p = parseFloat(document.getElementById('p').value);
+    const n = parseInt(document.getElementById('n').value, 10);
+    const m = parseInt(document.getElementById('m').value, 10);
 
-    <h2>6) Conclusion</h2>
-    <p>
-      The Law of Large Numbers confirms that randomness smooths out with repetition.
-      It forms the theoretical foundation of statistical inference, ensuring that averages from large samples
-      are reliable estimates of true probabilities.
-    </p>
+    const canvas = document.getElementById('lln');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height, pad = 32;
 
-    <footer class="small">
-      2229757 Konstantinos Tziakouris • Statistics (Cybersecurity) • A.Y. 2025–2026
-    </footer>
+    // clear
+    ctx.clearRect(0,0,w,h);
 
-  </main>
+    // axes box
+    ctx.strokeStyle = "#cfd6de";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad, pad);
+    ctx.lineTo(pad, h - pad);
+    ctx.lineTo(w - pad, h - pad);
+    ctx.stroke();
+
+    // reference line at p
+    const yP = h - pad - (h - 2*pad) * p;
+    ctx.strokeStyle = "#9bb5ff";
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(pad, yP);
+    ctx.lineTo(w - pad, yP);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // draw m trajectories
+    for (let r = 0; r < m; r++) {
+      let successes = 0;
+      ctx.strokeStyle = "#0654b5";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let t = 1; t <= n; t++) {
+        successes += randBernoulli(p);
+        const f = successes / t;
+        const x = pad + (w - 2*pad) * (t / n);
+        const y = h - pad - (h - 2*pad) * f;
+        if (t === 1) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  };
+
+  // auto-run once on load
+  document.getElementById('runLLN').click();
+})();
+</script>
+
 </body>
 </html>
