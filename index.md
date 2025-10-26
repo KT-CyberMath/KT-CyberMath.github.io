@@ -21,5 +21,7 @@ A collection of assignments and research for the Statistics course, academic yea
   <li>
     <a href="/homework2.html">Homework 2 — Dataset, Distribution & Caesar Cipher (Ithaca)</a>
   </li>
+  <li>
+    <a href="/homework3.html">Homework 3 — RSA (toy) + Distributions + Ithaca (GR)</a>
+  </li>
 </ul>
-
