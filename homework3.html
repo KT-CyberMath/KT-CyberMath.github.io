@@ -1,182 +1,284 @@
 ---
 layout: default
-title: Homework 3 — RSA on Greek Text (Kavafis)
+title: Homework 3 — RSA (toy) + Distributions + Ithaca (GR)
 ---
 
 <style>
-  .main-content { font-family: Arial, Helvetica, sans-serif; line-height: 1.45; }
-  h1, h2, h3 { margin-top: 1.2em; }
-  code, pre { background: #f6f8fa; padding: .2em .4em; border-radius: 4px; }
-  .note { background:#fff9e6; border:1px solid #f0e1a6; padding:10px; border-radius:6px; }
-  .box { border:1px solid #e5e5e5; border-radius:6px; padding:14px; }
-  .grid { display:grid; gap:14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  table { border-collapse: collapse; width:100%; }
-  th, td { border:1px solid #ddd; padding:6px 8px; text-align:left; }
-  th { background:#f2f2f2; }
-  .small { color:#666; font-size:.95em; }
-  .center { text-align:center; }
-  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+/* keep your font + colors, add a subtle math banner */
+.page-header { background-image: linear-gradient(120deg, #0aa2a9, #057d83); }
+.project-name, .project-tagline, .main-content { font-family: Arial, Helvetica, sans-serif; }
+.main-content p { line-height: 1.45; }
+a { text-decoration: none; } a:hover { text-decoration: underline; }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+table { border-collapse: collapse; width: 100%; margin: 0.75rem 0; }
+th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+th { background: #f6f8fa; }
+.small { color:#666; font-size: 0.92rem; }
+hr { border: 0; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
+.figure { margin: 1rem 0; }
+.canvas-wrap { background:#fff; border:1px solid #eee; padding:10px; border-radius:8px; }
+.note { background:#fff7d6; border:1px solid #ffe58f; padding:8px 10px; border-radius:8px; }
+kbd { background:#f4f4f4; padding:2px 5px; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; }
+ul.tight > li { margin: 0.2rem 0; }
 </style>
 
-<h1>Homework 3 — RSA on Greek Text (Κ. Π. Καβάφης)</h1>
-<p class="small">Konstantinos Tziakouris • Statistics • AY 2025–2026</p>
+<h1>Homework 3 — RSA (toy) + Distributions + Ithaca (GR)</h1>
+<p class="small">Konstantinos Tziakouris • Statistics (Cybersecurity) • AY 2025–2026</p>
+
+<hr>
+
+<h2>1) Concepts: Dataset &amp; Distribution</h2>
+<p>
+A <strong>dataset</strong> is a collection of observations described by variables.  
+A <strong>distribution</strong> tells how values of a variable are spread. Distributions can be
+<strong>univariate</strong> (one variable at a time) or <strong>multivariate</strong> (two or more variables jointly).
+Univariate views (histogram, bar chart, percent table) are quick for a single feature; multivariate views
+(scatter plots, contingency tables, correlation) show relationships between variables.
+</p>
 
 <div class="note">
-  <strong>Goal.</strong> Repeat the HW2 exercise using RSA (very small primes) on a short Greek text.
-  Show the idea of decoding by leveraging the alphabet’s distribution, and present a clear,
-  practical algorithm. Keep it simple and explain each step.
+<strong>Tip.</strong> Start univariate to understand each variable’s range, center, and spread. Then, if you suspect dependence,
+switch to multivariate tools (scatter plot for numeric–numeric, grouped bars for categorical–categorical, faceting for mixed types).
 </div>
 
-<h2>1) Short tribute &amp; text choice</h2>
+<h2>2) A tiny example dataset (10 people)</h2>
+<p>Below we simulate a very small dataset and look at three <em>univariate</em> distributions: Age, Height, Eye&nbsp;color.</p>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Name</th><th>Age</th><th>Height (cm)</th><th>Eye</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Alex</td><td>20</td><td>178</td><td>Brown</td></tr>
+    <tr><td>2</td><td>Maria</td><td>21</td><td>165</td><td>Green</td></tr>
+    <tr><td>3</td><td>Nikos</td><td>22</td><td>182</td><td>Brown</td></tr>
+    <tr><td>4</td><td>Sara</td><td>20</td><td>169</td><td>Blue</td></tr>
+    <tr><td>5</td><td>Giorgos</td><td>23</td><td>175</td><td>Brown</td></tr>
+    <tr><td>6</td><td>Elena</td><td>24</td><td>160</td><td>Green</td></tr>
+    <tr><td>7</td><td>Kostas</td><td>22</td><td>181</td><td>Brown</td></tr>
+    <tr><td>8</td><td>Irene</td><td>21</td><td>170</td><td>Blue</td></tr>
+    <tr><td>9</td><td>Petros</td><td>23</td><td>177</td><td>Brown</td></tr>
+    <tr><td>10</td><td>Anna</td><td>20</td><td>167</td><td>Green</td></tr>
+  </tbody>
+</table>
+
+<ul class="tight">
+  <li><strong>Age (years):</strong> values = {20, 21, 22, 23, 24}, with modes at 20 and 23 (three values appear twice). Mean ≈ 21.6, spread is small (all 20–24).</li>
+  <li><strong>Height (cm):</strong> roughly 160–182; mean ≈ 172.4; most values around the low 170s.</li>
+  <li><strong>Eye color (categorical):</strong> Brown=5, Green=3, Blue=2 — a simple frequency distribution.</li>
+</ul>
+
+<hr>
+
+<h2>3) RSA “toy” encryption for letters (per prof. notes)</h2>
+
 <p>
-  I use a short excerpt from <em>«Ιθάκη»</em> by Κωνσταντίνος Π. Καβάφης — one of the great
-  Greek poets. His work was a favorite of mine growing up, and it is perfect here because it
-  is in Greek and has a recognizable letter distribution.
+We map A→0, B→1, …, Z→25 and encode each letter as a number. Choose small primes
+<em>p</em>=29, <em>q</em>=31 → <em>N</em>=<em>pq</em>=899 and ϕ(<em>N</em>)=(29−1)(31−1)=840.
+Pick public exponent <em>e</em>=17 (coprime with 840). The private exponent <em>d</em> is the modular inverse of 17 mod 840,
+so <em>d</em>=593 (since 17×593 ≡ 1 (mod 840)).
 </p>
 
-<div class="box">
-  <strong>Excerpt (Greek plaintext)</strong>
-  <pre class="mono" id="plaintext">Σαν βγεις στον πηγαιμό για την Ιθάκη,
-να εύχεσαι να ’ναι μακρύς ο δρόμος.</pre>
-  <p class="small">Two short lines only (to keep the demo small and readable).</p>
+<p class="small">
+Prof’s algebra (encoding C = M<sup>e</sup> mod N, decoding M = C<sup>d</sup> mod N) follows from Euler’s theorem:
+M<sup>ϕ(N)</sup> ≡ 1 (mod N) when M and N are coprime, and from the identity e·d = 1 + k·ϕ(N).
+</p>
+
+<div class="note">
+<strong>Important.</strong> Frequency analysis that breaks a Caesar cipher does <em>not</em> help with RSA, because the mapping is not a simple shift
+on 0–25 anymore. For this toy exercise we show the math and use the known key pair (<em>e</em>,<em>d</em>) to decrypt.
 </div>
 
-<h2>2) RSA setup (tiny numbers for didactics)</h2>
-<div class="grid">
-  <div class="box">
-    <h3>Parameters</h3>
-    <ul>
-      <li>Choose primes: <code>p = 29</code>, <code>q = 31</code></li>
-      <li><code>n = p·q = 899</code></li>
-      <li><code>φ(n) = (p−1)(q−1) = 28·30 = 840</code></li>
-      <li>Public exponent: <code>e = 17</code> (coprime with 840)</li>
-      <li>Private exponent <code>d</code> is the modular inverse of 17 mod 840.<br>
-          From the extended Euclid steps: <code>d = 593</code> because <code>17·593 ≡ 1 (mod 840)</code>.
-      </li>
-    </ul>
-    <p class="small">These tiny values are only for demonstration. Real RSA uses large primes.</p>
-  </div>
-  <div class="box">
-    <h3>Encoding letters</h3>
-    <p>We map Greek letters to numbers 1…24 (monotonic Greek alphabet), ignore accents/tonos,
-       drop spaces and punctuation for the core demo.</p>
-    <table>
-      <tr><th>Α</th><td>1</td><th>Β</th><td>2</td><th>Γ</th><td>3</td><th>Δ</th><td>4</td><th>Ε</th><td>5</td><th>Ζ</th><td>6</td></tr>
-      <tr><th>Η</th><td>7</td><th>Θ</th><td>8</td><th>Ι</th><td>9</td><th>Κ</th><td>10</td><th>Λ</th><td>11</td><th>Μ</th><td>12</td></tr>
-      <tr><th>Ν</th><td>13</td><th>Ξ</th><td>14</td><th>Ο</th><td>15</td><th>Π</th><td>16</td><th>Ρ</th><td>17</td><th>Σ</th><td>18</td></tr>
-      <tr><th>Τ</th><td>19</td><th>Υ</th><td>20</td><th>Φ</th><td>21</td><th>Χ</th><td>22</td><th>Ψ</th><td>23</td><th>Ω</th><td>24</td></tr>
-    </table>
-  </div>
-</div>
+<h3>Interactive demo</h3>
+<p class="small">Type UPPERCASE letters only. The cipher is shown as numbers separated by hyphens.</p>
 
-<h2>3) The math behind decoding (from class)</h2>
-<p>
-By definition, the encryption is <code>C = M^e mod N</code>.  
-To recover <code>M</code> from <code>C</code>, since <code>d = e^{-1} (mod φ(N))</code>, we have:
-</p>
-<pre class="mono">M^(e·d) = C^d (mod N)
-M^(1 + k·φ(N)) = C^d (mod N)  for some integer k
-M · (M^φ(N))^k = C^d (mod N)
-</pre>
-<p>
-Using Euler’s Theorem (<code>M^φ(N) ≡ 1 (mod N)</code> when <code>M</code> and <code>N</code> are coprime), it follows that
-<code>M = C^d (mod N)</code>. This matches the derivation the professor shared.
-</p>
-
-<h2>4) Practical algorithm (frequency-aided)</h2>
-<ol>
-  <li>Normalize the Greek text (uppercase, strip accents, keep only Greek letters).</li>
-  <li>Map each letter to 1…24 and encrypt with <code>(n, e)</code> to get integers <code>C</code>.</li>
-  <li>To decode, compute <code>M = C^d mod n</code> and map back to letters.</li>
-  <li>Compute the **letter frequency** of the ciphertext and compare to Greek baseline to sanity-check decoding.</li>
-</ol>
-
-<h2>5) Demo (in-page JavaScript, small sample)</h2>
-<div class="box">
-  <button id="btnRun">Encrypt &amp; Decrypt</button>
-  <p class="small">Outputs (toy example, tiny primes):</p>
-  <pre class="mono" id="out"></pre>
+<div class="canvas-wrap">
+  <label>Plaintext: <input id="pt" value="ITHAKI"></label>
+  <button id="enc">Encrypt</button>
+  <br><br>
+  <label>Ciphertext (numbers): <input id="ct" style="width:100%"></label>
+  <button id="dec">Decrypt</button>
+  <p id="decOut" class="small"></p>
 </div>
 
 <script>
-(function () {
-  // RSA toy params
-  const p = 29, q = 31, n = p*q;        // 899
-  const phi = (p-1)*(q-1);              // 840
-  const e = 17, d = 593;                // 17*d ≡ 1 (mod 840)
-
-  // Greek mapping (tonos stripped)
-  const alphabet = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ"; // 24 letters
-  const toNum = ch => alphabet.indexOf(ch) + 1;         // 1..24, 0 if not found
-  const toChar = n => alphabet[n-1] || "";
-
-  function normalizeGreek(s){
-    return s.toUpperCase()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g,"") // strip accents
-            .replace(/[^Α-Ω]/g,""); // keep only Greek letters
-  }
-
-  function modPow(base, exp, mod){
-    let res = 1n, b = BigInt(base), e = BigInt(exp), m = BigInt(mod);
-    while (e > 0n){
-      if (e & 1n) res = (res*b) % m;
-      b = (b*b) % m;
-      e >>= 1n;
-    }
-    return res;
-  }
-
-  function encryptNums(nums){ return nums.map(x => Number(modPow(x, e, n))); }
-  function decryptNums(nums){ return nums.map(c => Number(modPow(c, d, n))); }
-
-  function freq(nums){
-    const f = new Map();
-    nums.forEach(v => f.set(v, (f.get(v)||0)+1));
-    return [...f.entries()].sort((a,b)=>b[1]-a[1]);
-  }
-
-  const sample = document.getElementById('plaintext').textContent.trim();
-  document.getElementById('btnRun').onclick = () => {
-    const clean = normalizeGreek(sample);
-    const nums = [...clean].map(toNum).filter(x => x>0);
-    const C = encryptNums(nums);
-    const M = decryptNums(C);
-    const text = M.map(toChar).join("");
-
-    const cf = freq(C).slice(0,8).map(([v,c])=>`C=${v} : ${c}`).join("\n");
-    const mf = freq(M).slice(0,8).map(([v,c])=>`${toChar(v)} : ${c}`).join("\n");
-
-    document.getElementById('out').textContent =
-`Plain (normalized):
-${clean}
-
-Numeric (M):
-${nums.join(" ")}
-
-Cipher (C):
-${C.join(" ")}
-
-Decoded numeric (M):
-${M.join(" ")}
-
-Decoded text:
-${text}
-
-Top ciphertext counts:
-${cf}
-
-Top decoded-letter counts:
-${mf}
-`;
+(function(){
+  const N = 899, e = 17, d = 593;
+  function modPow(base, exp, mod){ let r=1n, b=BigInt(base%mod), E=BigInt(exp), M=BigInt(mod);
+    while(E>0n){ if(E&1n) r=(r*b)%M; b=(b*b)%M; E>>=1n; } return Number(r); }
+  function toNums(s){ return s.replace(/[^A-Z]/g,'').split('').map(ch=>ch.charCodeAt(0)-65); }
+  function toText(nums){ return nums.map(n=>String.fromCharCode((n%26)+65)).join(''); }
+  document.getElementById('enc').onclick = () => {
+    const m = toNums(document.getElementById('pt').value.toUpperCase());
+    const c = m.map(M => modPow(M, e, N));
+    document.getElementById('ct').value = c.join('-');
+  };
+  document.getElementById('dec').onclick = () => {
+    const raw = document.getElementById('ct').value.trim();
+    if(!raw){ document.getElementById('decOut').textContent=''; return; }
+    const nums = raw.split('-').map(x => parseInt(x,10)).filter(x=>!Number.isNaN(x));
+    const m = nums.map(C => modPow(C, d, N));
+    document.getElementById('decOut').textContent = 'Decrypted plaintext: ' + toText(m);
   };
 })();
 </script>
 
-<h2>6) What to hand in</h2>
-<ul>
-  <li>Link to this page on your homepage.</li>
-  <li>Make sure the <em>Encrypt &amp; Decrypt</em> demo runs and the decoded text matches the original Greek (after normalization).</li>
-  <li>Add 3–4 sentences explaining why frequency checks help (Greek has distinctive letter frequencies; mismatches suggest wrong key or mapping).</li>
-</ul>
+<hr>
 
-<p class="small center">© 2025–2026 • Konstantinos Tziakouris</p>
+<h2>4) Greek text choice: Καβάφης — «Ιθάκη»</h2>
+<p class="small">
+A short tribute: Constantine P. Cavafy (Κωνσταντίνος Π. Καβάφης) is a major Greek poet whose
+lucid, reflective style shaped modern Greek literature. «Ιθάκη» was a favorite growing up.
+Below we show the poem and the empirical letter distribution (Greek alphabet).
+</p>
+
+<details>
+  <summary><strong>Πλήρες κείμενο (Ιθάκη)</strong></summary>
+  <pre id="ithaki" style="white-space:pre-wrap; margin-top:8px;">
+Σαν βγεις στον πηγαιμό για την Ιθάκη,
+να εύχεσαι νάναι μακρύς ο δρόμος,
+γεμάτος περιπέτειες, γεμάτος γνώσεις.
+Τους Λαιστρυγόνας και τους Κύκλωπας,
+τον θυμωμένο Ποσειδώνα μη φοβάσαι,
+τέτοια στον δρόμο σου ποτέ σου δεν θα βρεις,
+αν μέν’ η σκέψις σου υψηλή, αν εκλεκτή
+συγκίνησις το πνεύμα και το σώμα σου αγγίζει.
+Τους Λαιστρυγόνας και τους Κύκλωπας,
+τον άγριο Ποσειδώνα δεν θα συναντήσεις,
+αν δεν τους κουβανείς μες στην ψυχή σου,
+αν η ψυχή σου δεν τους στήνει εμπρός σου.
+
+Να εύχεσαι νάναι μακρύς ο δρόμος.
+Πολλά τα καλοκαιρινά πρωία να είναι
+που με τι ευχαρίστησι, με τι χαρά
+θα μπαίνεις σε λιμένας πρωτοειδωμένους·
+να σταματήσεις σ’ εμπορεία Φοινικικά,
+και τες καλές πραγμάτειες ν’ αποκτήσεις,
+σεντέφια και κοράλλια, κεχριμπάρια κ’ έβενους,
+και ηδονικά μυρωδικά κάθε λογής,
+όσο μπορείς πιο άφθονα μυρωδικά·
+σε πόλεις Αιγυπτιακές πολλές να πας,
+να μάθεις και να μάθεις απ’ τους σπουδασμένους.
+
+Πάντα στον νου σου να έχεις την Ιθάκη.
+Το φθάσιμον εκεί είν’ ο προορισμός σου.
+Αλλά μη βιάζεις το ταξείδι διόλου.
+Καλλίτερα χρόνια πολλά να διαρκέσει·
+και γέρος πια ν’ αράξεις στο νησί,
+πλούσιος με όσα κέρδισες στον δρόμο,
+μη προσδοκώντας πλούτη να σε δώσει η Ιθάκη.
+
+Η Ιθάκη σ’ έδωσε τ’ ωραίο ταξείδι.
+Χωρίς αυτήν δεν θα βγαινες στον δρόμο.
+Άλλα δεν έχει να σε δώσει πια.
+
+Κι αν πτωχική την βρεις, η Ιθάκη δεν σε γέλασε.
+Έτσι σοφός που έγινες, με τόση πείρα,
+ήδη θα το κατάλαβες οι Ιθάκες τι σημαίνουν.
+  </pre>
+</details>
+
+<h3>Letter distribution (Greek)</h3>
+<div class="canvas-wrap">
+  <canvas id="grChart" width="800" height="240" aria-label="Greek letter histogram"></canvas>
+</div>
+
+<script>
+(function(){
+  // crude normalization for Greek capitals without accents:
+  const greek = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
+  const map = {
+    'ά':'α','έ':'ε','ή':'η','ί':'ι','ό':'ο','ύ':'υ','ώ':'ω','ϊ':'ι','ΐ':'ι','ϋ':'υ','ΰ':'υ',
+    'ς':'σ'
+  };
+  function normalize(s){
+    return s.toLowerCase().replace(/[άέήίόύώϊΐϋΰς]/g, ch => map[ch]||ch)
+      .replace(/[^α-ω]/g,'')
+      .toUpperCase()
+      .replace(/Ϲ/g,'Σ');
+  }
+  function counts(s){
+    const c = {}; for (const L of greek) c[L]=0;
+    const N = normalize(s);
+    for (const ch of N){
+      if (greek.includes(ch)) c[ch]++;
+    }
+    return c;
+  }
+  function drawHistogram(ctx, freq){
+    const labels = greek.split('');
+    const data = labels.map(L => freq[L]);
+    const w = ctx.canvas.width, h = ctx.canvas.height, pad=30;
+    const max = Math.max(...data, 1);
+    const barW = (w - 2*pad)/labels.length;
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle="#ddd"; ctx.beginPath();
+    ctx.moveTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
+    ctx.fillStyle="#333";
+    labels.forEach((L,i) => {
+      const x = pad + i*barW + 4;
+      const bh = (h-2*pad) * (data[i]/max);
+      const y = h - pad - bh;
+      ctx.fillRect(x, y, barW-8, bh);
+      ctx.save();
+      ctx.translate(x + (barW-8)/2, h-pad+10);
+      ctx.rotate(-Math.PI/3);
+      ctx.textAlign="right";
+      ctx.font="10px Arial";
+      ctx.fillText(L, 0, 0);
+      ctx.restore();
+    });
+  }
+  const txt = document.getElementById('ithaki').textContent || "";
+  const ctx = document.getElementById('grChart').getContext('2d');
+  drawHistogram(ctx, counts(txt));
+})();
+</script>
+
+<hr>
+
+<h2>5) (Optional) LLN mini-simulation</h2>
+<p class="small">Flip a biased coin with probability <em>p</em> of Heads; the relative frequency tends to <em>p</em> as trials grow.</p>
+<div class="canvas-wrap">
+  <label>p: <input id="p" type="number" min="0" max="1" step="0.05" value="0.6"></label>
+  <label>n trials per run: <input id="n" type="number" min="10" max="1000" step="10" value="200"></label>
+  <label>m runs: <input id="m" type="number" min="1" max="10" value="5"></label>
+  <button id="runLLN">Run</button>
+  <canvas id="lln" width="800" height="260" style="display:block;margin-top:8px;"></canvas>
+</div>
+
+<script>
+(function(){
+  function rand(p){ return Math.random()<p ? 1:0; }
+  document.getElementById('runLLN').onclick = () => {
+    const p = parseFloat(document.getElementById('p').value);
+    const n = parseInt(document.getElementById('n').value,10);
+    const m = parseInt(document.getElementById('m').value,10);
+    const ctx = document.getElementById('lln').getContext('2d');
+    const w=ctx.canvas.width, h=ctx.canvas.height, pad=30;
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle="#ddd"; ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,h-pad); ctx.lineTo(w-pad,h-pad); ctx.stroke();
+    // target line p
+    ctx.strokeStyle="#999"; ctx.beginPath();
+    const yP = h - pad - (h-2*pad)*p;
+    ctx.moveTo(pad,yP); ctx.lineTo(w-pad,yP); ctx.stroke();
+    for(let r=0; r<m; r++){
+      let heads=0;
+      ctx.beginPath();
+      ctx.strokeStyle = "#333";
+      for(let t=1; t<=n; t++){
+        heads += rand(p);
+        const f = heads/t;
+        const x = pad + (w-2*pad)*(t/n);
+        const y = h - pad - (h-2*pad)*f;
+        if(t===1) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+  };
+})();
+</script>
+
+<hr>
+
+<p class="small"><em>Notes.</em> RSA section follows the algebra in class: C = M^e (mod N), M = C^d (mod N), with e=17, d=593 for N=29×31.</p>
