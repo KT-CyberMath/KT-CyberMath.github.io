@@ -1,0 +1,129 @@
+---
+layout: default
+title: Homework 4 — Law of Large Numbers Simulation
+---
+
+<style>
+.page-header {
+  background-image:url('https://upload.wikimedia.org/wikipedia/commons/1/13/Math_formulae_and_geometry_on_marble_texture.jpg');
+  background-size:cover;background-position:center;
+  color:#fff;text-shadow:0 0 6px rgba(0,0,0,.6);
+}
+.project-name,.project-tagline,.main-content{font-family:Arial,Helvetica,sans-serif;}
+.main-content p{line-height:1.45;}
+a{text-decoration:none;}a:hover{text-decoration:underline;}
+table{border-collapse:collapse;width:100%;margin:.75rem 0;}
+th,td{border:1px solid #ddd;padding:6px 8px;text-align:center;}
+th{background:#f6f8fa;}
+.small{color:#666;font-size:.9rem;}
+.note{background:#fff7d6;border:1px solid #ffe58f;padding:8px 10px;border-radius:8px;margin:.6rem 0;}
+hr{border:0;border-top:1px solid #e5e5e5;margin:1.25rem 0;}
+canvas{border:1px solid #eee;margin-top:10px;border-radius:8px;}
+</style>
+
+<h1>Homework 4 — Law of Large Numbers Simulation</h1>
+<p class="small">Konstantinos Tziakouris • Statistics (Cybersecurity) • A.Y. 2025 – 2026</p>
+<hr>
+
+<h2>1) Introduction</h2>
+<p>
+This assignment demonstrates the <strong>Law of Large Numbers (LLN)</strong>, one of the
+fundamental principles of probability. It states that as the number of trials
+increases, the empirical mean of repeated random outcomes approaches the theoretical expectation.
+</p>
+
+<h2>2) Concept</h2>
+<p>
+For a sequence of independent random variables X₁, X₂, …, Xₙ with expected value E[X],
+the sample mean is:
+</p>
+<pre>
+    <strong>f(n) = (X₁ + X₂ + … + Xₙ) / n</strong>
+</pre>
+<p>
+According to the LLN:
+<code>limₙ→∞ f(n) = E[X]</code>.
+In plain words, as n becomes large, the average of the observed outcomes tends
+to stabilize around the true probability.
+</p>
+
+<div class="note">
+<strong>Example.</strong> Tossing a biased coin with probability p = 0.6 of heads.
+As we repeat the toss more and more times, the proportion of heads converges to 0.6.
+</div>
+
+<h2>3) Simulation setup</h2>
+<p>
+We simulate <strong>m</strong> independent trajectories, each of <strong>n</strong> trials.
+Each trial is a Bernoulli random variable (1 for success, 0 for failure)
+with probability p of success. The program computes f(n) for each run
+and plots how the sample mean approaches p.
+</p>
+
+<div class="note">
+Parameters:
+<ul style="margin:0.4rem 0 0.4rem 1.4rem;">
+<li>p = probability of success (default 0.6)</li>
+<li>n = number of trials per trajectory</li>
+<li>m = number of independent trajectories</li>
+</ul>
+</div>
+
+<h2>4) Interactive demonstration</h2>
+<div class="canvas-wrap">
+  <label>p: <input id="p" type="number" min="0" max="1" step="0.05" value="0.6"></label>
+  <label>n trials: <input id="n" type="number" min="10" max="1000" step="10" value="200"></label>
+  <label>m runs: <input id="m" type="number" min="1" max="10" value="5"></label>
+  <button id="runLLN">Run Simulation</button>
+  <canvas id="lln" width="800" height="260"></canvas>
+</div>
+
+<script>
+(function(){
+  function rand(p){return Math.random()<p?1:0;}
+  document.getElementById('runLLN').onclick=()=>{
+    const p=parseFloat(document.getElementById('p').value);
+    const n=parseInt(document.getElementById('n').value,10);
+    const m=parseInt(document.getElementById('m').value,10);
+    const ctx=document.getElementById('lln').getContext('2d');
+    const w=ctx.canvas.width,h=ctx.canvas.height,pad=30;
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle="#ddd";
+    ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();
+    // reference line at p
+    const yp=h-pad-(h-2*pad)*p;
+    ctx.strokeStyle="#999";ctx.beginPath();ctx.moveTo(pad,yp);ctx.lineTo(w-pad,yp);ctx.stroke();
+    for(let r=0;r<m;r++){
+      let heads=0;ctx.beginPath();
+      ctx.strokeStyle=`hsl(${r*60},50%,40%)`;
+      for(let t=1;t<=n;t++){
+        heads+=rand(p);
+        const f=heads/t;
+        const x=pad+(w-2*pad)*(t/n);
+        const y=h-pad-(h-2*pad)*f;
+        if(t===1)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+  };
+})();
+</script>
+
+<h2>5) Results interpretation</h2>
+<p>
+Each colored trajectory corresponds to one repetition of the experiment.
+Initially, relative frequencies fluctuate heavily, but as n grows, all trajectories
+stabilize near p. This convergence visualizes the LLN in practice.
+</p>
+
+<h2>6) Conclusion</h2>
+<p>
+The Law of Large Numbers guarantees that randomness smooths out with repetition.
+This principle underpins modern statistics, machine learning, and risk estimation,
+ensuring that empirical averages provide reliable approximations of true expectations.
+</p>
+
+<hr>
+<p class="small center">
+2229757 Konstantinos Tziakouris • Homework 4 • Statistics • A.Y. 2025 – 2026
+</p>
