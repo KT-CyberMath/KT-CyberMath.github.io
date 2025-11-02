@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Homework 5 — Measures of Location and Online Mean and Variance</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homework 5 — Measures of Location, Online Mean and Variance</title>
 <style>
   :root{
     --bg:#f8fafc; --card:#ffffff; --ink:#111111; --muted:#666666;
-    --line:#e6e6e6; --accent:#0d83ff; --accent2:#0654b5;
+    --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5;
   }
   html,body{margin:0;background:var(--bg);color:var(--ink);
     font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
-  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--accent),var(--accent2));
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--blue),var(--blue2));
     color:#fff;text-align:center;}
   header h1{margin:0 0 8px;font-size:30px;}
   header p{margin:0;font-size:15px;opacity:.95;}
   .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
     box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
-  h2,h3{color:#0b61d6;text-align:center;margin:8px 0 10px;}
+  h2,h3{color:var(--blue2);text-align:center;margin:6px 0 10px;}
   p{margin:10px 0;text-align:justify;}
   .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
-  table{border-collapse:collapse;width:100%;margin:10px 0;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
   th,td{border:1px solid var(--line);padding:10px;text-align:center;}
   th{background:#f2f5f9;}
   code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .inputRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  input[type=number], input[type=text]{padding:10px;border:1px solid var(--line);border-radius:8px;flex:1;min-width:160px}
+  button{padding:10px 14px;border:1px solid var(--blue2);background:var(--blue);color:#fff;border-radius:8px;cursor:pointer}
+  button.secondary{background:#fff;color:var(--blue2)}
+  .stat{background:#f7f9ff;border:1px solid #dfe8ff;border-radius:10px;padding:12px}
+  .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
   .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
     text-align:center;color:var(--muted);font-size:14px;}
 </style>
@@ -32,156 +39,186 @@
 <body>
 
 <header>
-  <h1>Homework 5 — Measures of Location and Online Mean and Variance</h1>
-  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 – 2026</p>
+  <h1>Homework 5 — Measures of Location, Online Mean and Variance</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 2026</p>
 </header>
 
 <main class="wrap">
 
-<section class="card">
-  <h2>Introduction</h2>
-  <p>
-    The first part reviews measures of location and when each one is useful. 
-    The second part derives simple recurrence formulas to update mean and variance when a new value arrives. 
-    An optional note compares online updates with the classical full recomputation in terms of memory and time.
-  </p>
-</section>
+  <!-- PART A: Measures of location -->
+  <section class="card">
+    <h2>1) Measures of Location</h2>
+    <p class="meta">What each one means, formula, and when it is useful.</p>
 
-<section class="card" id="part1">
-  <h2>Part 1: Measures of Location</h2>
+    <div class="grid">
+      <div class="stat">
+        <h3>Arithmetic Mean</h3>
+        <p><strong>Formula:</strong> <span class="mono">x̄ = (1/n) Σ x<sub>i</sub></span></p>
+        <p><strong>Use:</strong> balanced average for additive data without heavy outliers.</p>
+      </div>
 
-  <h3>Arithmetic mean</h3>
-  <p>
-    Definition: average of all values. Formula for values x<sub>1</sub>,…,x<sub>n</sub>: 
-    <code>mean = (x1 + x2 + … + xn) / n</code>. 
-    Use when data are roughly symmetric with no extreme outliers. 
-    Example: average temperature over a week.
-  </p>
+      <div class="stat">
+        <h3>Geometric Mean</h3>
+        <p><strong>Formula:</strong> <span class="mono">G = (∏ x<sub>i</sub>)<sup>1/n</sup></span></p>
+        <p><strong>Use:</strong> growth rates, ratios, positive data on a multiplicative scale.</p>
+      </div>
 
-  <h3>Median</h3>
-  <p>
-    Middle value after sorting. Robust to outliers and skewed data. 
-    Use for incomes, house prices, waiting times. 
-    Example: for 2, 3, 9, 12, 100 the median is 9 while the mean is influenced by 100.
-  </p>
+      <div class="stat">
+        <h3>Harmonic Mean</h3>
+        <p><strong>Formula:</strong> <span class="mono">H = n / Σ (1/x<sub>i</sub>)</span></p>
+        <p><strong>Use:</strong> averaging speeds, rates, and densities.</p>
+      </div>
 
-  <h3>Mode</h3>
-  <p>
-    Most frequent value. Works for discrete or categorical data. 
-    Use for the most common customer choice, most frequent error code, most common eye color.
-  </p>
+      <div class="stat">
+        <h3>Quadratic Mean (RMS)</h3>
+        <p><strong>Formula:</strong> <span class="mono">RMS = √[(1/n) Σ x<sub>i</sub><sup>2</sup>]</span></p>
+        <p><strong>Use:</strong> when magnitude matters, such as signals and errors.</p>
+      </div>
 
-  <h3>Weighted mean</h3>
-  <p>
-    Some observations count more than others. 
-    Formula with weights w<sub>i</sub>:
-    <code>weighted mean = (Σ w_i x_i) / (Σ w_i)</code>. 
-    Use for grade point averages or when combining estimates with different reliability.
-  </p>
+      <div class="stat">
+        <h3>Median</h3>
+        <p><strong>Definition:</strong> middle value of the ordered data.</p>
+        <p><strong>Use:</strong> robust center with outliers or skewed distributions.</p>
+      </div>
 
-  <h3>Geometric mean</h3>
-  <p>
-    Multiplicative average: <code>GM = (x1 · x2 · … · xn)^(1/n)</code> for positive values. 
-    Use for growth rates and returns over time since compounding is multiplicative.
-  </p>
+      <div class="stat">
+        <h3>Mode</h3>
+        <p><strong>Definition:</strong> most frequent value.</p>
+        <p><strong>Use:</strong> discrete data and categories. detects the peak.</p>
+      </div>
+    </div>
+  </section>
 
-  <h3>Harmonic mean</h3>
-  <p>
-    Reciprocal of the average of reciprocals: 
-    <code>HM = n / (Σ 1/x_i)</code> for positive values. 
-    Use for averages of rates such as speed or throughput.
-  </p>
+  <!-- PART B: Interactive online mean and variance -->
+  <section class="card">
+    <h2>2) Online Mean and Variance — Interactive</h2>
+    <p>Enter numbers one by one or paste a comma separated list. The page updates the running mean and variance using the classic one pass recurrences (Welford method for variance).</p>
 
-  <h3>Trimmed mean</h3>
-  <p>
-    Average after removing a small fraction of the smallest and largest values. 
-    Use when you want a mean that is more robust than the arithmetic mean yet keeps most of the data.
-  </p>
+    <div class="inputRow" style="margin-top:8px">
+      <input id="single" type="number" step="any" placeholder="Add a value, for example 3.7" />
+      <button id="addOne">Add value</button>
+      <input id="many" type="text" placeholder="Or paste list: 2, 5, 7.2, 9" />
+      <button id="addMany" class="secondary">Add list</button>
+      <button id="reset" class="secondary">Reset</button>
+    </div>
 
-  <h3>Small illustrative dataset</h3>
-  <p class="meta">Ten people with age in years, height in centimeters, and eye color.</p>
-  <table>
-    <tr><th>Name</th><th>Age</th><th>Height</th><th>Eye</th></tr>
-    <tr><td>Alex</td><td>22</td><td>180</td><td>Brown</td></tr>
-    <tr><td>Maria</td><td>24</td><td>165</td><td>Green</td></tr>
-    <tr><td>Nikos</td><td>21</td><td>178</td><td>Blue</td></tr>
-    <tr><td>Eleni</td><td>23</td><td>172</td><td>Brown</td></tr>
-    <tr><td>Giorgos</td><td>25</td><td>182</td><td>Brown</td></tr>
-    <tr><td>Christina</td><td>22</td><td>160</td><td>Hazel</td></tr>
-    <tr><td>Kostas</td><td>20</td><td>175</td><td>Blue</td></tr>
-    <tr><td>Vasilis</td><td>23</td><td>185</td><td>Green</td></tr>
-    <tr><td>Daphne</td><td>24</td><td>170</td><td>Brown</td></tr>
-    <tr><td>Anna</td><td>21</td><td>168</td><td>Hazel</td></tr>
-  </table>
-  <p>
-    Age mean is about 22.5. Median age is 22.5 after sorting. 
-    Eye mode is Brown. Height mean is about 173.5 while the median is 173.5, close since heights are fairly symmetric.
-  </p>
-</section>
+    <div class="grid" style="margin-top:12px">
+      <div class="stat">
+        <p><strong>Count n:</strong> <span id="n">0</span></p>
+        <p><strong>Running mean:</strong> <span id="mean">0</span></p>
+        <p><strong>Population variance:</strong> <span id="varp">0</span></p>
+        <p><strong>Sample variance:</strong> <span id="vars">0</span></p>
+      </div>
+      <div class="stat">
+        <p style="margin-bottom:6px"><strong>Current data</strong></p>
+        <div id="data" class="mono" style="word-break:break-all; font-size:13px">[]</div>
+      </div>
+    </div>
+  </section>
 
-<section class="card" id="part2">
-  <h2>Part 2: Online mean and variance</h2>
+  <!-- PART C: Fixed example that accumulates step by step -->
+  <section class="card">
+    <h2>3) Example with Running Updates</h2>
+    <p>Given the dataset <span class="mono">[4, 7, 5, 9, 6, 8, 3, 5]</span> the table shows how n, mean, and variance evolve at each step.</p>
 
-  <h3>Online mean</h3>
-  <p>
-    Let m<sub>n</sub> be the mean after n values. When a new value x<sub>n</sub> arrives:
-    <code>m_n = m_{n-1} + (x_n − m_{n-1}) / n</code>.
-    This needs only the previous mean and the count.
-  </p>
+    <table id="runTable">
+      <thead>
+        <tr>
+          <th>Step</th><th>New value</th><th>n</th><th>Mean</th><th>Population Var</th><th>Sample Var</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-  <h3>Online variance with Welford update</h3>
-  <p>
-    Maintain three values: count n, mean m, and M2, where M2 is the running sum of squared deviations.  
-    For each new x:
-  </p>
-<pre><code>// start
-n = 0
-m = 0
-M2 = 0
-
-// update for each new x
-n = n + 1
-delta = x - m
-m = m + delta / n
-delta2 = x - m
-M2 = M2 + delta * delta2
-
-// results at any time
-sample_variance   = M2 / (n - 1)   // for n ≥ 2
-population_variance = M2 / n       // if population
-</code></pre>
-  <p>
-    This method is stable in floating point arithmetic and requires constant memory since it does not store the whole dataset.
-  </p>
-
-  <h3>Derivation sketch</h3>
-  <p>
-    Write the new mean as the previous mean plus the correction created by the new value. 
-    The M2 update follows from expanding the new sum of squared deviations and simplifying so that only the old mean, the new mean, and the new value appear.
-  </p>
-</section>
-
-<section class="card" id="optional">
-  <h2>Optional: online vs classical approach</h2>
-  <p>
-    Classical computation reads all values, then computes mean and variance from the full sums. 
-    This uses more memory and is slower for streams. 
-    Online updates process one value at a time, keep only n, m, M2, and are well suited for real time systems, embedded devices, and continuous logging. 
-    A single pass is usually enough which reduces time and avoids storing the array.
-  </p>
-</section>
-
-<section class="card">
-  <h2>Conclusion</h2>
-  <p>
-    Measures of location summarize where data are centered and each choice fits a different situation. 
-    Online updates provide a practical way to keep mean and variance current while data arrive, with low memory and good numerical behavior.
-  </p>
-  <div class="footer">
-    2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 – 2026
-  </div>
-</section>
-
+    <div class="footer">
+      Konstantinos Tziakouris • Matricola 2229757 • October 2025
+    </div>
+  </section>
 </main>
+
+<script>
+/* ---------- Online running stats (Welford) ---------- */
+let n = 0, mean = 0, M2 = 0;   // M2 is sum of squared deviations
+
+const elN = document.getElementById('n');
+const elMean = document.getElementById('mean');
+const elVarP = document.getElementById('varp');
+const elVarS = document.getElementById('vars');
+const elData = document.getElementById('data');
+
+let data = [];
+
+function updateDisplay(){
+  elN.textContent = n;
+  elMean.textContent = n ? mean.toFixed(6) : '0';
+  const varP = n ? (M2 / n) : 0;
+  const varS = n > 1 ? (M2 / (n - 1)) : 0;
+  elVarP.textContent = varP.toFixed(6);
+  elVarS.textContent = varS.toFixed(6);
+  elData.textContent = '[' + data.join(', ') + ']';
+}
+
+function pushValue(x){
+  // Welford update
+  const delta = x - mean;
+  n += 1;
+  mean += delta / n;
+  const delta2 = x - mean;
+  M2 += delta * delta2;
+  data.push(x);
+  updateDisplay();
+}
+
+function resetAll(){
+  n = 0; mean = 0; M2 = 0; data = [];
+  updateDisplay();
+}
+
+document.getElementById('addOne').onclick = () => {
+  const v = parseFloat(document.getElementById('single').value);
+  if (!Number.isFinite(v)) return;
+  pushValue(v);
+  document.getElementById('single').value = '';
+};
+
+document.getElementById('addMany').onclick = () => {
+  const raw = document.getElementById('many').value;
+  if (!raw) return;
+  raw.split(/[, \n\t]+/).forEach(tok=>{
+    const v = parseFloat(tok);
+    if (Number.isFinite(v)) pushValue(v);
+  });
+  document.getElementById('many').value = '';
+};
+
+document.getElementById('reset').onclick = resetAll;
+
+// init
+updateDisplay();
+
+/* ---------- Fixed example table ---------- */
+const example = [4,7,5,9,6,8,3,5];
+let n2 = 0, mean2 = 0, M22 = 0;
+const tbody = document.querySelector('#runTable tbody');
+
+function row(step, x, n, mean, varp, vars){
+  const tr = document.createElement('tr');
+  [step, x, n, mean.toFixed(6), varp.toFixed(6), vars.toFixed(6)]
+    .forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+  return tr;
+}
+
+example.forEach((x, i)=>{
+  const delta = x - mean2;
+  n2 += 1;
+  mean2 += delta / n2;
+  const delta2 = x - mean2;
+  M22 += delta * delta2;
+  const varp = M22 / n2;
+  const vars = n2>1 ? M22/(n2-1) : 0;
+  tbody.appendChild(row(i+1, x, n2, mean2, varp, vars));
+});
+</script>
+
 </body>
 </html>
