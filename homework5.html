@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homework 5 — Measures of Location and Online Mean and Variance</title>
+<style>
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --ink:#111111; --muted:#666666;
+    --line:#e6e6e6; --accent:#0d83ff; --accent2:#0654b5;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--accent),var(--accent2));
+    color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{color:#0b61d6;text-align:center;margin:8px 0 10px;}
+  p{margin:10px 0;text-align:justify;}
+  .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;}
+  th,td{border:1px solid var(--line);padding:10px;text-align:center;}
+  th{background:#f2f5f9;}
+  code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
+    text-align:center;color:var(--muted);font-size:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Homework 5 — Measures of Location and Online Mean and Variance</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 – 2026</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>Introduction</h2>
+  <p>
+    The first part reviews measures of location and when each one is useful. 
+    The second part derives simple recurrence formulas to update mean and variance when a new value arrives. 
+    An optional note compares online updates with the classical full recomputation in terms of memory and time.
+  </p>
+</section>
+
+<section class="card" id="part1">
+  <h2>Part 1: Measures of Location</h2>
+
+  <h3>Arithmetic mean</h3>
+  <p>
+    Definition: average of all values. Formula for values x<sub>1</sub>,…,x<sub>n</sub>: 
+    <code>mean = (x1 + x2 + … + xn) / n</code>. 
+    Use when data are roughly symmetric with no extreme outliers. 
+    Example: average temperature over a week.
+  </p>
+
+  <h3>Median</h3>
+  <p>
+    Middle value after sorting. Robust to outliers and skewed data. 
+    Use for incomes, house prices, waiting times. 
+    Example: for 2, 3, 9, 12, 100 the median is 9 while the mean is influenced by 100.
+  </p>
+
+  <h3>Mode</h3>
+  <p>
+    Most frequent value. Works for discrete or categorical data. 
+    Use for the most common customer choice, most frequent error code, most common eye color.
+  </p>
+
+  <h3>Weighted mean</h3>
+  <p>
+    Some observations count more than others. 
+    Formula with weights w<sub>i</sub>:
+    <code>weighted mean = (Σ w_i x_i) / (Σ w_i)</code>. 
+    Use for grade point averages or when combining estimates with different reliability.
+  </p>
+
+  <h3>Geometric mean</h3>
+  <p>
+    Multiplicative average: <code>GM = (x1 · x2 · … · xn)^(1/n)</code> for positive values. 
+    Use for growth rates and returns over time since compounding is multiplicative.
+  </p>
+
+  <h3>Harmonic mean</h3>
+  <p>
+    Reciprocal of the average of reciprocals: 
+    <code>HM = n / (Σ 1/x_i)</code> for positive values. 
+    Use for averages of rates such as speed or throughput.
+  </p>
+
+  <h3>Trimmed mean</h3>
+  <p>
+    Average after removing a small fraction of the smallest and largest values. 
+    Use when you want a mean that is more robust than the arithmetic mean yet keeps most of the data.
+  </p>
+
+  <h3>Small illustrative dataset</h3>
+  <p class="meta">Ten people with age in years, height in centimeters, and eye color.</p>
+  <table>
+    <tr><th>Name</th><th>Age</th><th>Height</th><th>Eye</th></tr>
+    <tr><td>Alex</td><td>22</td><td>180</td><td>Brown</td></tr>
+    <tr><td>Maria</td><td>24</td><td>165</td><td>Green</td></tr>
+    <tr><td>Nikos</td><td>21</td><td>178</td><td>Blue</td></tr>
+    <tr><td>Eleni</td><td>23</td><td>172</td><td>Brown</td></tr>
+    <tr><td>Giorgos</td><td>25</td><td>182</td><td>Brown</td></tr>
+    <tr><td>Christina</td><td>22</td><td>160</td><td>Hazel</td></tr>
+    <tr><td>Kostas</td><td>20</td><td>175</td><td>Blue</td></tr>
+    <tr><td>Vasilis</td><td>23</td><td>185</td><td>Green</td></tr>
+    <tr><td>Daphne</td><td>24</td><td>170</td><td>Brown</td></tr>
+    <tr><td>Anna</td><td>21</td><td>168</td><td>Hazel</td></tr>
+  </table>
+  <p>
+    Age mean is about 22.5. Median age is 22.5 after sorting. 
+    Eye mode is Brown. Height mean is about 173.5 while the median is 173.5, close since heights are fairly symmetric.
+  </p>
+</section>
+
+<section class="card" id="part2">
+  <h2>Part 2: Online mean and variance</h2>
+
+  <h3>Online mean</h3>
+  <p>
+    Let m<sub>n</sub> be the mean after n values. When a new value x<sub>n</sub> arrives:
+    <code>m_n = m_{n-1} + (x_n − m_{n-1}) / n</code>.
+    This needs only the previous mean and the count.
+  </p>
+
+  <h3>Online variance with Welford update</h3>
+  <p>
+    Maintain three values: count n, mean m, and M2, where M2 is the running sum of squared deviations.  
+    For each new x:
+  </p>
+<pre><code>// start
+n = 0
+m = 0
+M2 = 0
+
+// update for each new x
+n = n + 1
+delta = x - m
+m = m + delta / n
+delta2 = x - m
+M2 = M2 + delta * delta2
+
+// results at any time
+sample_variance   = M2 / (n - 1)   // for n ≥ 2
+population_variance = M2 / n       // if population
+</code></pre>
+  <p>
+    This method is stable in floating point arithmetic and requires constant memory since it does not store the whole dataset.
+  </p>
+
+  <h3>Derivation sketch</h3>
+  <p>
+    Write the new mean as the previous mean plus the correction created by the new value. 
+    The M2 update follows from expanding the new sum of squared deviations and simplifying so that only the old mean, the new mean, and the new value appear.
+  </p>
+</section>
+
+<section class="card" id="optional">
+  <h2>Optional: online vs classical approach</h2>
+  <p>
+    Classical computation reads all values, then computes mean and variance from the full sums. 
+    This uses more memory and is slower for streams. 
+    Online updates process one value at a time, keep only n, m, M2, and are well suited for real time systems, embedded devices, and continuous logging. 
+    A single pass is usually enough which reduces time and avoids storing the array.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Conclusion</h2>
+  <p>
+    Measures of location summarize where data are centered and each choice fits a different situation. 
+    Online updates provide a practical way to keep mean and variance current while data arrive, with low memory and good numerical behavior.
+  </p>
+  <div class="footer">
+    2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 – 2026
+  </div>
+</section>
+
+</main>
+</body>
+</html>
