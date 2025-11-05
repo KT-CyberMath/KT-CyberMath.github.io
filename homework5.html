@@ -1,153 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Homework 5 — Measures of Location, Online Mean and Variance</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homework 5 — Measures of Location and Online Algorithms</title>
 <style>
-  :root{
-    --bg:#f8fafc; --card:#ffffff; --ink:#111111; --muted:#666666;
-    --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5;
+  :root {
+    --bg: #f8fafc;
+    --card: #fff;
+    --ink: #111;
+    --muted: #555;
+    --line: #e5e5e5;
+    --accent: #004aad;
+    --accent2: #0066cc;
   }
-  html,body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
-  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--blue),var(--blue2));
-    color:#fff;text-align:center;}
-  header h1{margin:0 0 8px;font-size:30px;}
-  header p{margin:0;font-size:15px;opacity:.95;}
-  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
-    box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
-  h2,h3{color:var(--blue2);text-align:center;margin:6px 0 10px;}
-  p{margin:10px 0;text-align:justify;}
-  .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
-  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
-  th,td{border:1px solid var(--line);padding:10px;text-align:center;}
-  th{background:#f2f5f9;}
-  code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
-  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
-  .inputRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  input[type=number], input[type=text]{padding:10px;border:1px solid var(--line);border-radius:8px;flex:1;min-width:160px}
-  button{padding:10px 14px;border:1px solid var(--blue2);background:var(--blue);color:#fff;border-radius:8px;cursor:pointer}
-  button.secondary{background:#fff;color:var(--blue2)}
-  .stat{background:#f7f9ff;border:1px solid #dfe8ff;border-radius:10px;padding:12px}
-  .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
-  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
-    text-align:center;color:var(--muted);font-size:14px;}
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.45;
+  }
+  header {
+    padding: 54px 20px 40px;
+    background: linear-gradient(120deg, var(--accent), var(--accent2));
+    color: #fff;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+  }
+  header p {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.95;
+  }
+  .wrap {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 18px 28px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .04);
+    padding: 22px 24px;
+    margin-bottom: 18px;
+  }
+  h2, h3 {
+    text-align: center;
+    margin: 8px 0 10px;
+    color: var(--accent);
+  }
+  p {
+    margin: 10px 0;
+    text-align: justify;
+  }
+  .meta {
+    color: var(--muted);
+    text-align: center;
+    font-size: 14px;
+    margin: 6px 0 10px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 10px;
+    text-align: center;
+  }
+  th {
+    background: #f2f5f9;
+  }
+  code {
+    background: #f2f5f9;
+    padding: 2px 5px;
+    border-radius: 6px;
+  }
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    margin-top: 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  input[type="number"] {
+    padding: 6px;
+    margin: 5px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    width: 100px;
+  }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: var(--accent2);
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Homework 5 — Measures of Location, Online Mean and Variance</h1>
-  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025–2026</p>
+  <h1>Homework 5 — Measures of Location and Online Algorithms</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 – 2026</p>
 </header>
 
 <main class="wrap">
 
-  <!-- PART 1 -->
-  <section class="card">
-    <h2>1) Measures of Location</h2>
-    <p class="meta">Central tendency indicators and when each one is appropriate.</p>
-    <div class="grid">
-      <div class="stat"><h3>Arithmetic Mean</h3><p><strong>Formula:</strong> <code>x̄ = (1/n) Σ xᵢ</code></p><p><strong>Use:</strong> balanced average for symmetric data.</p></div>
-      <div class="stat"><h3>Geometric Mean</h3><p><strong>Formula:</strong> <code>G = (∏ xᵢ)<sup>1/n</sup></code></p><p><strong>Use:</strong> growth rates and ratios.</p></div>
-      <div class="stat"><h3>Harmonic Mean</h3><p><strong>Formula:</strong> <code>H = n / Σ(1/xᵢ)</code></p><p><strong>Use:</strong> rates such as speed or density.</p></div>
-      <div class="stat"><h3>Quadratic Mean (RMS)</h3><p><strong>Formula:</strong> <code>Q = √[(1/n) Σ xᵢ²]</code></p><p><strong>Use:</strong> magnitudes (e.g., voltage, error).</p></div>
-      <div class="stat"><h3>Median</h3><p><strong>Definition:</strong> middle ordered value.</p><p><strong>Use:</strong> robust to outliers, for skewed data.</p></div>
-      <div class="stat"><h3>Mode</h3><p><strong>Definition:</strong> most frequent value.</p><p><strong>Use:</strong> discrete or categorical data.</p></div>
-    </div>
-  </section>
+<section class="card">
+  <h2>1. Introduction</h2>
+  <p>
+    This homework explores the <strong>Measures of Location and Dispersion</strong>, and introduces
+    <strong>online algorithms</strong> for calculating mean and variance efficiently.
+    These concepts are essential in understanding how data is summarized, compared,
+    and updated dynamically when new information becomes available.
+  </p>
+</section>
 
-  <!-- PART 2 -->
-  <section class="card">
-    <h2>2) Online Mean and Variance (Interactive)</h2>
-    <p>Enter numbers to see the mean and variance update live (Welford algorithm).</p>
-    <div class="inputRow" style="margin-top:8px">
-      <input id="single" type="number" step="any" placeholder="Add one value (e.g. 4.2)" />
-      <button id="addOne">Add</button>
-      <input id="many" type="text" placeholder="Or paste list (e.g. 2, 5, 7.5, 8)" />
-      <button id="addMany" class="secondary">Add List</button>
-      <button id="reset" class="secondary">Reset</button>
-    </div>
+<section class="card">
+  <h2>2. Measures of Location</h2>
+  <p>
+    Measures of location (also called <em>measures of central tendency</em>) describe the center or
+    typical value of a dataset. The main ones include:
+  </p>
+  <ul>
+    <li><strong>Arithmetic Mean</strong>: The sum of all observations divided by their number.
+      Sensitive to outliers but widely used in symmetric distributions.</li>
+    <li><strong>Median</strong>: The middle value when the data is ordered. Robust to outliers and skewed data.</li>
+    <li><strong>Mode</strong>: The most frequent observation. Useful for categorical data.</li>
+    <li><strong>Geometric Mean</strong>: The nth root of the product of n values.
+      Suitable for growth rates, percentages, or multiplicative processes.</li>
+    <li><strong>Harmonic Mean</strong>: The reciprocal of the average of reciprocals.
+      Ideal for averaging rates or ratios (e.g., speed).</li>
+  </ul>
+</section>
 
-    <div class="grid" style="margin-top:12px">
-      <div class="stat">
-        <p><strong>Count n:</strong> <span id="n">0</span></p>
-        <p><strong>Mean:</strong> <span id="mean">0</span></p>
-        <p><strong>Population Variance:</strong> <span id="varp">0</span></p>
-        <p><strong>Sample Variance:</strong> <span id="vars">0</span></p>
-      </div>
-      <div class="stat">
-        <p><strong>Current Data</strong></p>
-        <div id="data" class="mono" style="word-break:break-all;font-size:13px">[]</div>
-      </div>
-    </div>
-  </section>
+<section class="card">
+  <h2>3. Measures of Dispersion</h2>
+  <p>
+    Dispersion measures describe the spread or variability of the data. The most common ones are:
+  </p>
+  <ul>
+    <li><strong>Range</strong>: The difference between the maximum and minimum value.</li>
+    <li><strong>Variance (σ²)</strong>: The average of squared deviations from the mean.</li>
+    <li><strong>Standard Deviation (σ)</strong>: The square root of variance, measured in the same units as the data.</li>
+    <li><strong>Interquartile Range (IQR)</strong>: The difference between the 75th and 25th percentiles, describing the middle 50% of data.</li>
+    <li><strong>Median Absolute Deviation (MAD)</strong>: The median of absolute deviations from the median. Robust against outliers.</li>
+    <li><strong>Coefficient of Variation (CV)</strong>: The ratio of SD to the mean, useful for comparing variability between datasets of different scales.</li>
+  </ul>
+</section>
 
-  <!-- NEW SIMPLE EXAMPLE -->
-  <section class="card">
-    <h2>3) Simple Example of Mean and Variance</h2>
-    <p>Consider five values <code>[4, 7, 5, 9, 6]</code>.</p>
-    <p><strong>Mean:</strong> (4 + 7 + 5 + 9 + 6) / 5 = <code>6.2</code></p>
-    <p><strong>Variance:</strong> average of squared deviations:</p>
-    <p class="mono">
-      ( (4−6.2)² + (7−6.2)² + (5−6.2)² + (9−6.2)² + (6−6.2)² ) / 5 = 2.96
-    </p>
-    <p><strong>Standard Deviation:</strong> √2.96 ≈ 1.72</p>
-  </section>
+<section class="card">
+  <h2>4. Example Dataset and Static Mean/Variance</h2>
+  <p>
+    Consider the following dataset representing sample scores:
+  </p>
+  <table>
+    <tr><th>Data</th><th>5</th><th>7</th><th>10</th><th>13</th><th>15</th></tr>
+  </table>
+  <p>
+    <strong>Mean (μ):</strong> (5 + 7 + 10 + 13 + 15) / 5 = <strong>10</strong><br>
+    <strong>Variance (σ²):</strong> [(5−10)² + (7−10)² + (10−10)² + (13−10)² + (15−10)²] / 5 = <strong>14</strong><br>
+    <strong>Standard Deviation (σ):</strong> √14 ≈ <strong>3.74</strong>
+  </p>
+</section>
 
-  <!-- PART 3 (running updates) -->
-  <section class="card">
-    <h2>4) Example with Step-by-Step Updates</h2>
-    <p>Dataset <code>[4, 7, 5, 9, 6, 8, 3, 5]</code> shows how n, mean and variance evolve as values arrive.</p>
-    <table id="runTable">
-      <thead>
-        <tr>
-          <th>Step</th><th>New Value</th><th>n</th><th>Mean</th><th>Population Var</th><th>Sample Var</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div class="footer">
-      Konstantinos Tziakouris · Matricola 2229757 · Statistics · A.Y. 2025–2026
-    </div>
-  </section>
+<section class="card">
+  <h2>5. Online Mean and Variance Calculator</h2>
+  <p>
+    Enter values one by one to observe the running (online) computation of mean and variance.
+  </p>
+  <div style="text-align:center;">
+    <input type="number" id="newValue" placeholder="Enter value">
+    <button onclick="addValue()">Add</button>
+  </div>
+  <p id="output" style="text-align:center; margin-top:10px;"></p>
+  <script>
+    let count = 0, mean = 0, M2 = 0;
+    function addValue() {
+      const val = parseFloat(document.getElementById('newValue').value);
+      if (isNaN(val)) return;
+      count++;
+      const delta = val - mean;
+      mean += delta / count;
+      M2 += delta * (val - mean);
+      const variance = count > 1 ? M2 / count : 0;
+      document.getElementById('output').innerHTML =
+        `Count: ${count}<br>Mean: ${mean.toFixed(3)}<br>Variance: ${variance.toFixed(3)}`;
+      document.getElementById('newValue').value = '';
+    }
+  </script>
+</section>
+
+<section class="card">
+  <h2>6. Extras & Notes</h2>
+
+  <h3>Quick Chooser</h3>
+  <table>
+    <thead>
+      <tr><th>Situation</th><th>Center</th><th>Spread</th><th>Why</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Symmetric, few outliers</td><td>Arithmetic mean</td><td>SD (or variance)</td><td>Efficient and widely understood</td></tr>
+      <tr><td>Skewed, outliers present</td><td>Median (or trimmed mean)</td><td>IQR or MAD</td><td>Robust to extremes</td></tr>
+      <tr><td>Multiplicative growth / ratios</td><td>Geometric mean</td><td>SD of log-data</td><td>Products act additively on logs</td></tr>
+      <tr><td>Rates over a fixed amount</td><td>Harmonic mean</td><td>IQR/MAD if skewed</td><td>Proper averaging of rates/speeds</td></tr>
+      <tr><td>Compare variability across units</td><td>—</td><td>Coefficient of Variation</td><td>Unitless relative variability</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Common Pitfalls</h3>
+  <ul>
+    <li>Outliers can drag the mean; prefer median or a trimmed mean for heavy-tailed data.</li>
+    <li>Zeros/negatives invalidate geometric and harmonic means.</li>
+    <li>Range is fragile; report it with IQR or SD.</li>
+    <li>Always pair a spread measure with a center (e.g., mean±SD or median+IQR).</li>
+  </ul>
+
+  <h3>Numerical Stability: Batch vs Online</h3>
+  <p>
+    Online formulas, such as Welford’s update, process one observation at a time, requiring constant memory
+    and avoiding catastrophic cancellation. Traditional batch computation (recomputing all sums each time)
+    is slower, more memory-intensive, and prone to round-off errors on large datasets.
+    Online algorithms are thus preferred for real-time data or large-scale applications.
+  </p>
+</section>
+
+<section class="card footer">
+  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 – 2026 · November 2025
+</section>
+
 </main>
-
-<script>
-// Interactive online mean + variance
-let n=0,mean=0,M2=0,data=[];
-const elN=document.getElementById('n'),elMean=document.getElementById('mean'),
-      elVarP=document.getElementById('varp'),elVarS=document.getElementById('vars'),elData=document.getElementById('data');
-function updateDisplay(){
-  elN.textContent=n;
-  elMean.textContent=n?mean.toFixed(6):'0';
-  const varP=n?M2/n:0, varS=n>1?M2/(n-1):0;
-  elVarP.textContent=varP.toFixed(6);
-  elVarS.textContent=varS.toFixed(6);
-  elData.textContent='['+data.join(', ')+']';
-}
-function pushValue(x){
-  const d=x-mean;
-  n++; mean+=d/n; const d2=x-mean; M2+=d*d2;
-  data.push(x); updateDisplay();
-}
-function resetAll(){n=0;mean=0;M2=0;data=[];updateDisplay();}
-document.getElementById('addOne').onclick=()=>{const v=parseFloat(document.getElementById('single').value);
-  if(Number.isFinite(v))pushValue(v);document.getElementById('single').value='';};
-document.getElementById('addMany').onclick=()=>{const raw=document.getElementById('many').value;
-  if(!raw)return; raw.split(/[, \n\t]+/).forEach(t=>{const v=parseFloat(t);if(Number.isFinite(v))pushValue(v);});
-  document.getElementById('many').value='';};
-document.getElementById('reset').onclick=resetAll;updateDisplay();
-
-// fixed example table
-const ex=[4,7,5,9,6,8,3,5];let n2=0,m2=0,M22=0;const tb=document.querySelector('#runTable tbody');
-function row(s,x,n,m,vp,vs){const tr=document.createElement('tr');
-  [s,x,n,m.toFixed(6),vp.toFixed(6),vs.toFixed(6)].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});return tr;}
-ex.forEach((x,i)=>{const d=x-m2;n2++;m2+=d/n2;const d2=x-m2;M22+=d*d2;const vp=M22/n2,vs=n2>1?M22/(n2-1):0;
-  tb.appendChild(row(i+1,x,n2,m2,vp,vs));});
-</script>
-
 </body>
 </html>
