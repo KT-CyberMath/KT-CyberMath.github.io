@@ -27,87 +27,30 @@
     color: #fff;
     text-align: center;
   }
-  header h1 {
-    margin: 0 0 8px;
-    font-size: 30px;
-  }
-  header p {
-    margin: 0;
-    font-size: 15px;
-    opacity: 0.95;
-  }
-  .wrap {
-    max-width: 900px;
-    margin: 24px auto;
-    padding: 0 18px 28px;
-  }
+  header h1 { margin: 0 0 8px; font-size: 30px; }
+  header p { margin: 0; font-size: 15px; opacity: .95; }
+
+  .wrap { max-width: 900px; margin: 24px auto; padding: 0 18px 28px; }
   .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, .04);
-    padding: 22px 24px;
-    margin-bottom: 18px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04); padding: 22px 24px; margin-bottom: 18px;
   }
-  h2, h3 {
-    text-align: center;
-    margin: 8px 0 10px;
-    color: var(--accent);
-  }
-  p {
-    margin: 10px 0;
-    text-align: justify;
-  }
-  .meta {
-    color: var(--muted);
-    text-align: center;
-    font-size: 14px;
-    margin: 6px 0 10px;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 10px 0;
-  }
-  th, td {
-    border: 1px solid var(--line);
-    padding: 10px;
-    text-align: center;
-  }
-  th {
-    background: #f2f5f9;
-  }
-  code {
-    background: #f2f5f9;
-    padding: 2px 5px;
-    border-radius: 6px;
-  }
-  .footer {
-    border-top: 1px solid var(--line);
-    padding-top: 12px;
-    margin-top: 10px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  input[type="number"] {
-    padding: 6px;
-    margin: 5px;
-    border-radius: 6px;
-    border: 1px solid var(--line);
-    width: 100px;
-  }
-  button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  button:hover {
-    background: var(--accent2);
-  }
+  h2, h3 { text-align: center; margin: 8px 0 10px; color: var(--accent); }
+  p { margin: 10px 0; text-align: justify; }
+  .meta { color: var(--muted); text-align: center; font-size: 14px; margin: 6px 0 10px; }
+
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+  th, td { border: 1px solid var(--line); padding: 10px; text-align: center; }
+  th { background: #f2f5f9; }
+  code { background: #f2f5f9; padding: 2px 5px; border-radius: 6px; }
+
+  .footer { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 10px;
+    text-align: center; color: var(--muted); font-size: 14px; }
+
+  input[type="number"]{ padding:6px; margin:5px; border-radius:6px; border:1px solid var(--line); width:110px; }
+  button{ background:var(--accent); color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; }
+  button:hover{ background:var(--accent2); }
+  ul { margin: 8px 0 0 18px; }
 </style>
 </head>
 <body>
@@ -120,121 +63,132 @@
 <main class="wrap">
 
 <section class="card">
-  <h2>1. Introduction</h2>
+  <h2>1) Introduction</h2>
   <p>
-    This homework explores the <strong>Measures of Location and Dispersion</strong>, and introduces
-    <strong>online algorithms</strong> for calculating mean and variance efficiently.
-    These concepts are essential in understanding how data is summarized, compared,
-    and updated dynamically when new information becomes available.
+    This homework surveys key <strong>measures of location</strong> and <strong>dispersion</strong>, then implements
+    numerically stable <strong>online (incremental)</strong> updates for the mean and variance. The goal is to be concise, practical, and fully aligned with the class brief.
   </p>
 </section>
 
 <section class="card">
-  <h2>2. Measures of Location</h2>
-  <p>
-    Measures of location (also called <em>measures of central tendency</em>) describe the center or
-    typical value of a dataset. The main ones include:
-  </p>
+  <h2>2) Measures of Location</h2>
+  <p>Common centers (when to use):</p>
   <ul>
-    <li><strong>Arithmetic Mean</strong>: The sum of all observations divided by their number.
-      Sensitive to outliers but widely used in symmetric distributions.</li>
-    <li><strong>Median</strong>: The middle value when the data is ordered. Robust to outliers and skewed data.</li>
-    <li><strong>Mode</strong>: The most frequent observation. Useful for categorical data.</li>
-    <li><strong>Geometric Mean</strong>: The nth root of the product of n values.
-      Suitable for growth rates, percentages, or multiplicative processes.</li>
-    <li><strong>Harmonic Mean</strong>: The reciprocal of the average of reciprocals.
-      Ideal for averaging rates or ratios (e.g., speed).</li>
+    <li><strong>Arithmetic mean</strong> — default for symmetric data; efficient but sensitive to outliers.</li>
+    <li><strong>Median</strong> — robust to skew/outliers; good for heavy tails.</li>
+    <li><strong>Mode</strong> — most frequent value; useful for categorical data or multimodality.</li>
+    <li><strong>Geometric mean</strong> — multiplicative data (growth rates, compounding); requires positive values.</li>
+    <li><strong>Harmonic mean</strong> — averaging rates/ratios (e.g., speeds); requires positive values.</li>
   </ul>
 </section>
 
 <section class="card">
-  <h2>3. Measures of Dispersion</h2>
-  <p>
-    Dispersion measures describe the spread or variability of the data. The most common ones are:
-  </p>
+  <h2>3) Measures of Dispersion</h2>
   <ul>
-    <li><strong>Range</strong>: The difference between the maximum and minimum value.</li>
-    <li><strong>Variance (σ²)</strong>: The average of squared deviations from the mean.</li>
-    <li><strong>Standard Deviation (σ)</strong>: The square root of variance, measured in the same units as the data.</li>
-    <li><strong>Interquartile Range (IQR)</strong>: The difference between the 75th and 25th percentiles, describing the middle 50% of data.</li>
-    <li><strong>Median Absolute Deviation (MAD)</strong>: The median of absolute deviations from the median. Robust against outliers.</li>
-    <li><strong>Coefficient of Variation (CV)</strong>: The ratio of SD to the mean, useful for comparing variability between datasets of different scales.</li>
+    <li><strong>Range</strong> (max−min) — quick spread, fragile to outliers.</li>
+    <li><strong>Variance</strong> (σ²) — average squared deviation from the mean.</li>
+    <li><strong>Standard deviation</strong> (σ) — sqrt(variance), same units as data.</li>
+    <li><strong>Interquartile range</strong> (IQR) — middle 50% (Q3−Q1); robust.</li>
+    <li><strong>Median absolute deviation</strong> (MAD) — robust spread around the median.</li>
+    <li><strong>Coefficient of variation</strong> (CV) — SD/mean; unitless relative variability.</li>
   </ul>
 </section>
 
 <section class="card">
-  <h2>4. Example Dataset and Static Mean/Variance</h2>
-  <p>
-    Consider the following dataset representing sample scores:
-  </p>
+  <h2>4) Example (static) — Mean & Variance</h2>
+  <p>Dataset: <code>5, 7, 10, 13, 15</code></p>
   <table>
     <tr><th>Data</th><th>5</th><th>7</th><th>10</th><th>13</th><th>15</th></tr>
   </table>
   <p>
-    <strong>Mean (μ):</strong> (5 + 7 + 10 + 13 + 15) / 5 = <strong>10</strong><br>
-    <strong>Variance (σ²):</strong> [(5−10)² + (7−10)² + (10−10)² + (13−10)² + (15−10)²] / 5 = <strong>14</strong><br>
-    <strong>Standard Deviation (σ):</strong> √14 ≈ <strong>3.74</strong>
+    <strong>Mean</strong>: (5+7+10+13+15)/5 = <strong>10</strong><br>
+    <strong>Variance</strong>: [25+9+0+9+25]/5 = <strong>14</strong> &nbsp;→&nbsp; <strong>SD</strong> ≈ 3.742
   </p>
 </section>
 
 <section class="card">
-  <h2>5. Online Mean and Variance Calculator</h2>
+  <h2>5) Recurrence relationships (proof sketches)</h2>
+  <h3>Mean</h3>
   <p>
-    Enter values one by one to observe the running (online) computation of mean and variance.
+    Let <code>μ<sub>n−1</sub></code> be the mean of the first <code>n−1</code> values and add <code>x<sub>n</sub></code>.
+    Then
   </p>
+  <p style="text-align:center;">
+    <code>μ<sub>n</sub> = μ<sub>n−1</sub> + (x<sub>n</sub> − μ<sub>n−1</sub>)/n</code>
+  </p>
+  <p class="meta">
+    Sketch: Start from <code>μ<sub>n</sub> = ( (n−1)μ<sub>n−1</sub> + x<sub>n</sub> ) / n</code> and rearrange.
+  </p>
+
+  <h3>Variance (Welford form)</h3>
+  <p>
+    Maintain <code>M2</code> = sum of squared deviations. For new value <code>x<sub>n</sub></code>:
+  </p>
+  <p style="text-align:center;">
+    <code>δ = x<sub>n</sub> − μ<sub>n−1</sub></code><br>
+    <code>μ<sub>n</sub> = μ<sub>n−1</sub> + δ/n</code><br>
+    <code>M2<sub>n</sub> = M2<sub>n−1</sub> + δ (x<sub>n</sub> − μ<sub>n</sub>)</code><br>
+    <code>σ²<sub>n</sub> = M2<sub>n</sub> / n</code> (population) &nbsp; or &nbsp; <code>M2<sub>n</sub> / (n−1)</code> (sample).
+  </p>
+  <p class="meta">
+    Sketch: expand <code>∑(x−μ<sub>n</sub>)²</code>, substitute the update for <code>μ<sub>n</sub></code>, and cancel cross terms;
+    this avoids catastrophic cancellation compared with naive <code>(∑x² − (∑x)²/n)/n</code>.
+  </p>
+</section>
+
+<section class="card">
+  <h2>6) Online Mean & Variance (interactive)</h2>
+  <p>Add values one by one to see the running statistics computed online.</p>
   <div style="text-align:center;">
     <input type="number" id="newValue" placeholder="Enter value">
     <button onclick="addValue()">Add</button>
+    <button onclick="resetCalc()" style="margin-left:6px;background:#666;">Reset</button>
   </div>
   <p id="output" style="text-align:center; margin-top:10px;"></p>
   <script>
-    let count = 0, mean = 0, M2 = 0;
-    function addValue() {
-      const val = parseFloat(document.getElementById('newValue').value);
-      if (isNaN(val)) return;
-      count++;
-      const delta = val - mean;
-      mean += delta / count;
-      M2 += delta * (val - mean);
-      const variance = count > 1 ? M2 / count : 0;
+    let n = 0, mean = 0, M2 = 0;
+    function addValue(){
+      const v = parseFloat(document.getElementById('newValue').value);
+      if (isNaN(v)) return;
+      n++;
+      const delta = v - mean;
+      mean += delta / n;
+      M2 += delta * (v - mean);
+      const varPop = n > 1 ? M2 / n : 0;
+      const varSam = n > 1 ? M2 / (n - 1) : 0;
       document.getElementById('output').innerHTML =
-        `Count: ${count}<br>Mean: ${mean.toFixed(3)}<br>Variance: ${variance.toFixed(3)}`;
+        `Count: ${n}<br>Mean: ${mean.toFixed(4)}<br>Variance (population): ${varPop.toFixed(4)}<br>Variance (sample): ${varSam.toFixed(4)}`;
       document.getElementById('newValue').value = '';
+    }
+    function resetCalc(){
+      n = 0; mean = 0; M2 = 0;
+      document.getElementById('output').innerHTML = 'Cleared.';
     }
   </script>
 </section>
 
 <section class="card">
-  <h2>6. Extras & Notes</h2>
+  <h2>7) Extras & Notes</h2>
 
-  <h3>Quick Chooser</h3>
+  <h3>Quick chooser</h3>
   <table>
     <thead>
       <tr><th>Situation</th><th>Center</th><th>Spread</th><th>Why</th></tr>
     </thead>
     <tbody>
-      <tr><td>Symmetric, few outliers</td><td>Arithmetic mean</td><td>SD (or variance)</td><td>Efficient and widely understood</td></tr>
-      <tr><td>Skewed, outliers present</td><td>Median (or trimmed mean)</td><td>IQR or MAD</td><td>Robust to extremes</td></tr>
-      <tr><td>Multiplicative growth / ratios</td><td>Geometric mean</td><td>SD of log-data</td><td>Products act additively on logs</td></tr>
-      <tr><td>Rates over a fixed amount</td><td>Harmonic mean</td><td>IQR/MAD if skewed</td><td>Proper averaging of rates/speeds</td></tr>
-      <tr><td>Compare variability across units</td><td>—</td><td>Coefficient of Variation</td><td>Unitless relative variability</td></tr>
+      <tr><td>Symmetric, few outliers</td><td>Mean</td><td>SD / Variance</td><td>Efficient, standard reporting</td></tr>
+      <tr><td>Skewed or outliers</td><td>Median (or trimmed mean)</td><td>IQR / MAD</td><td>Robust to extremes</td></tr>
+      <tr><td>Growth / multiplicative data</td><td>Geometric mean</td><td>SD of logs</td><td>Products become sums in log space</td></tr>
+      <tr><td>Rates over fixed distance/time</td><td>Harmonic mean</td><td>IQR/MAD if skewed</td><td>Correct averaging of rates</td></tr>
+      <tr><td>Compare variability across scales</td><td>—</td><td>Coefficient of variation</td><td>Unitless comparability</td></tr>
     </tbody>
   </table>
 
-  <h3>Common Pitfalls</h3>
-  <ul>
-    <li>Outliers can drag the mean; prefer median or a trimmed mean for heavy-tailed data.</li>
-    <li>Zeros/negatives invalidate geometric and harmonic means.</li>
-    <li>Range is fragile; report it with IQR or SD.</li>
-    <li>Always pair a spread measure with a center (e.g., mean±SD or median+IQR).</li>
-  </ul>
-
-  <h3>Numerical Stability: Batch vs Online</h3>
+  <h3>Batch vs online — numerical stability</h3>
   <p>
-    Online formulas, such as Welford’s update, process one observation at a time, requiring constant memory
-    and avoiding catastrophic cancellation. Traditional batch computation (recomputing all sums each time)
-    is slower, more memory-intensive, and prone to round-off errors on large datasets.
-    Online algorithms are thus preferred for real-time data or large-scale applications.
+    Online updates (Welford) use constant memory and resist round-off error; batch recomputation is
+    slower, memory-heavier, and suffers from cancellation in large datasets. For streaming or large data,
+    prefer online algorithms.
   </p>
 </section>
 
