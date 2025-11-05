@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homework 6 — Online Mean and Variance (Derivation + Demo)</title>
+<style>
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --ink:#111111; --muted:#666666;
+    --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--blue),var(--blue2));
+    color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{color:#0654b5;text-align:center;margin:6px 0 10px;}
+  p{margin:10px 0;text-align:justify;}
+  .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:10px;text-align:center;}
+  th{background:#f2f5f9;}
+  code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .inputRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  input[type=number], input[type=text]{padding:10px;border:1px solid var(--line);border-radius:8px;flex:1;min-width:160px}
+  button{padding:10px 14px;border:1px solid var(--blue2);background:var(--blue);color:#fff;border-radius:8px;cursor:pointer}
+  button.secondary{background:#fff;color:var(--blue2)}
+  .stat{background:#f7f9ff;border:1px solid #dfe8ff;border-radius:10px;padding:12px}
+  .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;
+    text-align:center;color:var(--muted);font-size:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Homework 6 — Online Mean and Variance (Derivation + Demo)</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025–2026</p>
+</header>
+
+<main class="wrap">
+
+  <!-- Intro -->
+  <section class="card">
+    <h2>1) Introduction</h2>
+    <p>
+      The goal is to show how to compute mean and variance <em>incrementally</em>, updating results as each
+      new observation arrives. We begin with the standard (“batch”) definitions, derive the online recurrences,
+      and then compare computational and numerical properties. A small interactive widget illustrates the updates
+      live. (Content aligned with class peers’ scope on online mean/variance.) 
+    </p>
+  </section>
+
+  <!-- Batch (standard) formulas -->
+  <section class="card">
+    <h2>2) Mean and Variance — Standard (“Batch”) Formulas</h2>
+    <p>
+      For values <code>x₁, x₂, …, xₙ</code>, the <strong>population mean</strong> is
+      <code> x̄ₙ = (1/n) Σ xᵢ </code>.
+      The <strong>population variance</strong> is 
+      <code> σ²ₙ = (1/n) Σ (xᵢ − x̄ₙ)² </code> and the <strong>sample variance</strong> (for <code>n ≥ 2</code>) is 
+      <code> s²ₙ = (1/(n−1)) Σ (xᵢ − x̄ₙ)² </code>.
+    </p>
+    <p class="meta">
+      Batch computation requires a full pass over the data and the final mean, which is expensive to redo on each new value.  [oai_citation:1‡matteovillanostatistics.blogspot.com](https://matteovillanostatistics.blogspot.com/2025/11/online-mean-and-variance.html)
+    </p>
+  </section>
+
+  <!-- Online mean derivation -->
+  <section class="card">
+    <h2>3) Mean — Online Update</h2>
+    <p>
+      Let <code>Sₙ = Σ xᵢ</code>. When a new observation <code>xₙ</code> arrives, 
+      <code>Sₙ = Sₙ₋₁ + xₙ</code>, so
+    </p>
+    <p style="text-align:center">
+      <code>x̄ₙ = Sₙ / n = ((n−1) x̄ₙ₋₁ + xₙ)/n = x̄ₙ₋₁ + (xₙ − x̄ₙ₋₁)/n</code>.
+    </p>
+    <p class="meta">Adjust the previous mean by a fraction of the new error.  [oai_citation:2‡matteovillanostatistics.blogspot.com](https://matteovillanostatistics.blogspot.com/2025/11/online-mean-and-variance.html)</p>
+  </section>
+
+  <!-- Online variance (Welford) -->
+  <section class="card">
+    <h2>4) Variance — Online Update (Welford)</h2>
+    <p>
+      Maintain running mean <code>x̄</code> and running sum of squared deviations <code>M2</code>. For new value <code>x</code>:
+    </p>
+    <p style="text-align:center">
+      <code>δ = x − x̄</code> &nbsp; <code>x̄ ← x̄ + δ/n</code> &nbsp; <code>M2 ← M2 + δ (x − x̄)</code><br>
+      <code>σ² (population) = M2 / n</code> &nbsp; <code>s² (sample) = M2 / (n − 1)</code>.
+    </p>
+    <p class="meta">
+      Algebraically equivalent to the batch definition; uses only the previous mean, <code>M2</code>, and the new point.
+      More stable than naïve “sum of squares minus square of sums.”  [oai_citation:3‡matteovillanostatistics.blogspot.com](https://matteovillanostatistics.blogspot.com/2025/11/online-mean-and-variance.html)
+    </p>
+  </section>
+
+  <!-- Interactive widget -->
+  <section class="card">
+    <h2>5) Interactive — Online Mean & Variance</h2>
+    <p>Enter numbers one by one or paste a list; the stats update live using Welford’s method.</p>
+    <div class="inputRow" style="margin-top:8px">
+      <input id="single" type="number" step="any" placeholder="Add one value (e.g. 4.2)" />
+      <button id="addOne">Add</button>
+      <input id="many" type="text" placeholder="Or paste list: 2, 5, 7.5, 8" />
+      <button id="addMany" class="secondary">Add list</button>
+      <button id="reset" class="secondary">Reset</button>
+    </div>
+
+    <div class="grid" style="margin-top:12px">
+      <div class="stat">
+        <p><strong>Count (n):</strong> <span id="n">0</span></p>
+        <p><strong>Mean:</strong> <span id="mean">0</span></p>
+        <p><strong>Population Variance:</strong> <span id="varp">0</span></p>
+        <p><strong>Sample Variance:</strong> <span id="vars">0</span></p>
+      </div>
+      <div class="stat">
+        <p style="margin-bottom:6px"><strong>Current data</strong></p>
+        <div id="data" class="mono" style="word-break:break-all; font-size:13px">[]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fixed example table -->
+  <section class="card">
+    <h2>6) Example — Step-by-Step Online Updates</h2>
+    <p>Dataset <code>[4, 7, 5, 9, 6, 8, 3, 5]</code>. The table shows how <em>n</em>, mean, and variance evolve.</p>
+    <table id="runTable">
+      <thead>
+        <tr>
+          <th>Step</th><th>New Value</th><th>n</th><th>Mean</th><th>Population Var</th><th>Sample Var</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Computational differences -->
+  <section class="card">
+    <h2>7) Computational Differences</h2>
+    <div class="grid">
+      <div class="stat">
+        <h3>Standard (recompute each time)</h3>
+        <ul>
+          <li>Time per new value: <strong>O(n)</strong></li>
+          <li>Total after n values: <strong>O(n²)</strong> if recomputed every step</li>
+          <li>Memory: <strong>O(n)</strong> (store all values)</li>
+          <li>Numerical stability: naïve variance using <code>Σx² − (Σx)²/n</code> can suffer cancellation</li>
+        </ul>
+      </div>
+      <div class="stat">
+        <h3>Online (incremental)</h3>
+        <ul>
+          <li>Time per new value: <strong>O(1)</strong></li>
+          <li>Total after n values: <strong>O(n)</strong></li>
+          <li>Memory: <strong>O(1)</strong> (track <em>n</em>, <em>x̄</em>, <em>M2</em>)</li>
+          <li>Numerical stability: Welford update is much more stable</li>
+        </ul>
+      </div>
+    </div>
+    <p class="meta">Bottom line: for streams or growing datasets, online updates are faster, memory-light, and more stable.  [oai_citation:4‡matteovillanostatistics.blogspot.com](https://matteovillanostatistics.blogspot.com/2025/11/online-mean-and-variance.html)</p>
+  </section>
+
+  <!-- Reference pseudocode -->
+  <section class="card">
+    <h2>8) Reference Pseudocode</h2>
+<pre class="mono" style="white-space:pre-wrap">
+# Online mean & variance (Welford)
+n = 0
+mean = 0
+M2 = 0
+
+for each new x:
+  n = n + 1
+  delta  = x - mean
+  mean   = mean + delta / n
+  M2     = M2 + delta * (x - mean)
+
+population_variance = M2 / n
+sample_variance     = M2 / (n - 1)   # for n ≥ 2
+</pre>
+  </section>
+
+  <section class="card footer">
+    2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025–2026 · November 2025
+  </section>
+
+</main>
+
+<script>
+// ---- Interactive online mean & variance (Welford) ----
+let n=0, mean=0, M2=0, data=[];
+const elN=document.getElementById('n'), elMean=document.getElementById('mean'),
+      elVarP=document.getElementById('varp'), elVarS=document.getElementById('vars'),
+      elData=document.getElementById('data');
+
+function updateDisplay(){
+  elN.textContent = n;
+  elMean.textContent = n ? mean.toFixed(6) : '0';
+  const varP = n ? M2/n : 0;
+  const varS = n>1 ? M2/(n-1) : 0;
+  elVarP.textContent = varP.toFixed(6);
+  elVarS.textContent = varS.toFixed(6);
+  elData.textContent = '[' + data.join(', ') + ']';
+}
+function pushValue(x){
+  const d = x - mean;
+  n += 1;
+  mean += d / n;
+  const d2 = x - mean;
+  M2 += d * d2;
+  data.push(x);
+  updateDisplay();
+}
+function resetAll(){
+  n=0; mean=0; M2=0; data=[];
+  updateDisplay();
+}
+document.getElementById('addOne').onclick = () => {
+  const v = parseFloat(document.getElementById('single').value);
+  if (!Number.isFinite(v)) return;
+  pushValue(v);
+  document.getElementById('single').value = '';
+};
+document.getElementById('addMany').onclick = () => {
+  const raw = document.getElementById('many').value;
+  if (!raw) return;
+  raw.split(/[, \n\t]+/).forEach(tok=>{
+    const v = parseFloat(tok);
+    if (Number.isFinite(v)) pushValue(v);
+  });
+  document.getElementById('many').value = '';
+};
+document.getElementById('reset').onclick = resetAll;
+updateDisplay();
+
+// ---- Fixed example table ----
+const example = [4,7,5,9,6,8,3,5];
+let n2=0, m2=0, M22=0;
+const tbody = document.querySelector('#runTable tbody');
+function row(step, x, n, m, varp, vars){
+  const tr = document.createElement('tr');
+  [step, x, n, m.toFixed(6), varp.toFixed(6), vars.toFixed(6)]
+    .forEach(v => { const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+  return tr;
+}
+example.forEach((x,i)=>{
+  const d = x - m2;
+  n2 += 1;
+  m2 += d / n2;
+  const d2 = x - m2;
+  M22 += d * d2;
+  const varp = M22 / n2;
+  const vars = n2>1 ? M22/(n2-1) : 0;
+  tbody.appendChild(row(i+1, x, n2, m2, varp, vars));
+});
+</script>
+
+</body>
+</html>
