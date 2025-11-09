@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homework 8 — Bernoulli Process, Binomial & Combinatorics</title>
+<style>
+  :root{ --bg:#f8fafc; --card:#fff; --ink:#111; --muted:#666; --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5; }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--blue),var(--blue2));color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;} header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{color:var(--blue2);text-align:center;margin:6px 0 10px;}
+  p{margin:10px 0;text-align:justify;} .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  ul{margin:6px 0 0 18px;} code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:center;} th{background:#f2f5f9;}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;text-align:center;color:var(--muted);font-size:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Homework 8 — Bernoulli Process, Binomial & Combinatorics</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025–2026</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>1) Analogy with Homework 7</h2>
+  <p>
+    In HW7, each week was a Bernoulli trial: “secure” vs “breach”. Let π be the breach probability per week. 
+    Over <span class="mono">n</span> weeks, the number of breaches <span class="mono">K</span> follows 
+    <span class="mono">Binomial(n, π)</span>. The random-walk total score was <span class="mono">S<sub>n</sub> = n − 2K</span>.
+    Thus HW7’s simulation is an empirical view of the same Bernoulli process formalized here.
+  </p>
+</section>
+
+<section class="card">
+  <h2>2) Binomial Coefficients & Counting Trajectories</h2>
+  <p>
+    The probability of exactly <span class="mono">k</span> breaches is
+    <span class="mono">P(K=k) = C(n,k) π<sup>k</sup> (1−π)<sup>n−k</sup></span>, where
+    <span class="mono">C(n,k) = n! / (k!(n−k)!)</span> counts how many sequences contain <span class="mono">k</span> breaches 
+    and <span class="mono">n−k</span> secure weeks. Each such sequence maps to a unique random-walk path with final score
+    <span class="mono">S<sub>n</sub> = n − 2k</span>.
+  </p>
+</section>
+
+<section class="card">
+  <h2>3) Pascal’s Triangle & Binomial Expansion</h2>
+  <p>
+    The rows of <strong>Pascal’s triangle</strong> list the coefficients <span class="mono">C(n,0), C(n,1), …, C(n,n)</span>.
+    They are the coefficients in the <strong>binomial expansion</strong>
+    <span class="mono">(p + q)^n = Σ C(n,k) p^k q^{n-k}</span>.
+    Setting <span class="mono">p = π</span> and <span class="mono">q = 1−π</span> yields the complete Bernoulli law of outcomes.
+  </p>
+  <table>
+    <thead><tr><th>n</th><th>Coefficients C(n,k)</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>1</td></tr>
+      <tr><td>1</td><td>1, 1</td></tr>
+      <tr><td>2</td><td>1, 2, 1</td></tr>
+      <tr><td>3</td><td>1, 3, 3, 1</td></tr>
+      <tr><td>4</td><td>1, 4, 6, 4, 1</td></tr>
+      <tr><td>5</td><td>1, 5, 10, 10, 5, 1</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h2>4) Law of Large Numbers (LLN) & Central Limit Theorem (CLT)</h2>
+  <ul>
+    <li><strong>LLN:</strong> The empirical breach proportion <span class="mono">K/n</span> converges to <span class="mono">π</span> as <span class="mono">n → ∞</span>.</li>
+    <li><strong>Variance:</strong> <span class="mono">Var(K) = n π (1−π)</span>.</li>
+    <li><strong>CLT (approximation):</strong> For large <span class="mono">n</span>, 
+      <span class="mono">K</span> is approximately normal with mean <span class="mono">nπ</span> and variance <span class="mono">nπ(1−π)</span>, 
+      hence <span class="mono">S<sub>n</sub> = n − 2K</span> is also approximately normal after an affine transform.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>5) Fibonacci & Combinatorial Relationships (brief)</h2>
+  <p>
+    With <em>constraints</em> on paths (e.g., forbid going below zero, or forbid consecutive breaches), 
+    the number of admissible trajectories follows simple recurrences. 
+    For example, the number of binary strings of length <span class="mono">n</span> without consecutive 1’s equals <span class="mono">F_{n+2}</span>, 
+    where <span class="mono">F_k</span> are Fibonacci numbers. These are not part of HW7 but show how combinatorial coefficients pattern subsets of walks.
+  </p>
+</section>
+
+<section class="card">
+  <h2>6) Similarities & Differences (HW7 vs HW8)</h2>
+  <ul>
+    <li><strong>Similarities:</strong> same Bernoulli mechanism; same binomial counting; same final-score mapping <span class="mono">S<sub>n</sub>=n−2K</span>.</li>
+    <li><strong>Differences:</strong> HW7 is simulation-first; HW8 formalizes counting via <span class="mono">C(n,k)</span>, 
+      connects to Pascal’s triangle and binomial expansion, and states LLN/CLT.</li>
+  </ul>
+</section>
+
+<section class="card footer">
+  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025–2026 · November 2025
+</section>
+
+</main>
+</body>
+</html>
