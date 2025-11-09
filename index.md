@@ -73,4 +73,6 @@ A collection of assignments and research for the Statistics course, academic yea
  <li><a href="/homework4.html">Homework 4 — Law of Large Numbers Simulation</a></li>
  <li><a href="/homework5.html">Homework 5 — Measures of Location and Online Mean & Variance</a></li>
 <li><a href="/homework6.html">Homework 6 — Online Mean and Variance (Derivation + Demo)</a></li>
+  <li><a href="/homework7.html">Homework 7 — Random Walk of Server Security & Binomial Convergence</a></li>
+<li><a href="/homework8.html">Homework 8 — Bernoulli Process, Binomial & Combinatorics</a></li>
 </ul>
