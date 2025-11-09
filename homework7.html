@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homework 7 — Random Walk of Server Security & Binomial Convergence</title>
+<style>
+  :root{ --bg:#f8fafc; --card:#fff; --ink:#111; --muted:#666; --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5; }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
+  header{padding:54px 20px 40px;background:linear-gradient(120deg,var(--blue),var(--blue2));color:#fff;text-align:center;}
+  header h1{margin:0 0 8px;font-size:30px;} header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:1000px;margin:24px auto;padding:0 18px 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:22px 24px;margin-bottom:18px;}
+  h2,h3{color:var(--blue2);text-align:center;margin:6px 0 10px;}
+  p{margin:10px 0;text-align:justify;} .meta{color:var(--muted);text-align:center;font-size:14px;margin:6px 0 10px;}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+  .inputRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:10px}
+  input,select{padding:10px;border:1px solid var(--line);border-radius:8px;min-width:120px}
+  button{padding:10px 14px;border:1px solid var(--blue2);background:var(--blue);color:#fff;border-radius:8px;cursor:pointer}
+  button.secondary{background:#fff;color:var(--blue2)}
+  code{background:#f2f5f9;padding:2px 5px;border-radius:6px;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:center;} th{background:#f2f5f9;}
+  canvas{width:100%;max-width:920px;height:260px;border:1px solid var(--line);border-radius:10px;background:#fff;display:block;margin:10px auto;}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .legend{display:flex;gap:18px;justify-content:center;margin:8px 0;color:#333}
+  .badge{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .b1{background:#0d83ff;} .b2{background:#8ab6ff;}
+  .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;text-align:center;color:var(--muted);font-size:14px;}
+  .scrollX{overflow:auto}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Homework 7 — Random Walk of Server Security & Binomial Convergence</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025–2026</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>1) Problem Setup</h2>
+  <p>
+    A server receives weekly security updates for <strong>n</strong> weeks. Each week there are <strong>m</strong> independent attackers; 
+    an individual attacker breaches with probability <strong>p</strong>. The server is <em>breached</em> if at least one attacker succeeds, with
+    weekly breach probability <span class="mono">π = 1 − (1−p)<sup>m</sup></span>.
+  </p>
+  <p>
+    Weekly score: <strong>+1</strong> if the server remains secure, <strong>−1</strong> if breached. 
+    The cumulative score after n weeks is a (possibly biased) <strong>random walk</strong>:
+    <span class="mono">S<sub>n</sub> = ∑ X<sub>i</sub></span> with <span class="mono">P(X=+1)=1−π</span> and <span class="mono">P(X=−1)=π</span>.
+  </p>
+  <p class="meta">Equivalently, if K is the number of breached weeks (K ~ Binomial(n, π)), then <span class="mono">S<sub>n</sub> = n − 2K</span>.</p>
+</section>
+
+<section class="card">
+  <h2>2) Simulation Controls</h2>
+  <div class="inputRow">
+    <label>Weeks n <input id="n" type="number" min="1" value="30"></label>
+    <label>Attackers m <input id="m" type="number" min="1" value="5"></label>
+    <label>Attacker breach p <input id="p" type="number" min="0" max="1" step="0.01" value="0.10"></label>
+    <label>Trajectories (sims) <input id="sims" type="number" min="100" step="100" value="1000"></label>
+    <button id="run">Run simulation</button>
+    <button id="reset" class="secondary">Reset</button>
+  </div>
+  <p class="meta">Weekly breach probability: <span class="mono">π = 1 − (1−p)<sup>m</sup></span>. As <em>sims</em> grows, empirical counts converge to the binomial law.</p>
+</section>
+
+<section class="card">
+  <h2>3) Trajectories (Random Walk)</h2>
+  <p>A small sample of trajectories visualizes the random walk (secure → up, breach → down).</p>
+  <canvas id="traj"></canvas>
+</section>
+
+<section class="card">
+  <h2>4) Final Score Distribution</h2>
+  <p>Histogram of final scores <span class="mono">S<sub>n</sub></span> with empirical counts (blue) vs theoretical binomial (light blue) via <span class="mono">S<sub>n</sub>=n−2K</span>.</p>
+  <div class="legend">
+    <div><span class="badge b1"></span>Empirical count</div>
+    <div><span class="badge b2"></span>Theoretical Binomial × sims</div>
+  </div>
+  <canvas id="hist"></canvas>
+  <div class="scrollX">
+    <table id="summary">
+      <thead>
+        <tr><th>Score s</th><th>Empirical count</th><th>Theoretical count (≈)</th><th>Absolute error</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="meta">As n and simulations grow, empirical frequencies → binomial probabilities (LLN). For large n, a normal approximation emerges (CLT).</p>
+</section>
+
+<section class="card footer">
+  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025–2026 · November 2025
+</section>
+
+</main>
+
+<script>
+// ---------- Helpers ----------
+function binomPMF(n, k, pi){
+  k = Math.round(k);
+  if (k < 0 || k > n) return 0;
+  let coeff = 1;
+  for (let i=1;i<=k;i++){
+    coeff *= (n - (k - i)) / i;
+  }
+  return coeff * Math.pow(pi, k) * Math.pow(1-pi, n-k);
+}
+function mapScoreFromK(n,k){ return n - 2*k; }
+function clamp01(x){ return Math.min(1, Math.max(0, x)); }
+
+// ---------- DOM ----------
+const elN = document.getElementById('n');
+const elM = document.getElementById('m');
+const elP = document.getElementById('p');
+const elSims = document.getElementById('sims');
+const runBtn = document.getElementById('run');
+const resetBtn = document.getElementById('reset');
+const trajCanvas = document.getElementById('traj');
+const histCanvas = document.getElementById('hist');
+const tableBody = document.querySelector('#summary tbody');
+
+// Resize canvases
+function fitCanvas(cnv, W=920, H=260){
+  const ratio = window.devicePixelRatio || 1;
+  cnv.width = W*ratio; cnv.height = H*ratio;
+  cnv.style.width = W+'px'; cnv.style.height = H+'px';
+  const ctx = cnv.getContext('2d'); ctx.scale(ratio, ratio);
+  return ctx;
+}
+const trajCtx = fitCanvas(trajCanvas);
+const histCtx = fitCanvas(histCanvas);
+
+// ---------- Simulation ----------
+function simulate(){
+  const n = Math.max(1, parseInt(elN.value,10));
+  const m = Math.max(1, parseInt(elM.value,10));
+  const p = clamp01(parseFloat(elP.value));
+  const sims = Math.max(1, parseInt(elSims.value,10));
+  const pi = 1 - Math.pow(1-p, m); // weekly breach prob
+
+  // Generate trajectories (keep a few to plot)
+  const show = Math.min(60, sims);
+  const paths = [];
+  const finalCounts = new Map(); // score -> count
+
+  for (let s=0; s<sims; s++){
+    let y = 0;
+    let K = 0;
+    const path = [];
+    for (let i=0;i<n;i++){
+      const breached = Math.random() < pi;
+      const step = breached ? -1 : +1;
+      if (breached) K++;
+      y += step;
+      if (s < show) path.push(y);
+    }
+    const finalScore = y; // equals n - 2K
+    finalCounts.set(finalScore, (finalCounts.get(finalScore)||0) + 1);
+    if (s < show) paths.push(path);
+  }
+
+  drawTrajectories(paths);
+  drawHistogram(n, pi, sims, finalCounts);
+}
+
+function drawTrajectories(paths){
+  const ctx = trajCtx;
+  const W = 920, H = 260, pad = 20;
+  ctx.clearRect(0,0,W,H);
+  // axis
+  ctx.strokeStyle = '#d7dbe3'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad, H/2); ctx.lineTo(W-pad, H/2); ctx.stroke();
+  // plot
+  const n = paths.length ? paths[0].length : 0;
+  for (const path of paths){
+    ctx.beginPath();
+    let x0 = pad, y0 = H/2;
+    ctx.moveTo(x0,y0);
+    for (let i=0;i<path.length;i++){
+      const x = pad + (W-2*pad)*(i+1)/n;
+      const y = H/2 - (path[i])*( (H/2 - pad) / Math.max(1, n) );
+      ctx.strokeStyle = 'rgba(13,131,255,0.25)';
+      ctx.lineWidth = 1.2;
+      ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+}
+
+function drawHistogram(n, pi, sims, finalCounts){
+  const ctx = histCtx;
+  const W = 920, H = 260, pad = 32;
+  ctx.clearRect(0,0,W,H);
+
+  const scores = [];
+  const empirical = [];
+  const theoretical = [];
+  let maxVal = 0;
+
+  for (let k=0; k<=n; k++){
+    const s = mapScoreFromK(n,k);
+    scores.push(s);
+    const emp = (finalCounts.get(s)||0);
+    const th = binomPMF(n, k, pi) * sims;
+    empirical.push(emp);
+    theoretical.push(th);
+    maxVal = Math.max(maxVal, emp, th);
+  }
+
+  // axes
+  ctx.strokeStyle = '#d7dbe3'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad, H-pad); ctx.lineTo(W-pad, H-pad); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, H-pad); ctx.stroke();
+
+  const barW = (W - 2*pad) / scores.length * 0.8;
+  const gap = (W - 2*pad) / scores.length * 0.2;
+
+  for (let i=0;i<scores.length;i++){
+    const x = pad + i*((W - 2*pad)/scores.length);
+    const hEmp = (empirical[i]/maxVal)*(H-2*pad);
+    const hTh  = (theoretical[i]/maxVal)*(H-2*pad);
+
+    // theoretical
+    ctx.fillStyle = '#8ab6ff';
+    ctx.fillRect(x + gap/2, H-pad-hTh, barW, hTh);
+
+    // empirical
+    ctx.fillStyle = '#0d83ff';
+    ctx.fillRect(x + gap/2 + barW*0.2, H-pad-hEmp, barW*0.6, hEmp);
+
+    if (i%Math.max(1,Math.floor(scores.length/10))===0){
+      ctx.fillStyle = '#333'; ctx.font = '11px Arial';
+      ctx.fillText(scores[i], x + gap/2, H-pad+12);
+    }
+  }
+
+  const tbody = tableBody; tbody.innerHTML = '';
+  for (let i=0;i<scores.length;i++){
+    const tr = document.createElement('tr');
+    const absErr = Math.abs(empirical[i] - theoretical[i]);
+    [scores[i], Math.round(empirical[i]), theoretical[i].toFixed(1), absErr.toFixed(1)]
+      .forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+    tbody.appendChild(tr);
+  }
+}
+
+runBtn.onclick = simulate;
+resetBtn.onclick = () => {
+  document.getElementById('n').value = 30;
+  document.getElementById('m').value = 5;
+  document.getElementById('p').value = 0.10;
+  document.getElementById('sims').value = 1000;
+  const ctx1 = trajCtx, ctx2 = histCtx;
+  ctx1.clearRect(0,0,920,260); ctx2.clearRect(0,0,920,260);
+  tableBody.innerHTML = '';
+};
+</script>
+
+</body>
+</html>
