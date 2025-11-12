@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Homework 7 — Random Walk of Server Security & Binomial Convergence</title>
+<title>Homework 7 — Random Walk of Server Security and Binomial Convergence</title>
 <style>
   :root{ --bg:#f8fafc; --card:#fff; --ink:#111; --muted:#666; --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5; }
   html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45;}
@@ -28,13 +28,14 @@
   .b1{background:#0d83ff;} .b2{background:#8ab6ff;}
   .footer{border-top:1px solid var(--line);padding-top:12px;margin-top:10px;text-align:center;color:var(--muted);font-size:14px;}
   .scrollX{overflow:auto}
+  ul{margin:6px 0 0 18px;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Homework 7 — Random Walk of Server Security & Binomial Convergence</h1>
-  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025–2026</p>
+  <h1>Homework 7 — Random Walk of Server Security and Binomial Convergence</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025-2026</p>
 </header>
 
 <main class="wrap">
@@ -42,16 +43,16 @@
 <section class="card">
   <h2>1) Problem Setup</h2>
   <p>
-    A server receives weekly security updates for <strong>n</strong> weeks. Each week there are <strong>m</strong> independent attackers; 
-    an individual attacker breaches with probability <strong>p</strong>. The server is <em>breached</em> if at least one attacker succeeds, with
-    weekly breach probability <span class="mono">π = 1 − (1−p)<sup>m</sup></span>.
+    A server receives weekly security updates for <strong>n</strong> weeks. Each week there are <strong>m</strong> independent attackers. 
+    An individual attacker breaches with probability <strong>p</strong>. The server is breached if at least one attacker succeeds, with
+    weekly breach probability <span class="mono">π = 1 − (1 − p)<sup>m</sup></span>.
   </p>
   <p>
-    Weekly score: <strong>+1</strong> if the server remains secure, <strong>−1</strong> if breached. 
-    The cumulative score after n weeks is a (possibly biased) <strong>random walk</strong>:
-    <span class="mono">S<sub>n</sub> = ∑ X<sub>i</sub></span> with <span class="mono">P(X=+1)=1−π</span> and <span class="mono">P(X=−1)=π</span>.
+    Weekly score: <strong>+1</strong> if the server remains secure, <strong>−1</strong> if it is breached. 
+    The cumulative score after n weeks is a (possibly biased) random walk:
+    <span class="mono">S<sub>n</sub> = ∑ X<sub>i</sub></span> with <span class="mono">P(X = +1) = 1 − π</span> and <span class="mono">P(X = −1) = π</span>.
   </p>
-  <p class="meta">Equivalently, if K is the number of breached weeks (K ~ Binomial(n, π)), then <span class="mono">S<sub>n</sub> = n − 2K</span>.</p>
+  <p class="meta">If K is the number of breached weeks (K ~ Binomial(n, π)), then <span class="mono">S<sub>n</sub> = n − 2K</span>.</p>
 </section>
 
 <section class="card">
@@ -64,55 +65,102 @@
     <button id="run">Run simulation</button>
     <button id="reset" class="secondary">Reset</button>
   </div>
-  <p class="meta">Weekly breach probability: <span class="mono">π = 1 − (1−p)<sup>m</sup></span>. As <em>sims</em> grows, empirical counts converge to the binomial law.</p>
+  <p class="meta">
+    Weekly breach probability π = <span id="piValue">0.000</span>, computed as π = 1 − (1 − p)<sup>m</sup>. 
+    As the number of simulated trajectories increases, the empirical distribution of final scores approaches the theoretical one.
+  </p>
 </section>
 
 <section class="card">
-  <h2>3) Trajectories (Random Walk)</h2>
-  <p>A small sample of trajectories visualizes the random walk (secure → up, breach → down).</p>
+  <h2>3) Theoretical Properties of the Random Walk</h2>
+  <p>
+    The weekly step <span class="mono">X</span> takes value +1 (secure) with probability <span class="mono">1 − π</span> and −1 (breach) with probability <span class="mono">π</span>.
+    From this we obtain the basic moments of the random walk.
+  </p>
+  <ul>
+    <li><strong>Mean of one step:</strong> <span class="mono">E[X] = (+1)(1 − π) + (−1)π = 1 − 2π</span>.</li>
+    <li><strong>Variance of one step:</strong> since <span class="mono">X² = 1</span>, <span class="mono">Var(X) = E[X²] − (E[X])² = 1 − (1 − 2π)² = 4π(1 − π)</span>.</li>
+    <li><strong>Mean of the total score:</strong> <span class="mono">E[S<sub>n</sub>] = n E[X] = n (1 − 2π)</span>.</li>
+    <li><strong>Variance of the total score:</strong> with independent steps, <span class="mono">Var(S<sub>n</sub>) = n Var(X) = 4n π (1 − π)</span>.</li>
+  </ul>
+  <p class="meta">
+    Because <span class="mono">S<sub>n</sub> = n − 2K</span> with <span class="mono">K ~ Binomial(n, π)</span>, these expressions agree with the binomial mean and variance.
+  </p>
+</section>
+
+<section class="card">
+  <h2>4) Trajectories (Random Walk)</h2>
+  <p>
+    The plot below shows a sample of simulated trajectories of the cumulative score. 
+    Each colored path is one trial of <span class="mono">S<sub>k</sub> = ∑<sub>i=1</sub><sup>k</sup> X<sub>i</sub></span>. 
+    The horizontal axis is the week index, the vertical axis is the cumulative sum of scores up to that week.
+  </p>
+  <p class="meta">
+    This chart focuses on the time evolution of the process, while the histogram in the next section focuses on the final distribution of <span class="mono">S<sub>n</sub></span>.
+  </p>
   <canvas id="traj"></canvas>
 </section>
 
 <section class="card">
-  <h2>4) Final Score Distribution</h2>
-  <p>Histogram of final scores <span class="mono">S<sub>n</sub></span> with empirical counts (blue) vs theoretical binomial (light blue) via <span class="mono">S<sub>n</sub>=n−2K</span>.</p>
+  <h2>5) Final Score Distribution</h2>
+  <p>
+    Each bar of the histogram corresponds to a possible final score <span class="mono">s ∈ {−n, −n+2, …, n−2, n}</span>. 
+    For a given score s, the height of the empirical bar is the number of simulated trajectories that ended with <span class="mono">S<sub>n</sub> = s</span>. 
+    The light bar overlay is the theoretical binomial probability for the number of breached weeks K, mapped to the score variable by <span class="mono">S<sub>n</sub> = n − 2K</span> and multiplied by the number of simulations.
+  </p>
+  <p class="meta">
+    In other words, the histogram shows the empirical distribution of the binomial variable K, expressed on the scale of cumulative scores in the random walk.
+  </p>
   <div class="legend">
     <div><span class="badge b1"></span>Empirical count</div>
-    <div><span class="badge b2"></span>Theoretical Binomial × sims</div>
+    <div><span class="badge b2"></span>Theoretical binomial count</div>
   </div>
   <canvas id="hist"></canvas>
   <div class="scrollX">
     <table id="summary">
       <thead>
-        <tr><th>Score s</th><th>Empirical count</th><th>Theoretical count (≈)</th><th>Absolute error</th></tr>
+        <tr><th>Score s</th><th>Empirical count</th><th>Theoretical count (approx)</th><th>Absolute error</th></tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
-  <p class="meta">As n and simulations grow, empirical frequencies → binomial probabilities (LLN). For large n, a normal approximation emerges (CLT).</p>
+  <p class="meta">
+    When π is close to one half, the distribution is roughly symmetric around <span class="mono">E[S<sub>n</sub>] = n (1 − 2π)</span>. 
+    For π equal to 0.5 the walk is unbiased and symmetric around zero. For π different from 0.5 the histogram shifts to the left or right.
+  </p>
+</section>
+
+<section class="card">
+  <h2>6) Drift, Symmetry and Convergence</h2>
+  <ul>
+    <li><strong>Drift:</strong> if π is less than 0.5, then <span class="mono">E[X] = 1 − 2π</span> is positive and trajectories tend to drift upward. If π is greater than 0.5 they drift downward.</li>
+    <li><strong>Unbiased case:</strong> for π equal to 0.5, the random walk has zero mean step and no systematic drift. The distribution of <span class="mono">S<sub>n</sub></span> is symmetric.</li>
+    <li><strong>Law of Large Numbers:</strong> the empirical frequencies of each final score converge to the binomial probabilities as the number of simulations increases.</li>
+    <li><strong>Central Limit Theorem:</strong> for large n, <span class="mono">S<sub>n</sub></span> is approximately normal with mean <span class="mono">n (1 − 2π)</span> and variance <span class="mono">4n π (1 − π)</span>.</li>
+  </ul>
 </section>
 
 <section class="card footer">
-  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025–2026 · November 2025
+  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025-2026 · November 2025
 </section>
 
 </main>
 
 <script>
-// ---------- Helpers ----------
+// Helpers
 function binomPMF(n, k, pi){
   k = Math.round(k);
   if (k < 0 || k > n) return 0;
   let coeff = 1;
-  for (let i=1;i<=k;i++){
+  for (let i = 1; i <= k; i++){
     coeff *= (n - (k - i)) / i;
   }
-  return coeff * Math.pow(pi, k) * Math.pow(1-pi, n-k);
+  return coeff * Math.pow(pi, k) * Math.pow(1 - pi, n - k);
 }
-function mapScoreFromK(n,k){ return n - 2*k; }
+function mapScoreFromK(n, k){ return n - 2 * k; }
 function clamp01(x){ return Math.min(1, Math.max(0, x)); }
 
-// ---------- DOM ----------
+// DOM
 const elN = document.getElementById('n');
 const elM = document.getElementById('m');
 const elP = document.getElementById('p');
@@ -122,44 +170,46 @@ const resetBtn = document.getElementById('reset');
 const trajCanvas = document.getElementById('traj');
 const histCanvas = document.getElementById('hist');
 const tableBody = document.querySelector('#summary tbody');
+const piSpan = document.getElementById('piValue');
 
 // Resize canvases
-function fitCanvas(cnv, W=920, H=260){
+function fitCanvas(cnv, W = 920, H = 260){
   const ratio = window.devicePixelRatio || 1;
-  cnv.width = W*ratio; cnv.height = H*ratio;
-  cnv.style.width = W+'px'; cnv.style.height = H+'px';
+  cnv.width = W * ratio; cnv.height = H * ratio;
+  cnv.style.width = W + 'px'; cnv.style.height = H + 'px';
   const ctx = cnv.getContext('2d'); ctx.scale(ratio, ratio);
   return ctx;
 }
 const trajCtx = fitCanvas(trajCanvas);
 const histCtx = fitCanvas(histCanvas);
 
-// ---------- Simulation ----------
+// Simulation
 function simulate(){
-  const n = Math.max(1, parseInt(elN.value,10));
-  const m = Math.max(1, parseInt(elM.value,10));
+  const n = Math.max(1, parseInt(elN.value, 10));
+  const m = Math.max(1, parseInt(elM.value, 10));
   const p = clamp01(parseFloat(elP.value));
-  const sims = Math.max(1, parseInt(elSims.value,10));
-  const pi = 1 - Math.pow(1-p, m); // weekly breach prob
+  const sims = Math.max(1, parseInt(elSims.value, 10));
+  const pi = 1 - Math.pow(1 - p, m); // weekly breach probability
 
-  // Generate trajectories (keep a few to plot)
+  if (piSpan) piSpan.textContent = pi.toFixed(3);
+
   const show = Math.min(60, sims);
   const paths = [];
-  const finalCounts = new Map(); // score -> count
+  const finalCounts = new Map();
 
-  for (let s=0; s<sims; s++){
+  for (let s = 0; s < sims; s++){
     let y = 0;
     let K = 0;
     const path = [];
-    for (let i=0;i<n;i++){
+    for (let i = 0; i < n; i++){
       const breached = Math.random() < pi;
       const step = breached ? -1 : +1;
       if (breached) K++;
       y += step;
       if (s < show) path.push(y);
     }
-    const finalScore = y; // equals n - 2K
-    finalCounts.set(finalScore, (finalCounts.get(finalScore)||0) + 1);
+    const finalScore = y;
+    finalCounts.set(finalScore, (finalCounts.get(finalScore) || 0) + 1);
     if (s < show) paths.push(path);
   }
 
@@ -170,22 +220,20 @@ function simulate(){
 function drawTrajectories(paths){
   const ctx = trajCtx;
   const W = 920, H = 260, pad = 20;
-  ctx.clearRect(0,0,W,H);
-  // axis
+  ctx.clearRect(0, 0, W, H);
   ctx.strokeStyle = '#d7dbe3'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(pad, H/2); ctx.lineTo(W-pad, H/2); ctx.stroke();
-  // plot
+  ctx.beginPath(); ctx.moveTo(pad, H / 2); ctx.lineTo(W - pad, H / 2); ctx.stroke();
   const n = paths.length ? paths[0].length : 0;
   for (const path of paths){
     ctx.beginPath();
-    let x0 = pad, y0 = H/2;
-    ctx.moveTo(x0,y0);
-    for (let i=0;i<path.length;i++){
-      const x = pad + (W-2*pad)*(i+1)/n;
-      const y = H/2 - (path[i])*( (H/2 - pad) / Math.max(1, n) );
+    let x0 = pad, y0 = H / 2;
+    ctx.moveTo(x0, y0);
+    for (let i = 0; i < path.length; i++){
+      const x = pad + (W - 2 * pad) * (i + 1) / n;
+      const y = H / 2 - (path[i]) * ((H / 2 - pad) / Math.max(1, n));
       ctx.strokeStyle = 'rgba(13,131,255,0.25)';
       ctx.lineWidth = 1.2;
-      ctx.lineTo(x,y);
+      ctx.lineTo(x, y);
     }
     ctx.stroke();
   }
@@ -194,70 +242,75 @@ function drawTrajectories(paths){
 function drawHistogram(n, pi, sims, finalCounts){
   const ctx = histCtx;
   const W = 920, H = 260, pad = 32;
-  ctx.clearRect(0,0,W,H);
+  ctx.clearRect(0, 0, W, H);
 
   const scores = [];
   const empirical = [];
   const theoretical = [];
   let maxVal = 0;
 
-  for (let k=0; k<=n; k++){
-    const s = mapScoreFromK(n,k);
+  for (let k = 0; k <= n; k++){
+    const s = mapScoreFromK(n, k);
     scores.push(s);
-    const emp = (finalCounts.get(s)||0);
+    const emp = (finalCounts.get(s) || 0);
     const th = binomPMF(n, k, pi) * sims;
     empirical.push(emp);
     theoretical.push(th);
     maxVal = Math.max(maxVal, emp, th);
   }
 
-  // axes
   ctx.strokeStyle = '#d7dbe3'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(pad, H-pad); ctx.lineTo(W-pad, H-pad); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, H-pad); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad, H - pad); ctx.lineTo(W - pad, H - pad); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, H - pad); ctx.stroke();
 
-  const barW = (W - 2*pad) / scores.length * 0.8;
-  const gap = (W - 2*pad) / scores.length * 0.2;
+  const barW = (W - 2 * pad) / scores.length * 0.8;
+  const gap = (W - 2 * pad) / scores.length * 0.2;
 
-  for (let i=0;i<scores.length;i++){
-    const x = pad + i*((W - 2*pad)/scores.length);
-    const hEmp = (empirical[i]/maxVal)*(H-2*pad);
-    const hTh  = (theoretical[i]/maxVal)*(H-2*pad);
+  for (let i = 0; i < scores.length; i++){
+    const x = pad + i * ((W - 2 * pad) / scores.length);
+    const hEmp = (empirical[i] / maxVal) * (H - 2 * pad);
+    const hTh  = (theoretical[i] / maxVal) * (H - 2 * pad);
 
-    // theoretical
     ctx.fillStyle = '#8ab6ff';
-    ctx.fillRect(x + gap/2, H-pad-hTh, barW, hTh);
+    ctx.fillRect(x + gap / 2, H - pad - hTh, barW, hTh);
 
-    // empirical
     ctx.fillStyle = '#0d83ff';
-    ctx.fillRect(x + gap/2 + barW*0.2, H-pad-hEmp, barW*0.6, hEmp);
+    ctx.fillRect(x + gap / 2 + barW * 0.2, H - pad - hEmp, barW * 0.6, hEmp);
 
-    if (i%Math.max(1,Math.floor(scores.length/10))===0){
+    if (i % Math.max(1, Math.floor(scores.length / 10)) === 0){
       ctx.fillStyle = '#333'; ctx.font = '11px Arial';
-      ctx.fillText(scores[i], x + gap/2, H-pad+12);
+      ctx.fillText(scores[i], x + gap / 2, H - pad + 12);
     }
   }
 
   const tbody = tableBody; tbody.innerHTML = '';
-  for (let i=0;i<scores.length;i++){
+  for (let i = 0; i < scores.length; i++){
     const tr = document.createElement('tr');
     const absErr = Math.abs(empirical[i] - theoretical[i]);
     [scores[i], Math.round(empirical[i]), theoretical[i].toFixed(1), absErr.toFixed(1)]
-      .forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+      .forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
     tbody.appendChild(tr);
   }
 }
 
 runBtn.onclick = simulate;
 resetBtn.onclick = () => {
-  document.getElementById('n').value = 30;
-  document.getElementById('m').value = 5;
-  document.getElementById('p').value = 0.10;
-  document.getElementById('sims').value = 1000;
+  elN.value = 30;
+  elM.value = 5;
+  elP.value = 0.10;
+  elSims.value = 1000;
+  const piDefault = 1 - Math.pow(1 - 0.10, 5);
+  if (piSpan) piSpan.textContent = piDefault.toFixed(3);
   const ctx1 = trajCtx, ctx2 = histCtx;
-  ctx1.clearRect(0,0,920,260); ctx2.clearRect(0,0,920,260);
+  ctx1.clearRect(0, 0, 920, 260); ctx2.clearRect(0, 0, 920, 260);
   tableBody.innerHTML = '';
 };
+
+// set initial pi from defaults
+(function initPi(){
+  const piDefault = 1 - Math.pow(1 - 0.10, 5);
+  if (piSpan) piSpan.textContent = piDefault.toFixed(3);
+})();
 </script>
 
 </body>
