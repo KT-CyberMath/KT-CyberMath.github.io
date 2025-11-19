@@ -75,4 +75,6 @@ A collection of assignments and research for the Statistics course, academic yea
 <li><a href="/homework6.html">Homework 6 — Online Mean and Variance (Derivation + Demo)</a></li>
   <li><a href="/homework7.html">Homework 7 — Random Walk of Server Security & Binomial Convergence</a></li>
 <li><a href="/homework8.html">Homework 8 — Bernoulli Process, Binomial & Combinatorics</a></li>
+  <li><a href="/homework9.html">Homework 9 — Interpretations of Probability and Kolmogorov Axioms</a></li>
+<li><a href="/homework10.html">Homework 10 — From Bernoulli Trials to the Poisson Process</a></li>
 </ul>
