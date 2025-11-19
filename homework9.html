@@ -46,12 +46,17 @@
     margin:6px 0 10px;
   }
   ul{margin:6px 0 0 18px;}
-  code{
-    background:#f2f5f9;
-    padding:2px 5px;
-    border-radius:6px;
-  }
   .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .formulaBox{
+    border:1px solid #d0d7e2;
+    background:#f9fbff;
+    border-radius:8px;
+    padding:10px 12px;
+    margin:12px 0;
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+  }
   .footer{
     border-top:1px solid var(--line);
     padding-top:12px;
@@ -87,15 +92,19 @@
   <p>
     In the classical interpretation we consider a finite set of equally likely outcomes. For a fair die with six faces, the probability of an event A
     is defined as
-    <span class="mono">P(A) = (number of favorable outcomes) / (number of possible outcomes)</span>.
+  </p>
+  <div class="formulaBox">
+    P(A) = (number of favorable outcomes) / (number of possible outcomes)
+  </div>
+  <p>
     This works very well in symmetric finite situations but it already assumes that all basic outcomes have the same probability.
   </p>
 
   <h3>Frequentist probability</h3>
   <p>
     The frequentist view defines the probability of an event A as the limiting relative frequency of A in a long sequence of identical experiments.
-    If the experiment is repeated n times and A occurs N<sub>n</sub> times, the empirical frequency is N<sub>n</sub> / n.
-    The idea is that for large n, N<sub>n</sub> / n should be close to P(A).
+    If the experiment is repeated n times and A occurs B<sub>n</sub> times, the empirical frequency is B<sub>n</sub> / n.
+    The idea is that for large n, B<sub>n</sub> / n should be close to P(A).
   </p>
 
   <h3>Bayesian probability</h3>
@@ -121,17 +130,17 @@
 <section class="card">
   <h2>3) Kolmogorov Axioms and Resolution of Inconsistencies</h2>
   <p>
-    Kolmogorov proposed to define probability in purely abstract terms. A probability space is a triple
-    <span class="mono">(Ω, F, P)</span> where Ω is the sample space, F is a sigma algebra of events and
-    P is a function that assigns to each event A in F a number P(A) in the interval [0, 1] such that:
+    Kolmogorov proposed to define probability in purely abstract terms. A probability space is a triple (Ω, F, P) where Ω is the sample space,
+    F is a sigma algebra of events and P is a function that assigns to each event A in F a number P(A) in the interval [0, 1] such that:
   </p>
   <ul>
     <li>Non negativity: P(A) ≥ 0 for every A in F.</li>
     <li>Normalization: P(Ω) = 1.</li>
-    <li>Countable additivity: for any sequence of pairwise disjoint events A<sub>1</sub>, A<sub>2</sub>, ... we have
-      <span class="mono">P(∪ A<sub>i</sub>) = Σ P(A<sub>i</sub>)</span>.
-    </li>
+    <li>Countable additivity: for any sequence of pairwise disjoint events A<sub>1</sub>, A<sub>2</sub>, ...</li>
   </ul>
+  <div class="formulaBox">
+    P(A<sub>1</sub> ∪ A<sub>2</sub> ∪ ...) = P(∪ A<sub>i</sub>) = Σ P(A<sub>i</sub>)
+  </div>
   <p>
     All further properties of probability are deduced from these axioms. The classical, frequentist, Bayesian and geometric interpretations
     are then seen as different ways to construct or interpret a probability measure P that satisfies the axioms. In this way the axiomatic
@@ -151,9 +160,9 @@
     A function X from Ω to ℝ is called measurable if for every Borel set B in ℝ the preimage {ω in Ω : X(ω) belongs to B} is in F.
     In probability theory such measurable functions are called random variables. The distribution of a random variable X is the measure
   </p>
-  <p class="mono">
-    P<sub>X</sub>(B) = P(X in B) = P({ω in Ω : X(ω) in B}).
-  </p>
+  <div class="formulaBox">
+    P<sub>X</sub>(B) = P(X ∈ B) = P({ω in Ω : X(ω) in B})
+  </div>
   <p>
     Expectations and variances are defined as integrals with respect to the probability measure P, using Lebesgue integration.
     This shows that probability theory is measure theory with an additional interpretation: events are measurable sets, probabilities
@@ -166,9 +175,9 @@
   <p>
     Let (A<sub>1</sub>, A<sub>2</sub>, ...) be any sequence of events, not necessarily disjoint. We want to show the subadditivity property
   </p>
-  <p class="mono">
-    P(∪ A<sub>i</sub>) ≤ Σ P(A<sub>i</sub>).
-  </p>
+  <div class="formulaBox">
+    P(∪ A<sub>i</sub>) ≤ Σ P(A<sub>i</sub>)
+  </div>
   <p>
     Define a new sequence of sets:
   </p>
@@ -183,9 +192,9 @@
     We have B<sub>i</sub> contained in A<sub>i</sub>, therefore P(B<sub>i</sub>) ≤ P(A<sub>i</sub>).
     Using countable additivity for the disjoint family (B<sub>i</sub>) we obtain
   </p>
-  <p class="mono">
-    P(∪ A<sub>i</sub>) = P(∪ B<sub>i</sub>) = Σ P(B<sub>i</sub>) ≤ Σ P(A<sub>i</sub>).
-  </p>
+  <div class="formulaBox">
+    P(∪ A<sub>i</sub>) = P(∪ B<sub>i</sub>) = Σ P(B<sub>i</sub>) ≤ Σ P(A<sub>i</sub>)
+  </div>
   <p>
     This proves subadditivity using only the axioms and the monotonicity of P.
   </p>
@@ -196,44 +205,37 @@
 
   <h3>Two events</h3>
   <p>
-    For events A and B we want to prove
+    For events A and B we want to prove the formula
   </p>
-  <p class="mono">
-    P(A ∪ B) = P(A) + P(B) − P(A ∩ B).
-  </p>
+  <div class="formulaBox">
+    P(A ∪ B) = P(A) + P(B) − P(A ∩ B)
+  </div>
   <p>
-    Decompose the union as
-    <span class="mono">A ∪ B = A ∪ (B \ A)</span>. The sets A and B \ A are disjoint, so by finite additivity
+    Decompose the union as A ∪ B = A ∪ (B \ A). The sets A and B \ A are disjoint, so by finite additivity
   </p>
-  <p class="mono">
-    P(A ∪ B) = P(A) + P(B \ A).
-  </p>
+  <div class="formulaBox">
+    P(A ∪ B) = P(A) + P(B \ A)
+  </div>
   <p>
-    On the other hand B can be written as a disjoint union
-    <span class="mono">B = (B ∩ A) ∪ (B \ A)</span>. Thus
+    On the other hand B can be written as a disjoint union B = (B ∩ A) ∪ (B \ A). Thus
   </p>
-  <p class="mono">
+  <div class="formulaBox">
     P(B) = P(B ∩ A) + P(B \ A)
-  </p>
+  </div>
   <p>
-    and therefore
-    <span class="mono">P(B \ A) = P(B) − P(A ∩ B)</span>. Substituting in the union formula gives
-  </p>
-  <p class="mono">
-    P(A ∪ B) = P(A) + P(B) − P(A ∩ B).
+    and therefore P(B \ A) = P(B) − P(A ∩ B). Substituting in the union formula gives the inclusion exclusion identity above.
   </p>
 
   <h3>Finite general case</h3>
   <p>
     For a finite family of events A<sub>1</sub>, ..., A<sub>n</sub> one can prove by induction that
   </p>
-  <p class="mono">
-    P(A<sub>1</sub> ∪ ... ∪ A<sub>n</sub>) = Σ P(A<sub>i</sub>)  
-    − Σ P(A<sub>i</sub> ∩ A<sub>j</sub>)  
-    + Σ P(A<sub>i</sub> ∩ A<sub>j</sub> ∩ A<sub>k</sub>)  
-    − ...  
-    + (−1)<sup>n+1</sup> P(A<sub>1</sub> ∩ ... ∩ A<sub>n</sub>),
-  </p>
+  <div class="formulaBox">
+    P(A<sub>1</sub> ∪ ... ∪ A<sub>n</sub>) =
+    Σ P(A<sub>i</sub>) − Σ P(A<sub>i</sub> ∩ A<sub>j</sub>)
+    + Σ P(A<sub>i</sub> ∩ A<sub>j</sub> ∩ A<sub>k</sub>) − ... +
+    (−1)<sup>n+1</sup> P(A<sub>1</sub> ∩ ... ∩ A<sub>n</sub>)
+  </div>
   <p>
     where each sum runs over all distinct index sets of the given size. This is the inclusion exclusion principle for probabilities.
   </p>
