@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homework 10 — From Bernoulli Trials to the Poisson Process</title>
+<style>
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --ink:#111111; --muted:#666666;
+    --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5;
+  }
+  html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;
+    line-height:1.45;
+  }
+  header{
+    padding:54px 20px 40px;
+    background:linear-gradient(120deg,var(--blue),var(--blue2));
+    color:#fff;
+    text-align:center;
+  }
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);
+    padding:22px 24px;
+    margin-bottom:18px;
+  }
+  h2,h3{
+    color:var(--blue2);
+    text-align:center;
+    margin:6px 0 10px;
+  }
+  p{margin:10px 0;text-align:justify;}
+  .meta{
+    color:var(--muted);
+    text-align:center;
+    font-size:14px;
+    margin:6px 0 10px;
+  }
+  ul{margin:6px 0 0 18px;}
+  code{
+    background:#f2f5f9;
+    padding:2px 5px;
+    border-radius:6px;
+  }
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:center;}
+  th{background:#f2f5f9;}
+  .footer{
+    border-top:1px solid var(--line);
+    padding-top:12px;
+    margin-top:10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Homework 10 — From Bernoulli Trials to the Poisson Process</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 2026</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>1) Discrete Approximation of a Counting Process</h2>
+  <p>
+    We consider a time interval [0, T] and a process that counts the number of events or successes that occur in this interval.
+    Each event is assumed to happen independently of the others and the average rate of events is λ per unit time. For concreteness
+    we can take T equal to 1.
+  </p>
+  <p>
+    To simulate the process we approximate continuous time with a fine discrete grid. We divide [0, T] into n sub intervals of equal length
+    Δt = T / n. In each sub interval we perform a Bernoulli trial with probability of success equal to λ Δt. If a success occurs we record an event
+    in that sub interval, otherwise no event occurs there.
+  </p>
+  <p class="meta">
+    For large n this simulation gives a discrete time process that approximates a continuous time counting process with constant rate λ.
+  </p>
+</section>
+
+<section class="card">
+  <h2>2) Distribution of the Number of Events</h2>
+  <p>
+    Let N<sub>n</sub>(t) be the number of events observed in the simulation up to time t in [0, T]. For a fixed t, approximately
+    k = n t / T sub intervals fall inside [0, t]. Each of these k sub intervals contains an event with probability λ Δt, independently
+    of the others. Therefore the number of events in [0, t] has a binomial distribution:
+  </p>
+  <p class="mono">
+    N<sub>n</sub>(t) ∼ Binomial(k, λ Δt) with k ≈ n t / T and Δt = T / n.
+  </p>
+  <p>
+    If we keep t and λ fixed and let n go to infinity, then k grows and the success probability in each trial becomes λ / n.
+    In this limit we obtain the classical Poisson approximation of the binomial distribution. The law of N<sub>n</sub>(t) converges to
+    a Poisson distribution with parameter λ t:
+  </p>
+  <p class="mono">
+    N<sub>n</sub>(t) ⇒ N(t) with N(t) ∼ Poisson(λ t).
+  </p>
+  <p>
+    Thus the simulated counting process converges in distribution to a Poisson counting process.
+  </p>
+</section>
+
+<section class="card">
+  <h2>3) Identification as a Poisson Process</h2>
+  <p>
+    The limiting process N(t), for t in [0, T], has the following properties:
+  </p>
+  <ul>
+    <li>N(0) = 0.</li>
+    <li>N(t) increases by jumps of size one at random times, each jump representing a new event.</li>
+    <li>Independent increments: for disjoint time intervals the numbers of events are independent random variables.</li>
+    <li>Stationary increments: for s less than t the increment N(t) minus N(s) depends only on t minus s and follows a Poisson(λ (t − s)) law.</li>
+  </ul>
+  <p>
+    A counting process with these properties is called a Poisson process with rate λ. The discrete simulation based on Bernoulli trials over small
+    sub intervals is a standard way to construct it by approximation.
+  </p>
+</section>
+
+<section class="card">
+  <h2>4) Theoretical Properties</h2>
+  <p>
+    For every fixed t the random variable N(t) follows a Poisson distribution with parameter λ t. Its probability mass function is
+  </p>
+  <p class="mono">
+    P(N(t) = k) = e<span style="vertical-align:super;">−λ t</span> (λ t)<sup>k</sup> / k! ,   k = 0, 1, 2, ...
+  </p>
+  <p>
+    The mean and variance of N(t) are both equal to λ t:
+  </p>
+  <p class="mono">
+    E[N(t)] = λ t,   Var(N(t)) = λ t.
+  </p>
+  <p>
+    If we look at an increment over an interval of length h, then N(t + h) − N(t) ∼ Poisson(λ h) and is independent of the past.
+    These properties match exactly the behavior that appears in the simulation when n is large.
+  </p>
+</section>
+
+<section class="card">
+  <h2>5) Inter Arrival Times and Exponential Law</h2>
+  <p>
+    Another way to describe the same process is to look at the waiting time between two consecutive events.
+    Let T<sub>1</sub> be the time until the first event occurs. In a Poisson process with rate λ this waiting time
+    has an exponential distribution with parameter λ:
+  </p>
+  <p class="mono">
+    P(T<sub>1</sub> > t) = e<span style="vertical-align:super;">−λ t</span>,   t ≥ 0.
+  </p>
+  <p>
+    The same holds for the inter arrival times between any two events. The number of events up to time t is then the largest k such that
+    the sum of the first k waiting times is less than or equal to t. This description highlights the relation between the Poisson process
+    and the exponential distribution.
+  </p>
+</section>
+
+<section class="card">
+  <h2>6) Interpretation of the Rate λ</h2>
+  <p>
+    The parameter λ is the intensity of the process. It has several equivalent meanings:
+  </p>
+  <ul>
+    <li>It is the expected number of events per unit time. On average we see λ events in a time interval of length one and λ t events in a time interval of length t.</li>
+    <li>Its inverse 1 / λ is the expected waiting time between two consecutive events.</li>
+    <li>It controls the spread of the process. Since Var(N(t)) = λ t, larger λ produces more variability but in relative terms the fluctuations around the mean become smaller when t grows.</li>
+  </ul>
+  <p>
+    In applications λ is interpreted as arrival rate, failure rate or intensity of requests, depending on the context. The Bernoulli simulation over small time steps provides
+    a concrete way to see how this rate parameter governs both the distribution of counts and the timing of events.
+  </p>
+</section>
+
+<section class="card footer">
+  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 2026 · November 2025
+</section>
+
+</main>
+</body>
+</html>
