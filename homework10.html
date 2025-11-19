@@ -46,12 +46,17 @@
     margin:6px 0 10px;
   }
   ul{margin:6px 0 0 18px;}
-  code{
-    background:#f2f5f9;
-    padding:2px 5px;
-    border-radius:6px;
-  }
   .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .formulaBox{
+    border:1px solid #d0d7e2;
+    background:#f9fbff;
+    border-radius:8px;
+    padding:10px 12px;
+    margin:12px 0;
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+  }
   table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px;}
   th,td{border:1px solid var(--line);padding:8px 10px;text-align:center;}
   th{background:#f2f5f9;}
@@ -98,17 +103,17 @@
     k = n t / T sub intervals fall inside [0, t]. Each of these k sub intervals contains an event with probability λ Δt, independently
     of the others. Therefore the number of events in [0, t] has a binomial distribution:
   </p>
-  <p class="mono">
-    N<sub>n</sub>(t) ∼ Binomial(k, λ Δt) with k ≈ n t / T and Δt = T / n.
-  </p>
+  <div class="formulaBox">
+    N<sub>n</sub>(t) ∼ Binomial(k, λ Δt) with k ≈ (n t) / T and Δt = T / n
+  </div>
   <p>
-    If we keep t and λ fixed and let n go to infinity, then k grows and the success probability in each trial becomes λ / n.
+    If we keep t and λ fixed and let n grow to infinity, then k grows and the success probability in each trial becomes λ / n.
     In this limit we obtain the classical Poisson approximation of the binomial distribution. The law of N<sub>n</sub>(t) converges to
     a Poisson distribution with parameter λ t:
   </p>
-  <p class="mono">
-    N<sub>n</sub>(t) ⇒ N(t) with N(t) ∼ Poisson(λ t).
-  </p>
+  <div class="formulaBox">
+    N<sub>n</sub>(t) ⇒ N(t) , with N(t) ∼ Poisson(λ t)
+  </div>
   <p>
     Thus the simulated counting process converges in distribution to a Poisson counting process.
   </p>
@@ -136,18 +141,18 @@
   <p>
     For every fixed t the random variable N(t) follows a Poisson distribution with parameter λ t. Its probability mass function is
   </p>
-  <p class="mono">
-    P(N(t) = k) = e<span style="vertical-align:super;">−λ t</span> (λ t)<sup>k</sup> / k! ,   k = 0, 1, 2, ...
-  </p>
+  <div class="formulaBox">
+    P(N(t) = k) = e<sup>−λ t</sup> (λ t)<sup>k</sup> / k! ,  k = 0, 1, 2, ...
+  </div>
   <p>
     The mean and variance of N(t) are both equal to λ t:
   </p>
-  <p class="mono">
-    E[N(t)] = λ t,   Var(N(t)) = λ t.
-  </p>
+  <div class="formulaBox">
+    E[N(t)] = λ t,   Var(N(t)) = λ t
+  </div>
   <p>
-    If we look at an increment over an interval of length h, then N(t + h) − N(t) ∼ Poisson(λ h) and is independent of the past.
-    These properties match exactly the behavior that appears in the simulation when n is large.
+    If we look at an increment over an interval of length h, then N(t + h) minus N(t) follows a Poisson(λ h) law and is independent of the past.
+    These properties match the behavior that appears in the simulation when n is large.
   </p>
 </section>
 
@@ -158,9 +163,9 @@
     Let T<sub>1</sub> be the time until the first event occurs. In a Poisson process with rate λ this waiting time
     has an exponential distribution with parameter λ:
   </p>
-  <p class="mono">
-    P(T<sub>1</sub> > t) = e<span style="vertical-align:super;">−λ t</span>,   t ≥ 0.
-  </p>
+  <div class="formulaBox">
+    P(T<sub>1</sub> > t) = e<sup>−λ t</sup> ,  t ≥ 0
+  </div>
   <p>
     The same holds for the inter arrival times between any two events. The number of events up to time t is then the largest k such that
     the sum of the first k waiting times is less than or equal to t. This description highlights the relation between the Poisson process
