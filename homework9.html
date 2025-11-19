@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Homework 9 — Interpretations of Probability and Kolmogorov Axioms</title>
+<style>
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --ink:#111111; --muted:#666666;
+    --line:#e6e6e6; --blue:#0d83ff; --blue2:#0654b5;
+  }
+  html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;
+    line-height:1.45;
+  }
+  header{
+    padding:54px 20px 40px;
+    background:linear-gradient(120deg,var(--blue),var(--blue2));
+    color:#fff;
+    text-align:center;
+  }
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{max-width:900px;margin:24px auto;padding:0 18px 28px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.04);
+    padding:22px 24px;
+    margin-bottom:18px;
+  }
+  h2,h3{
+    color:var(--blue2);
+    text-align:center;
+    margin:6px 0 10px;
+  }
+  p{margin:10px 0;text-align:justify;}
+  .meta{
+    color:var(--muted);
+    text-align:center;
+    font-size:14px;
+    margin:6px 0 10px;
+  }
+  ul{margin:6px 0 0 18px;}
+  code{
+    background:#f2f5f9;
+    padding:2px 5px;
+    border-radius:6px;
+  }
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .footer{
+    border-top:1px solid var(--line);
+    padding-top:12px;
+    margin-top:10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Homework 9 — Interpretations of Probability and Kolmogorov Axioms</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025 2026</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>1) Interpretations of Probability</h2>
+  <p>
+    The word probability can be understood in several ways. The most common interpretations are classical, frequentist, Bayesian and geometric.
+    They give different intuition but in practice they must all respect the same algebraic rules. The axiomatic approach by Kolmogorov provides
+    a common framework where these interpretations can be compared.
+  </p>
+</section>
+
+<section class="card">
+  <h2>2) Classical, Frequentist, Bayesian and Geometric Views</h2>
+
+  <h3>Classical probability</h3>
+  <p>
+    In the classical interpretation we consider a finite set of equally likely outcomes. For a fair die with six faces, the probability of an event A
+    is defined as
+    <span class="mono">P(A) = (number of favorable outcomes) / (number of possible outcomes)</span>.
+    This works very well in symmetric finite situations but it already assumes that all basic outcomes have the same probability.
+  </p>
+
+  <h3>Frequentist probability</h3>
+  <p>
+    The frequentist view defines the probability of an event A as the limiting relative frequency of A in a long sequence of identical experiments.
+    If the experiment is repeated n times and A occurs N<sub>n</sub> times, the empirical frequency is N<sub>n</sub> / n.
+    The idea is that for large n, N<sub>n</sub> / n should be close to P(A).
+  </p>
+
+  <h3>Bayesian probability</h3>
+  <p>
+    In the Bayesian interpretation probability measures a degree of belief of a rational agent, given the information available.
+    We start from a prior probability and then update it with data through Bayes formula. This allows us to assign probabilities to unique events,
+    such as the probability that a model is correct, as long as the degrees of belief satisfy the usual probability rules.
+  </p>
+
+  <h3>Geometric probability</h3>
+  <p>
+    In geometric probability the sample space is a set with a geometrical structure, for example an interval or a region in the plane.
+    Events are sub regions and probability is a ratio of lengths, areas or volumes. If a point is chosen uniformly at random on an interval,
+    the probability to fall in a sub interval is length of sub interval divided by length of the whole interval. This is very intuitive but
+    requires a careful definition of uniform distribution on continuous spaces.
+  </p>
+
+  <p class="meta">
+    These interpretations give different stories but they must all satisfy the same algebraic properties if they are to be mathematically coherent.
+  </p>
+</section>
+
+<section class="card">
+  <h2>3) Kolmogorov Axioms and Resolution of Inconsistencies</h2>
+  <p>
+    Kolmogorov proposed to define probability in purely abstract terms. A probability space is a triple
+    <span class="mono">(Ω, F, P)</span> where Ω is the sample space, F is a sigma algebra of events and
+    P is a function that assigns to each event A in F a number P(A) in the interval [0, 1] such that:
+  </p>
+  <ul>
+    <li>Non negativity: P(A) ≥ 0 for every A in F.</li>
+    <li>Normalization: P(Ω) = 1.</li>
+    <li>Countable additivity: for any sequence of pairwise disjoint events A<sub>1</sub>, A<sub>2</sub>, ... we have
+      <span class="mono">P(∪ A<sub>i</sub>) = Σ P(A<sub>i</sub>)</span>.
+    </li>
+  </ul>
+  <p>
+    All further properties of probability are deduced from these axioms. The classical, frequentist, Bayesian and geometric interpretations
+    are then seen as different ways to construct or interpret a probability measure P that satisfies the axioms. In this way the axiomatic
+    approach does not choose a single philosophical meaning for probability. Instead, it demands that any meaning must respect the same algebra,
+    which removes many previous paradoxes and inconsistencies.
+  </p>
+</section>
+
+<section class="card">
+  <h2>4) Probability and Measure Theory</h2>
+  <p>
+    Measure theory studies triples (Ω, F, μ) where F is a sigma algebra of subsets of Ω and μ is a measure on F. A measure is a function
+    μ from F to [0, ∞] which is countably additive and satisfies μ(∅) = 0. Probability fits in this framework as the special case
+    where μ(Ω) = 1. In that case we write μ = P and speak about a probability space.
+  </p>
+  <p>
+    A function X from Ω to ℝ is called measurable if for every Borel set B in ℝ the preimage {ω in Ω : X(ω) belongs to B} is in F.
+    In probability theory such measurable functions are called random variables. The distribution of a random variable X is the measure
+  </p>
+  <p class="mono">
+    P<sub>X</sub>(B) = P(X in B) = P({ω in Ω : X(ω) in B}).
+  </p>
+  <p>
+    Expectations and variances are defined as integrals with respect to the probability measure P, using Lebesgue integration.
+    This shows that probability theory is measure theory with an additional interpretation: events are measurable sets, probabilities
+    are measures, random variables are measurable functions.
+  </p>
+</section>
+
+<section class="card">
+  <h2>5) Subadditivity from the Axioms</h2>
+  <p>
+    Let (A<sub>1</sub>, A<sub>2</sub>, ...) be any sequence of events, not necessarily disjoint. We want to show the subadditivity property
+  </p>
+  <p class="mono">
+    P(∪ A<sub>i</sub>) ≤ Σ P(A<sub>i</sub>).
+  </p>
+  <p>
+    Define a new sequence of sets:
+  </p>
+  <p class="mono">
+    B<sub>1</sub> = A<sub>1</sub>  
+    B<sub>2</sub> = A<sub>2</sub> \ A<sub>1</sub>  
+    B<sub>3</sub> = A<sub>3</sub> \ (A<sub>1</sub> ∪ A<sub>2</sub>)  
+    ...
+  </p>
+  <p>
+    The sets B<sub>i</sub> are pairwise disjoint by construction and their union equals ∪ A<sub>i</sub>.
+    We have B<sub>i</sub> contained in A<sub>i</sub>, therefore P(B<sub>i</sub>) ≤ P(A<sub>i</sub>).
+    Using countable additivity for the disjoint family (B<sub>i</sub>) we obtain
+  </p>
+  <p class="mono">
+    P(∪ A<sub>i</sub>) = P(∪ B<sub>i</sub>) = Σ P(B<sub>i</sub>) ≤ Σ P(A<sub>i</sub>).
+  </p>
+  <p>
+    This proves subadditivity using only the axioms and the monotonicity of P.
+  </p>
+</section>
+
+<section class="card">
+  <h2>6) Inclusion Exclusion Principle</h2>
+
+  <h3>Two events</h3>
+  <p>
+    For events A and B we want to prove
+  </p>
+  <p class="mono">
+    P(A ∪ B) = P(A) + P(B) − P(A ∩ B).
+  </p>
+  <p>
+    Decompose the union as
+    <span class="mono">A ∪ B = A ∪ (B \ A)</span>. The sets A and B \ A are disjoint, so by finite additivity
+  </p>
+  <p class="mono">
+    P(A ∪ B) = P(A) + P(B \ A).
+  </p>
+  <p>
+    On the other hand B can be written as a disjoint union
+    <span class="mono">B = (B ∩ A) ∪ (B \ A)</span>. Thus
+  </p>
+  <p class="mono">
+    P(B) = P(B ∩ A) + P(B \ A)
+  </p>
+  <p>
+    and therefore
+    <span class="mono">P(B \ A) = P(B) − P(A ∩ B)</span>. Substituting in the union formula gives
+  </p>
+  <p class="mono">
+    P(A ∪ B) = P(A) + P(B) − P(A ∩ B).
+  </p>
+
+  <h3>Finite general case</h3>
+  <p>
+    For a finite family of events A<sub>1</sub>, ..., A<sub>n</sub> one can prove by induction that
+  </p>
+  <p class="mono">
+    P(A<sub>1</sub> ∪ ... ∪ A<sub>n</sub>) = Σ P(A<sub>i</sub>)  
+    − Σ P(A<sub>i</sub> ∩ A<sub>j</sub>)  
+    + Σ P(A<sub>i</sub> ∩ A<sub>j</sub> ∩ A<sub>k</sub>)  
+    − ...  
+    + (−1)<sup>n+1</sup> P(A<sub>1</sub> ∩ ... ∩ A<sub>n</sub>),
+  </p>
+  <p>
+    where each sum runs over all distinct index sets of the given size. This is the inclusion exclusion principle for probabilities.
+  </p>
+</section>
+
+<section class="card footer">
+  2229757 Konstantinos Tziakouris · Statistics · A.Y. 2025 2026 · November 2025
+</section>
+
+</main>
+</body>
+</html>
