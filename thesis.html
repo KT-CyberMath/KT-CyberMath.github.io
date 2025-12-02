@@ -148,4 +148,158 @@ x₁, x₂, x₃, … , xₙ
 Our goal is to compute classical quantities such as:
 </p>
 <ul>
-  <li
+  <li><b>Mean:</b> <span class="math">μₙ = (1/n) Σ xᵢ</span></li>
+  <li><b>Variance:</b> <span class="math">σₙ² = (1/n) Σ (xᵢ − μₙ)²</span></li>
+</ul>
+<p>
+Computing these directly requires recomputing sums every time a new value arrives. 
+The purpose of online formulas is to avoid this recomputation.
+</p>
+
+<div class="page-number">Page 3</div>
+
+<!-- ===== Streaming Mean ===== -->
+<h2 id="mean">Streaming Mean</h2>
+<p>
+The recurrence for the streaming mean is built on the observation that when a new value <span class="math">xₙ</span> arrives, the new mean <span class="math">μₙ</span> can be obtained from the previous one <span class="math">μₙ₋₁</span>:
+</p>
+
+<p class="math">
+μₙ = μₙ₋₁ + (xₙ − μₙ₋₁) / n
+</p>
+
+<p>
+This elegant formula shows how the mean shifts gradually toward the new value. 
+It is computationally efficient and numerically stable.
+</p>
+
+<div class="diagram">
+Streaming mean update:
+
+Old mean: μₙ₋₁  
+New value: xₙ  
+Adjustment: (xₙ − μₙ₋₁) / n  
+Updated mean: μₙ
+</div>
+
+<div class="page-number">Page 4</div>
+
+<!-- ===== Streaming Variance ===== -->
+<h2 id="variance">Streaming Variance (Welford’s Algorithm)</h2>
+<p>
+The standard definition of variance is not suitable for streaming because it depends on the mean, which itself is changing. 
+Welford’s method resolves this by tracking an auxiliary quantity:
+</p>
+
+<p class="math">
+M₂ₙ = Σ (xᵢ − μₙ)²
+</p>
+
+<p>
+The recurrence is:
+</p>
+
+<p class="math">
+δ = xₙ − μₙ₋₁  
+μₙ = μₙ₋₁ + δ / n  
+M₂ₙ = M₂ₙ₋₁ + δ (xₙ − μₙ)
+</p>
+
+<p>
+Variance is then:
+</p>
+
+<p class="math">σₙ² = M₂ₙ / n</p>
+
+<p>
+This method is widely regarded as one of the most stable ways to compute variance online.
+</p>
+
+<div class="page-number">Page 5</div>
+
+<!-- ===== Numerical Stability ===== -->
+<h2 id="stability">Numerical Stability</h2>
+<p>
+Online estimators must be resistant to rounding errors, especially when the data stream grows large. 
+The classical variance formula:
+</p>
+<p class="math">
+σ² = (Σ xᵢ² / n) − μ²
+</p>
+<p>
+is prone to catastrophic cancellation.  
+Welford’s recurrence avoids this because the updates rely on incremental differences rather than subtracting large numbers.
+</p>
+
+<div class="diagram">
+Problematic: large numbers − large numbers → small difference  
+Stable: update via small corrections each step
+</div>
+
+<div class="page-number">Page 6</div>
+
+<!-- ===== Simulation ===== -->
+<h2 id="simulation">Simulation Study</h2>
+<p>
+To understand the behavior of streaming estimators, we simulate a sequence of 5,000 values from a normal distribution:
+</p>
+<p class="math">
+xᵢ ~ N(0, 1)
+</p>
+
+<p>
+At each step we record the streaming mean and compare it with the true mean.  
+The convergence pattern looks like:
+</p>
+
+<div class="diagram">
+        μₙ
+        |
+      0.2|             ┌─ fluctuations ─┐
+      0.1|       ┌─────┘               └──────┐
+      0.0|───────┘                               Stable limit
+     −0.1|
+     −0.2|
+        +----------------------------------------------→ n
+         0      1000      2000      3000      4000
+</div>
+
+<p>
+The variance estimator shows a similar stabilization once <span class="math">n</span> becomes sufficiently large.
+</p>
+
+<div class="page-number">Page 7</div>
+
+<!-- ===== Applications ===== -->
+<h2 id="applications">Applications</h2>
+
+<h3>Sensor Streams</h3>
+<p>
+Temperature or vibration sensors produce rapid streams of measurements.  
+Online mean and variance track anomalies without storing large logs.</p>
+
+<h3>Network Monitoring</h3>
+<p>
+Packet arrival times, round-trip delays, or throughput measures are well suited to streaming statistics.</p>
+
+<h3>Cybersecurity</h3>
+<p>
+Anomaly detection systems often rely on streaming statistical estimators to identify unusual behavior in real time.</p>
+
+<div class="page-number">Page 8</div>
+
+<!-- ===== Conclusion ===== -->
+<h2 id="conclusion">Conclusion</h2>
+<p>
+Online algorithms provide an elegant and efficient way to compute statistics in real time. 
+The mean and variance can be updated using simple recurrence relations that avoid storing past data and reduce numerical errors. 
+As data streams continue to grow in importance, these methods remain fundamental tools for modern statistical analysis and real-time decision systems.
+</p>
+
+<footer>
+Online Algorithms for Real-Time Statistical Computation — Konstantinos Tziakouris — 2025 / 2026
+</footer>
+
+</div>
+</body>
+</html>
