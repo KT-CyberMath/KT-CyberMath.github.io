@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Brownian Motion – From Random Walks to Continuous-Time Processes</title>
+
+<style>
+  :root{
+    --bg:#f8fafc; --card:#ffffff; --ink:#111111;
+    --muted:#666666; --line:#e3e6ea;
+    --blue:#0d83ff; --blue2:#0654b5;
+  }
+  html,body{
+    margin:0; padding:0;
+    background:var(--bg); color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;
+    line-height:1.5;
+  }
+  header{
+    padding:54px 20px 40px;
+    background:linear-gradient(120deg,var(--blue),var(--blue2));
+    color:#fff; text-align:center;
+  }
+  header h1{margin:0 0 8px;font-size:30px;}
+  header p{margin:0;font-size:15px;opacity:.95;}
+  .wrap{
+    max-width:900px;margin:24px auto;
+    padding:0 18px 28px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    box-shadow:0 2px 10px rgba(0,0,0,.03);
+  }
+  h2{
+    text-align:center;
+    margin:4px 0 10px;
+    color:var(--blue2);
+    font-size:22px;
+  }
+  h3{
+    margin:12px 0 6px;
+    color:var(--blue2);
+    font-size:18px;
+  }
+  p{text-align:justify;margin:8px 0;}
+  ul{margin:6px 0 6px 20px;}
+  .meta{
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:4px;
+  }
+  .grid{
+    display:grid;
+    gap:14px;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  }
+  .box{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    background:#f7f9ff;
+    font-size:14px;
+  }
+  code{
+    background:#f2f5f9;
+    padding:2px 4px;
+    border-radius:4px;
+    font-family:Consolas, "Courier New", monospace;
+  }
+  .mono{
+    font-family:Consolas, "Courier New", monospace;
+    font-size:13px;
+  }
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  input[type="number"]{
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    min-width:120px;
+  }
+  button{
+    padding:8px 14px;
+    border-radius:8px;
+    border:1px solid var(--blue2);
+    background:var(--blue);
+    color:#fff;
+    cursor:pointer;
+    font-size:14px;
+  }
+  button.secondary{
+    background:#fff;
+    color:var(--blue2);
+  }
+  canvas{
+    border:1px solid var(--line);
+    border-radius:10px;
+    width:100%;
+    max-width:860px;
+    height:340px;
+    background:#ffffff;
+  }
+  .footer{
+    border-top:1px solid var(--line);
+    margin-top:12px; padding-top:10px;
+    text-align:center;
+    font-size:13px;
+    color:var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Beyond the Random Walk – Brownian Motion</h1>
+  <p>Konstantinos Tziakouris • Matricola 2229757 • Statistics • A.Y. 2025–2026</p>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. Introduction -->
+  <section class="card">
+    <h2>1) Introduction</h2>
+    <p class="meta">From discrete random walks to continuous Brownian motion</p>
+    <p>
+      In previous assignments we simulated discrete-time random walks and Poisson counting processes.
+      Both models are based on sequences of independent increments and are used to describe the
+      cumulative effect of many small random events. Brownian motion, or the Wiener process, is the
+      continuous-time, continuous-state limit of these constructions. It plays a central role in
+      probability theory, stochastic calculus and applications in cybersecurity, finance and physics.
+    </p>
+  </section>
+
+  <!-- 2. Three-level picture -->
+  <section class="card">
+    <h2>2) From Random Walks to Brownian Motion</h2>
+    <p class="meta">Discrete / continuous time and state</p>
+
+    <div class="grid">
+      <div class="box">
+        <h3>Random Walk (HW 7)</h3>
+        <p>
+          <strong>Discrete time, discrete state.</strong> At steps
+          <code>k = 0,1,2,...</code> the position updates as
+          <code>S<sub>k</sub> = S<sub>k−1</sub> + X<sub>k</sub></code>,
+          where <code>X<sub>k</sub> = ±1</code> with equal probability.
+        </p>
+        <p>
+          The trajectory is a jagged path on the integers. This model was used to describe a
+          server’s cumulative security score.
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>Poisson Process (HW 10)</h3>
+        <p>
+          <strong>Continuous time, discrete state.</strong> The counting process
+          <code>N(t)</code> jumps by +1 at random times. In small intervals of length
+          <code>Δt</code>, we have
+          <code>P(N(t+Δt)−N(t)=1) ≈ λΔt</code>.
+        </p>
+        <p>
+          The state is still discrete (0,1,2,…) but time is continuous. It approximates the
+          Bernoulli trials with many small intervals.
+        </p>
+      </div>
+
+      <div class="box">
+        <h3>Brownian Motion (this HW)</h3>
+        <p>
+          <strong>Continuous time, continuous state.</strong> The Wiener process
+          <code>W(t)</code> starts at 0 and has independent Gaussian increments:
+        </p>
+        <p class="mono">
+          W(0) = 0, &nbsp; W(t+Δt) − W(t) ~ N(0, Δt)
+        </p>
+        <p>
+          When the time step <code>Δt</code> goes to zero and random walk steps are rescaled by
+          <code>1/√n</code>, the paths converge in distribution to Brownian motion
+          (Donsker’s invariance principle).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Brownian motion theory -->
+  <section class="card">
+    <h2>3) Brownian Motion – Main Properties</h2>
+    <p>
+      A one-dimensional standard Brownian motion <code>{W(t), t ≥ 0}</code> is a stochastic process
+      satisfying:
+    </p>
+    <ul>
+      <li><strong>Initial condition:</strong> <code>W(0) = 0</code> almost surely.</li>
+      <li><strong>Independent increments:</strong> increments over disjoint time intervals are independent.</li>
+      <li><strong>Gaussian increments:</strong> for <code>s &lt; t</code>,
+        <code>W(t) − W(s) ~ N(0, t − s)</code>.</li>
+      <li><strong>Stationary increments:</strong> the distribution of <code>W(t) − W(s)</code> depends
+        only on <code>t − s</code>.</li>
+      <li><strong>Continuous paths:</strong> with probability 1 the map <code>t ↦ W(t)</code> is continuous.</li>
+    </ul>
+    <p>
+      In discrete simulations we approximate time by a grid <code>t<sub>k</sub> = kΔt</code> and build
+      the process recursively using Gaussian increments with variance <code>Δt</code>.
+    </p>
+  </section>
+
+  <!-- 4. Discrete approximation -->
+  <section class="card">
+    <h2>4) Discrete Approximation Scheme</h2>
+    <p>
+      Let the time horizon be <code>T = 1</code> and choose a number of steps <code>n</code>.
+      Then <code>Δt = T / n</code>. We start from <code>W<sub>0</sub> = 0</code> and for
+      <code>k = 1,…,n</code> define
+    </p>
+    <p class="mono">
+      W<sub>k</sub> = W<sub>k−1</sub> + √Δt · Z<sub>k</sub>,
+    </p>
+    <p>
+      where <code>Z<sub>k</sub> ~ N(0,1)</code> are independent standard normal variables.
+      The sequence <code>(W<sub>k</sub>)</code> approximates the continuous path <code>W(t)</code>
+      at times <code>t<sub>k</sub> = kΔt</code>.
+    </p>
+  </section>
+
+  <!-- 5. Interactive simulator -->
+  <section class="card">
+    <h2>5) Interactive Brownian Motion Simulator</h2>
+    <p>
+      The panel below generates several independent Brownian trajectories on
+      <code>[0,1]</code>. You can change the number of steps and the number of paths.
+    </p>
+
+    <div class="controls">
+      <label>Steps n:
+        <input type="number" id="steps" min="50" max="5000" value="500" />
+      </label>
+      <label>Paths:
+        <input type="number" id="paths" min="1" max="8" value="5" />
+      </label>
+      <button id="simulate">Simulate</button>
+      <button id="resetView" class="secondary">Clear</button>
+    </div>
+
+    <canvas id="bmCanvas" width="860" height="340">
+      Your browser does not support the HTML canvas tag.
+    </canvas>
+
+    <p class="meta">
+      In each run the increments are independent <code>N(0, Δt)</code>. As
+      <code>n</code> becomes large the trajectories visually resemble continuous Brownian paths.
+    </p>
+  </section>
+
+  <!-- 6. Interpretation and applications -->
+  <section class="card">
+    <h2>6) Interpretation and Applications</h2>
+    <p>
+      Brownian motion is a universal limit object: it arises as a properly rescaled limit of many
+      discrete-time, independent-increment models, such as the security-score random walk from
+      Homework 7 or the Poisson counting process of Homework 10.
+    </p>
+    <p>
+      In cybersecurity and data analysis it can be used as an idealised model of cumulative noise
+      or of random fluctuations in traffic, loss or latency. When discrete event data are observed
+      at high frequency, Brownian motion often provides an accurate continuous-time approximation,
+      which can be analysed using tools from stochastic calculus.
+    </p>
+
+    <div class="footer">
+      Konstantinos Tziakouris · Beyond the Random Walk: Brownian Motion · November / December 2025
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ---------- Utilities: Box–Muller normal(0,1) ----------
+function randn() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+// ---------- Draw Brownian paths on canvas ----------
+const canvas = document.getElementById('bmCanvas');
+const ctx = canvas.getContext('2d');
+
+function clearCanvas() {
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#cccccc';
+  // time axis
+  ctx.beginPath();
+  ctx.moveTo(40, canvas.height - 30);
+  ctx.lineTo(canvas.width - 10, canvas.height - 30);
+  ctx.stroke();
+  // vertical axis
+  ctx.beginPath();
+  ctx.moveTo(40, 15);
+  ctx.lineTo(40, canvas.height - 30);
+  ctx.stroke();
+}
+
+function simulateBrownian() {
+  clearCanvas();
+  const n = Math.max(50, Math.min(5000, parseInt(document.getElementById('steps').value)||500));
+  const paths = Math.max(1, Math.min(8, parseInt(document.getElementById('paths').value)||5));
+
+  const T = 1.0;
+  const dt = T / n;
+  const width = canvas.width - 60;
+  const height = canvas.height - 50;
+  const x0 = 40;
+  const y0 = canvas.height - 30;
+
+  // choose a vertical scale so that most paths remain visible
+  const scaleY = height / 4; // corresponds roughly to +-2 standard deviations
+
+  for (let p = 0; p < paths; p++) {
+    let t = 0;
+    let w = 0;
+
+    // random colour for each path (soft)
+    const hue = 200 + Math.floor(120 * Math.random());
+    ctx.strokeStyle = `hsl(${hue},70%,45%)`;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 - w * scaleY);
+
+    for (let k = 1; k <= n; k++) {
+      t += dt;
+      w += Math.sqrt(dt) * randn();
+      const x = x0 + (t / T) * width;
+      const y = y0 - w * scaleY;
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+}
+
+// initial blank canvas
+clearCanvas();
+
+// buttons
+document.getElementById('simulate').addEventListener('click', simulateBrownian);
+document.getElementById('resetView').addEventListener('click', clearCanvas);
+</script>
+
+</body>
+</html>
