@@ -1,523 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Online Algorithms for Real Time Statistical Computation</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Online Algorithms for Real-Time Statistical Computation</title>
+
 <style>
-  /* Layout and typography */
-  html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Times New Roman", serif;
-    font-size: 12pt;
-    line-height: 1.5;
-    color: #111111;
-    background: #ffffff;
-  }
-
+  /* ====== STYLING ====== */
   body {
-    counter-reset: page;
+    margin: 0;
+    font-family: Georgia, serif;
+    background: #fafafa;
+    color: #111;
+    line-height: 1.55;
   }
-
-  .page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1.5cm;
-    padding: 0.3cm 2cm 0 2cm;
-    font-size: 10pt;
-    color: #444444;
-    border-bottom: 1px solid #cccccc;
-  }
-
-  .page-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1.2cm;
-    padding: 0.2cm 2cm 0 2cm;
-    font-size: 10pt;
-    color: #444444;
-    border-top: 1px solid #cccccc;
-  }
-
-  .page-footer .page-number::after {
-    content: counter(page);
-  }
-
-  .content {
-    margin: 2.5cm 2cm 2cm 2cm;
-  }
-
-  h1 {
+  header {
     text-align: center;
-    font-size: 20pt;
-    margin-top: 0.8cm;
-    margin-bottom: 0.3cm;
+    padding: 45px 20px 25px;
+    border-bottom: 1px solid #ddd;
   }
-
+  header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  header p { margin: 6px 0; font-size: 15px; color: #555; }
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px 22px 60px;
+    background: #fff;
+  }
   h2 {
-    font-size: 16pt;
-    margin-top: 0.8cm;
-    margin-bottom: 0.2cm;
+    font-size: 22px;
+    color: #003e92;
+    margin-top: 40px;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 4px;
   }
-
   h3 {
-    font-size: 13pt;
-    margin-top: 0.5cm;
-    margin-bottom: 0.15cm;
+    font-size: 19px;
+    color: #003e92;
+    margin-top: 28px;
   }
-
-  p {
-    text-align: justify;
-    margin: 0.2cm 0;
+  p { margin: 12px 0; text-align: justify; }
+  ul { margin: 10px 0 10px 25px; }
+  code {
+    background: #f0f3f8;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 95%;
   }
-
-  ul {
-    margin: 0.2cm 0 0.2cm 0.8cm;
-  }
-
-  a {
-    color: #0d83ff;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-
-  .center {
+  .math { font-family: "Times New Roman", serif; font-size: 18px; }
+  .toc a { text-decoration: none; color: #003e92; }
+  .toc a:hover { text-decoration: underline; }
+  footer {
     text-align: center;
+    color: #555;
+    font-size: 13px;
+    border-top: 1px solid #eee;
+    padding: 15px 0;
+    margin-top: 40px;
   }
-
-  .toc {
-    margin-top: 0.5cm;
-  }
-
-  .toc ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-
-  .toc li {
-    margin: 0.1cm 0;
-  }
-
-  .math {
-    font-family: "Times New Roman", serif;
-    font-style: italic;
-  }
-
-  .figure {
-    margin: 0.4cm 0;
+  .page-number {
     text-align: center;
-    page-break-inside: avoid;
+    font-size: 12px;
+    margin-top: 25px;
+    color: #666;
   }
-
-  .figure-caption {
-    font-size: 10pt;
-    color: #555555;
-    margin-top: 0.1cm;
-  }
-
-  .page-break {
-    page-break-before: always;
-  }
-
-  @media print {
-    a {
-      color: black;
-      text-decoration: none;
-    }
+  /* Simple diagram boxes */
+  .diagram {
+    background: #f9fbff;
+    border: 1px solid #d4e2ff;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 15px;
+    margin: 18px 0;
+    white-space: pre;
   }
 </style>
 </head>
+
 <body>
 
-<div class="page-header">
-  Konstatinos Tziakouris | Online Algorithms for Real Time Statistical Computation
+<header>
+  <h1>Online Algorithms for Real-Time Statistical Computation</h1>
+  <p>Konstantinos Tziakouris</p>
+  <p>Matricola 2229757 — Statistics Module</p>
+  <p>Academic Year 2025 / 2026</p>
+</header>
+
+<div class="wrap">
+
+<!-- ===== Table of Contents ===== -->
+<h2>Table of Contents</h2>
+<div class="toc">
+  <ul>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#background">Statistical Background</a></li>
+    <li><a href="#mean">Streaming Mean</a></li>
+    <li><a href="#variance">Streaming Variance</a></li>
+    <li><a href="#stability">Numerical Stability</a></li>
+    <li><a href="#simulation">Simulation Study</a></li>
+    <li><a href="#applications">Applications</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
 </div>
 
-<div class="page-footer">
-  <span>Statistics, Academic Year 2025 / 2026</span>
-  <span style="float:right" class="page-number">Page </span>
-</div>
+<div class="page-number">Page 0</div>
 
-<div class="content">
+<!-- ===== Abstract ===== -->
+<h2 id="abstract">Abstract</h2>
+<p>
+Online or streaming algorithms update statistical quantities using only the most recent observation and the current estimate. 
+This avoids storing the entire dataset and eliminates the need to recompute sums from scratch. 
+This thesis presents the ideas behind online formulas for the mean and the variance, together with discussions on recurrence relations, numerical stability, and convergence properties. 
+We illustrate the behavior of these streaming estimators on simulated data and comment on their practicality in real-time environments.
+</p>
 
-  <!-- Title block -->
-  <h1>Online Algorithms for Real Time Statistical Computation</h1>
-  <p class="center">
-    Konstatinos Tziakouris<br>
-    Matricola 2229757<br>
-    Statistics Module, Academic Year 2025 / 2026
-  </p>
+<div class="page-number">Page 1</div>
 
-  <h2>Abstract</h2>
-  <p>
-    Online or streaming algorithms provide a way to update statistical quantities in real time,
-    without storing all past data and without recomputing sums from scratch. This thesis presents
-    the theory behind online formulas for the mean and the variance, with a particular focus on
-    recurrence relations, numerical stability, convergence, and applications in cybersecurity.
-    Simulation examples illustrate how these estimators behave on data streams and why they are
-    an essential tool for modern monitoring systems.
-  </p>
+<!-- ===== Introduction ===== -->
+<h2 id="intro">Introduction</h2>
+<p>
+In classical statistics, most formulas assume that the entire dataset is available at once. 
+While this approach is perfectly suited for offline analysis, it becomes inefficient when data arrive gradually or continuously. 
+In such settings, it may be impossible—or computationally expensive—to recompute quantities each time a new value appears.
+</p>
+<p>
+Online statistical algorithms address this issue by updating estimates incrementally. 
+Instead of storing all past observations, they keep only a small number of running values such as the current mean or a set of recurrence coefficients. 
+This idea dates back to early work in numerical analysis and has seen a resurgence due to the rise of streaming data sources, sensor networks, and real-time monitoring systems.
+</p>
 
-  <div class="page-break"></div>
+<div class="page-number">Page 2</div>
 
-  <!-- Table of contents -->
-  <h2>Table of Contents</h2>
-  <div class="toc">
-    <ul>
-      <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#background">Statistical Background</a></li>
-      <li><a href="#streaming-mean">Streaming Mean</a></li>
-      <li><a href="#streaming-variance">Streaming Variance</a></li>
-      <li><a href="#stability">Numerical Stability</a></li>
-      <li><a href="#simulation">Simulation Study</a></li>
-      <li><a href="#cybersecurity">Cybersecurity Applications</a></li>
-      <li><a href="#conclusion">Conclusion</a></li>
-    </ul>
-  </div>
-
-  <div class="page-break" id="introduction"></div>
-
-  <!-- Introduction -->
-  <h2>Introduction</h2>
-  <p>
-    Many modern systems generate continuous streams of data. Examples include network packets,
-    login attempts, transaction logs, sensor measurements, and user interaction traces. In such
-    environments, statistical analysis has to be performed in real time, while the data are
-    still arriving. Classical batch methods assume that the entire dataset is fully available
-    and can be stored. This assumption is often unrealistic when data volumes grow and when
-    decisions must be taken instantly.
-  </p>
-  <p>
-    Online algorithms respond to this challenge by updating statistics incrementally. At each
-    time step a new observation arrives, and the algorithm modifies the current estimates of
-    quantities such as the mean or the variance using only a few arithmetic operations. The
-    memory usage remains constant, since there is no need to store past observations. The
-    computational cost per observation also remains bounded, which is essential for high
-    frequency data.
-  </p>
-  <p>
-    The main goal of this thesis is to present a clear and self contained treatment of online
-    algorithms for the mean and the variance. First, the basic statistical concepts are
-    recalled. Then the recurrence formulas for the streaming mean and streaming variance are
-    derived and discussed. The numerical stability of these formulas is examined, in contrast
-    with naive batch implementations. A simple simulation study is included, together with
-    colored diagrams that show the convergence of the online estimators. Finally, the relevance
-    of these methods for cybersecurity is explained through concrete examples.
-  </p>
-
-  <div class="page-break" id="background"></div>
-
-  <!-- Background -->
-  <h2>Statistical Background</h2>
-  <p>
-    Let <span class="math">x₁, x₂, …, xₙ</span> be real valued observations. The arithmetic mean
-    of these values is defined as
-  </p>
-  <p class="center math">
-    μₙ = (1 / n) Σ xᵢ
-  </p>
-  <p>
-    where the sum is taken from index 1 to index n. The mean is a measure of central tendency.
-    It is often interpreted as the balance point of the data values on the real line.
-  </p>
-  <p>
-    The variance quantifies the spread of the data around the mean. The population variance can
-    be written as
-  </p>
-  <p class="center math">
-    σ²ₙ = (1 / n) Σ (xᵢ − μₙ)²
-  </p>
-  <p>
-    while the sample variance, which is unbiased under standard assumptions, is
-  </p>
-  <p class="center math">
-    s²ₙ = (1 / (n − 1)) Σ (xᵢ − μₙ)².
-  </p>
-  <p>
-    In the classical batch approach, these quantities are computed by first summing all the
-    values of the dataset, then dividing by n, and finally computing the squared deviations
-    from the mean. This requires repeated passes over the data or storing all the values.
-    Both options can become impractical in streaming scenarios.
-  </p>
-
-  <div class="page-break" id="streaming-mean"></div>
-
-  <!-- Streaming mean -->
-  <h2>Streaming Mean</h2>
-  <p>
-    The streaming or online mean is based on a simple recurrence relation. Suppose that the mean
-    after n observations is known and is denoted by <span class="math">μₙ</span>. When a new
-    observation <span class="math">xₙ₊₁</span> arrives, the updated mean can be written as
-  </p>
-  <p class="center math">
-    μₙ₊₁ = (1 / (n + 1)) (x₁ + x₂ + … + xₙ + xₙ₊₁).
-  </p>
-  <p>
-    The old mean satisfies
-  </p>
-  <p class="center math">
-    μₙ = (1 / n) (x₁ + x₂ + … + xₙ)
-  </p>
-  <p>
-    and therefore
-  </p>
-  <p class="center math">
-    n μₙ = x₁ + x₂ + … + xₙ.
-  </p>
-  <p>
-    Substituting this expression into the formula for the new mean gives
-  </p>
-  <p class="center math">
-    μₙ₊₁ = (1 / (n + 1)) (n μₙ + xₙ₊₁).
-  </p>
-  <p>
-    This can be rearranged into the classical online update form
-  </p>
-  <p class="center math">
-    μₙ₊₁ = μₙ + (xₙ₊₁ − μₙ) / (n + 1).
-  </p>
-  <p>
-    This formula shows that the new mean is obtained by taking the old mean and adding a
-    correction term. The correction is proportional to the difference between the new
-    observation and the old mean, scaled by the factor 1 divided by n plus one. As n grows
-    larger the correction becomes smaller, which is consistent with the idea that the estimate
-    becomes more stable as more data are observed.
-  </p>
-  <p>
-    From a computational point of view the recurrence relation is very efficient. At each step
-    only one subtraction, one division, and one addition are needed. No previous data points
-    are stored. The streaming mean therefore has constant memory usage and constant update
-    cost per observation.
-  </p>
-
-  <div class="page-break" id="streaming-variance"></div>
-
-  <!-- Streaming variance -->
-  <h2>Streaming Variance</h2>
-  <p>
-    Extending the online approach to the variance is less straightforward. A naive approach
-    would be to maintain running sums for Σ xᵢ and Σ xᵢ² and then use the identity
-  </p>
-  <p class="center math">
-    Var[X] = E[X²] − (E[X])².
-  </p>
-  <p>
-    In finite precision arithmetic this formula is problematic. When the mean is large, the
-    term E[X²] and the square of the mean can be close in magnitude. Subtracting them can lead
-    to loss of precision, a phenomenon known as catastrophic cancellation.
-  </p>
-  <p>
-    A much more stable solution is given by the method due to Welford. The idea is to update the
-    mean and a quantity that accumulates squared deviations from the mean in a recursive way.
-    Let <span class="math">Mₙ</span> denote the streaming mean and let <span class="math">M2ₙ</span>
-    denote the cumulative sum of squared deviations after n observations. When a new value
-    <span class="math">xₙ₊₁</span> arrives, the algorithm proceeds in three steps:
-  </p>
-  <p class="center math">
-    δ = xₙ₊₁ − Mₙ
-    <br>
-    Mₙ₊₁ = Mₙ + δ / (n + 1)
-    <br>
-    M2ₙ₊₁ = M2ₙ + δ (xₙ₊₁ − Mₙ₊₁).
-  </p>
-  <p>
-    After processing n observations, the variance estimates can be written as
-  </p>
-  <p class="center math">
-    σ²ₙ = M2ₙ / n
-    <br>
-    s²ₙ = M2ₙ / (n − 1).
-  </p>
-  <p>
-    The key point is that the deviation <span class="math">δ</span> is measured relative to
-    the current mean, and that the update of the cumulative squared deviations uses both the
-    old and the new mean. This avoids large differences between two close values and greatly
-    improves numerical robustness.
-  </p>
-
-  <!-- Figure 1: streaming mean convergence (simple SVG) -->
-  <div class="figure">
-    <svg width="500" height="220">
-      <rect x="0" y="0" width="500" height="220" fill="#ffffff" stroke="#dddddd"/>
-      <!-- axes -->
-      <line x1="50" y1="180" x2="460" y2="180" stroke="#444444" stroke-width="1"/>
-      <line x1="50" y1="30" x2="50" y2="180" stroke="#444444" stroke-width="1"/>
-      <!-- true mean line -->
-      <line x1="50" y1="110" x2="460" y2="110" stroke="#ff0000" stroke-width="1" stroke-dasharray="4 3"/>
-      <!-- approximate streaming mean path -->
-      <polyline
-        fill="none"
-        stroke="#0d83ff"
-        stroke-width="1.5"
-        points="
-          50,70
-          90,140
-          130,100
-          170,120
-          210,108
-          250,112
-          290,109
-          330,111
-          370,110
-          410,110
-          450,110
-        "/>
-      <text x="55" y="45" font-size="10" fill="#444444">Mean estimate</text>
-      <text x="280" y="100" font-size="10" fill="#ff0000">True mean</text>
-      <text x="240" y="205" font-size="11" fill="#444444">Number of observations n</text>
-      <text x="10" y="105" font-size="11" fill="#444444" transform="rotate(-90 10,105)">Mean</text>
-      <text x="180" y="20" font-size="12" fill="#222222">Streaming mean convergence (schematic)</text>
-    </svg>
-    <div class="figure-caption">
-      Figure 1. Sketch of the convergence of the streaming mean towards the true mean as n increases.
-    </div>
-  </div>
-
-  <div class="page-break" id="stability"></div>
-
-  <!-- Numerical stability -->
-  <h2>Numerical Stability</h2>
-  <p>
-    Numerical stability is a crucial aspect of any algorithm that will be used in long running
-    systems. When the same computation is repeated for millions of observations, small rounding
-    errors can accumulate and lead to significant bias or even overflow. The naive batch variance
-    formula is particularly sensitive, since it involves subtracting two large numbers that are
-    close to each other.
-  </p>
-  <p>
-    Welford variance updates avoid this issue by keeping the intermediate quantities small. The
-    deviations from the mean are typically of the same order as the standard deviation of the
-    data, even when the mean itself is large. The cumulative sum of these deviations and the
-    mean updates remain within a numerically safe range for many practical distributions.
-  </p>
-  <p>
-    In addition, the streaming mean formula always interpolates between the previous mean and
-    the new observation. This smooth adjustment process reduces the sensitivity to single large
-    values and makes the estimator more robust in the presence of occasional outliers, although
-    extreme contamination still influences any mean based method.
-  </p>
-
-  <!-- Figure 2: streaming variance convergence (simple SVG) -->
-  <div class="figure">
-    <svg width="500" height="220">
-      <rect x="0" y="0" width="500" height="220" fill="#ffffff" stroke="#dddddd"/>
-      <!-- axes -->
-      <line x1="50" y1="180" x2="460" y2="180" stroke="#444444" stroke-width="1"/>
-      <line x1="50" y1="30" x2="50" y2="180" stroke="#444444" stroke-width="1"/>
-      <!-- true variance line -->
-      <line x1="50" y1="120" x2="460" y2="120" stroke="#ff0000" stroke-width="1" stroke-dasharray="4 3"/>
-      <!-- approximate streaming variance path -->
-      <polyline
-        fill="none"
-        stroke="#0a9a4f"
-        stroke-width="1.5"
-        points="
-          50,40
-          90,160
-          130,100
-          170,130
-          210,118
-          250,123
-          290,121
-          330,119
-          370,120
-          410,120
-          450,120
-        "/>
-      <text x="55" y="45" font-size="10" fill="#444444">Variance estimate</text>
-      <text x="270" y="113" font-size="10" fill="#ff0000">True variance</text>
-      <text x="240" y="205" font-size="11" fill="#444444">Number of observations n</text>
-      <text x="10" y="115" font-size="11" fill="#444444" transform="rotate(-90 10,115)">Variance</text>
-      <text x="160" y="20" font-size="12" fill="#222222">Streaming variance convergence (schematic)</text>
-    </svg>
-    <div class="figure-caption">
-      Figure 2. Schematic illustration of the convergence of streaming variance to the true variance.
-    </div>
-  </div>
-
-  <div class="page-break" id="simulation"></div>
-
-  <!-- Simulation study -->
-  <h2>Simulation Study</h2>
-  <p>
-    A simple simulation can be used to illustrate the behavior of the streaming estimators.
-    Consider a sequence of independent observations drawn from a normal distribution with
-    known mean and variance, for example mean zero and variance one. The streaming mean and
-    variance are updated at each step according to the formulas described above.
-  </p>
-  <p>
-    The trajectories of the streaming mean and variance can be plotted as functions of the
-    sample size. The mean typically fluctuates more strongly for small sample sizes and then
-    stabilizes around the true value. The variance estimate follows a similar pattern, with
-    larger variability at the beginning and gradual convergence towards the true variance.
-  </p>
-  <p>
-    These experiments show empirically that the online algorithms implement the same Law of
-    Large Numbers as the batch estimators. The difference is that the online form expresses
-    the convergence as an evolving process that can be observed in real time, rather than as
-    a property of a fixed final sample.
-  </p>
-
-  <div class="page-break" id="cybersecurity"></div>
-
-  <!-- Cybersecurity applications -->
-  <h2>Cybersecurity Applications</h2>
-  <p>
-    Cybersecurity systems rely heavily on continuous monitoring of activity. Examples include
-    counting failed login attempts, measuring packet inter arrival times, recording the size
-    of network flows, and tracking risk scores associated with different users or addresses.
-    In all these scenarios, online statistics allow these quantities to be summarised with
-    very limited memory.
-  </p>
-  <p>
-    A streaming mean of failed login attempts per user or per time window can reveal slow
-    escalation in attack intensity. A streaming variance of packet timing or payload size can
-    highlight sudden irregularities that correspond to exfiltration attempts or denial of
-    service attacks. Because the online algorithms update the estimates at the exact moment
-    when an event occurs, alerts can be raised with minimal delay.
-  </p>
-  <p>
-    Another advantage is that online statistics can easily serve as input features for
-    anomaly detection models or simple rule based systems. Thresholds can be based on the
-    current mean and variance, for example by flagging behavior that moves more than a
-    certain number of standard deviations away from the historical baseline. This approach
-    connects online algorithms to classical statistical process control.
-  </p>
-
-  <div class="page-break" id="conclusion"></div>
-
-  <!-- Conclusion -->
-  <h2>Conclusion</h2>
-  <p>
-    This thesis has presented a compact overview of online algorithms for real time
-    statistical computation. The recurrence formulas for the streaming mean and the streaming
-    variance allow these quantities to be updated at constant computational cost and with
-    constant memory, without storing past observations. The Welford method provides a
-    numerically stable way to maintain variance estimates and avoids the issues of naive
-    batch implementations based on differences of squared terms.
-  </p>
-  <p>
-    The convergence behavior of these estimators is fully consistent with the Law of Large
-    Numbers. In practice they provide a practical and robust tool for monitoring large and
-    fast data streams. The connection to cybersecurity is direct, since many security
-    indicators can be expressed as simple statistics on streaming events. Online algorithms
-    therefore form a bridge between probabilistic theory and the operational needs of real
-    systems.
-  </p>
-  <p>
-    Possible extensions include online estimation of higher moments such as skewness and
-    kurtosis, exponential moving averages that give more weight to recent data, and online
-    regression models that adapt continuously to new observations. All these directions share
-    the same central idea: updating statistical information in a recursive way with small and
-    controlled computational steps.
-  </p>
-
-</div>
-</body>
-</html>
+<!-- ===== Background ===== -->
+<h2 id="background">Statistical Background</h2>
+<p>
+Let a stream of data be denoted by:
+</p>
+<p class="math">
+x₁, x₂, x₃, … , xₙ
+</p>
+<p>
+Our goal is to compute classical quantities such as:
+</p>
+<ul>
+  <li
