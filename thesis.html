@@ -3,80 +3,91 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Online Algorithms for Real-Time Statistical Computation</title>
+<title>Poisson Processes and Counting Processes</title>
 
 <style>
-  /* ====== STYLING ====== */
   body {
     margin: 0;
-    font-family: Georgia, serif;
-    background: #fafafa;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6fa;
     color: #111;
     line-height: 1.55;
   }
   header {
     text-align: center;
-    padding: 45px 20px 25px;
-    border-bottom: 1px solid #ddd;
+    padding: 40px 20px 20px;
+    border-bottom: 1px solid #dddddd;
+    background: #ffffff;
   }
   header h1 {
     margin: 0;
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 26px;
+    font-weight: 600;
   }
-  header p { margin: 6px 0; font-size: 15px; color: #555; }
+  header p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #555555;
+  }
   .wrap {
     max-width: 900px;
     margin: 0 auto;
-    padding: 25px 22px 60px;
-    background: #fff;
+    padding: 25px 22px 55px;
+    background: #ffffff;
   }
   h2 {
-    font-size: 22px;
-    color: #003e92;
-    margin-top: 40px;
-    border-bottom: 1px solid #e5e5e5;
+    font-size: 21px;
+    color: #064797;
+    margin-top: 32px;
+    border-bottom: 1px solid #e3e3e3;
     padding-bottom: 4px;
   }
   h3 {
-    font-size: 19px;
-    color: #003e92;
-    margin-top: 28px;
+    font-size: 17px;
+    color: #064797;
+    margin-top: 22px;
   }
-  p { margin: 12px 0; text-align: justify; }
-  ul { margin: 10px 0 10px 25px; }
-  code {
-    background: #f0f3f8;
-    padding: 2px 5px;
-    border-radius: 4px;
-    font-size: 95%;
+  p {
+    margin: 10px 0;
+    text-align: justify;
   }
-  .math { font-family: "Times New Roman", serif; font-size: 18px; }
-  .toc a { text-decoration: none; color: #003e92; }
-  .toc a:hover { text-decoration: underline; }
+  ul {
+    margin: 8px 0 8px 24px;
+  }
+  .math {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+  }
+  .toc a {
+    text-decoration: none;
+    color: #064797;
+  }
+  .toc a:hover {
+    text-decoration: underline;
+  }
+  .diagram {
+    background: #f4f7ff;
+    border: 1px solid #cbd7ff;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin: 14px 0;
+    white-space: pre;
+    font-family: "Courier New", monospace;
+  }
   footer {
     text-align: center;
-    color: #555;
+    margin-top: 35px;
+    padding-top: 10px;
+    border-top: 1px solid #eeeeee;
     font-size: 13px;
-    border-top: 1px solid #eee;
-    padding: 15px 0;
-    margin-top: 40px;
+    color: #666666;
   }
-  .page-number {
+  .page-tag {
     text-align: center;
-    font-size: 12px;
-    margin-top: 25px;
-    color: #666;
-  }
-  /* Simple diagram boxes */
-  .diagram {
-    background: #f9fbff;
-    border: 1px solid #d4e2ff;
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-size: 15px;
-    margin: 18px 0;
-    white-space: pre;
+    font-size: 11px;
+    color: #666666;
+    margin-top: 18px;
   }
 </style>
 </head>
@@ -84,221 +95,347 @@
 <body>
 
 <header>
-  <h1>Online Algorithms for Real-Time Statistical Computation</h1>
+  <h1>Poisson Processes and Counting Processes</h1>
   <p>Konstantinos Tziakouris</p>
-  <p>Matricola 2229757 — Statistics Module</p>
-  <p>Academic Year 2025 / 2026</p>
+  <p>Matricola 2229757 · Statistics Module · Academic Year 2025 / 2026</p>
 </header>
 
 <div class="wrap">
 
-<!-- ===== Table of Contents ===== -->
-<h2>Table of Contents</h2>
-<div class="toc">
+  <!-- Table of contents -->
+  <h2>Table of Contents</h2>
+  <div class="toc">
+    <ul>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#counting">Counting Processes</a></li>
+      <li><a href="#poisson">Poisson Processes</a></li>
+      <li><a href="#interarrival">Interarrival Times and Exponential Law</a></li>
+      <li><a href="#from-bernoulli">From Bernoulli Trials to Poisson</a></li>
+      <li><a href="#simulation">Simulation Study</a></li>
+      <li><a href="#applications">Applications and Interpretation of λ</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+    </ul>
+  </div>
+
+  <div class="page-tag">Page 1</div>
+
+  <!-- Abstract -->
+  <h2 id="abstract">Abstract</h2>
+  <p>
+    Poisson processes provide a simple and powerful model for random events that occur in time. 
+    They are used to describe arrivals of packets on a network link, calls in a call center, 
+    customers in a queue, or even certain models of cyber attacks. In this short thesis I 
+    introduce counting processes, define the homogeneous Poisson process, explain the role of 
+    the rate parameter λ, and discuss the link with the exponential distribution of interarrival 
+    times. I also show how a Poisson process can be obtained as the limit of a Bernoulli process, 
+    and I present a basic simulation experiment that illustrates the main properties.
+  </p>
+
+  <div class="page-tag">Page 2</div>
+
+  <!-- Introduction -->
+  <h2 id="intro">Introduction</h2>
+  <p>
+    One of the central questions in probability theory is how to model the occurrence of events 
+    in time. Sometimes we want to predict the number of login attempts per minute, the number 
+    of packets that arrive on a server during a fixed interval, or the number of alarms raised 
+    by a monitoring system. In many simple cases we only need a model that captures the average 
+    rate of events and some basic randomness around that rate.
+  </p>
+  <p>
+    The Poisson process is one of the most classical models for this purpose. It is simple 
+    enough to be taught in an introductory course, yet rich enough to provide intuition for 
+    more advanced stochastic processes. This project collects the main ideas regarding Poisson 
+    processes, with an eye on clarity and concrete examples, rather than on formal measure 
+    theoretic definitions.
+  </p>
+  <p>
+    I start with the general concept of a counting process, then move to the specific defining 
+    properties of the Poisson process. After that, I describe the connection with exponential 
+    interarrival times and with the Bernoulli process on a fine time grid. I also show a simple 
+    simulation scheme that can be implemented in any programming language and discuss how the 
+    parameter λ should be interpreted in practice.
+  </p>
+
+  <div class="page-tag">Page 3</div>
+
+  <!-- Counting Processes -->
+  <h2 id="counting">Counting Processes</h2>
+  <p>
+    Informally, a counting process is a stochastic process that counts how many events have 
+    occurred up to a given time. We denote it by:
+  </p>
+  <p class="math">
+    N(t),  t ≥ 0
+  </p>
+  <p>
+    where N(t) takes integer values. The interpretation is straightforward. For example N(5) 
+    could be the number of packets received in the first five seconds, or the number of 
+    connection attempts recorded by a firewall in the first five minutes.
+  </p>
+  <p>
+    There are some natural properties that we usually require from a counting process:
+  </p>
   <ul>
-    <li><a href="#abstract">Abstract</a></li>
-    <li><a href="#intro">Introduction</a></li>
-    <li><a href="#background">Statistical Background</a></li>
-    <li><a href="#mean">Streaming Mean</a></li>
-    <li><a href="#variance">Streaming Variance</a></li>
-    <li><a href="#stability">Numerical Stability</a></li>
-    <li><a href="#simulation">Simulation Study</a></li>
-    <li><a href="#applications">Applications</a></li>
-    <li><a href="#conclusion">Conclusion</a></li>
+    <li>N(t) ≥ 0 and N(0) = 0.</li>
+    <li>N(t) takes integer values.</li>
+    <li>For s ≤ t we have N(s) ≤ N(t), so the process is non decreasing.</li>
+    <li>Events arrive one by one, so the process increases by jumps of size one.</li>
   </ul>
-</div>
+  <p>
+    These conditions describe many realistic systems. However, they do not yet specify a unique 
+    probability model. The Poisson process adds extra assumptions on how the increments behave.
+  </p>
 
-<div class="page-number">Page 0</div>
+  <div class="page-tag">Page 4</div>
 
-<!-- ===== Abstract ===== -->
-<h2 id="abstract">Abstract</h2>
-<p>
-Online or streaming algorithms update statistical quantities using only the most recent observation and the current estimate. 
-This avoids storing the entire dataset and eliminates the need to recompute sums from scratch. 
-This thesis presents the ideas behind online formulas for the mean and the variance, together with discussions on recurrence relations, numerical stability, and convergence properties. 
-We illustrate the behavior of these streaming estimators on simulated data and comment on their practicality in real-time environments.
-</p>
+  <!-- Poisson Process -->
+  <h2 id="poisson">Poisson Processes</h2>
+  <p>
+    A homogeneous Poisson process with rate λ greater than zero is a counting process N(t) that 
+    satisfies three key properties:
+  </p>
+  <ul>
+    <li><b>Independent increments.</b> The numbers of events on disjoint time intervals are independent.</li>
+    <li><b>Stationary increments.</b> The distribution of N(t + s) − N(s) depends only on t, not on s.</li>
+    <li><b>Poisson distribution of increments.</b> For each t the random variable N(t) follows a Poisson law with parameter λt.</li>
+  </ul>
+  <p>
+    The last point can be written as:
+  </p>
+  <p class="math">
+    P(N(t) = k) = e^{−λt} (λt)^{k} / k!,  for k = 0, 1, 2, ...
+  </p>
+  <p>
+    Here λ is the average rate of events per unit time. For example, if λ = 5 per minute, then 
+    in a time interval of length two minutes the expected number of events is λt = 10.
+  </p>
 
-<div class="page-number">Page 1</div>
+  <div class="diagram">
+Time  t →
+N(t)  ↑
 
-<!-- ===== Introduction ===== -->
-<h2 id="intro">Introduction</h2>
-<p>
-In classical statistics, most formulas assume that the entire dataset is available at once. 
-While this approach is perfectly suited for offline analysis, it becomes inefficient when data arrive gradually or continuously. 
-In such settings, it may be impossible—or computationally expensive—to recompute quantities each time a new value appears.
-</p>
-<p>
-Online statistical algorithms address this issue by updating estimates incrementally. 
-Instead of storing all past observations, they keep only a small number of running values such as the current mean or a set of recurrence coefficients. 
-This idea dates back to early work in numerical analysis and has seen a resurgence due to the rise of streaming data sources, sensor networks, and real-time monitoring systems.
-</p>
+3 |                •
+2 |         •
+1 |   •
+0 +--------------------------------
+    0     1     2     3     4     5
 
-<div class="page-number">Page 2</div>
+Idealized Poisson sample path. The process N(t) jumps up by one at random times.
+  </div>
 
-<!-- ===== Background ===== -->
-<h2 id="background">Statistical Background</h2>
-<p>
-Let a stream of data be denoted by:
-</p>
-<p class="math">
-x₁, x₂, x₃, … , xₙ
-</p>
-<p>
-Our goal is to compute classical quantities such as:
-</p>
-<ul>
-  <li><b>Mean:</b> <span class="math">μₙ = (1/n) Σ xᵢ</span></li>
-  <li><b>Variance:</b> <span class="math">σₙ² = (1/n) Σ (xᵢ − μₙ)²</span></li>
-</ul>
-<p>
-Computing these directly requires recomputing sums every time a new value arrives. 
-The purpose of online formulas is to avoid this recomputation.
-</p>
+  <p>
+    The figure above shows a schematic sample path of a Poisson process. The horizontal axis is 
+    time, and the vertical axis shows the value of N(t). The process stays flat between events 
+    and jumps by one each time an event occurs.
+  </p>
 
-<div class="page-number">Page 3</div>
+  <div class="page-tag">Page 5</div>
 
-<!-- ===== Streaming Mean ===== -->
-<h2 id="mean">Streaming Mean</h2>
-<p>
-The recurrence for the streaming mean is built on the observation that when a new value <span class="math">xₙ</span> arrives, the new mean <span class="math">μₙ</span> can be obtained from the previous one <span class="math">μₙ₋₁</span>:
-</p>
+  <!-- Interarrival times -->
+  <h2 id="interarrival">Interarrival Times and Exponential Law</h2>
+  <p>
+    Another way to describe a Poisson process is through its interarrival times. Let T₁ be the 
+    waiting time for the first event, T₂ the time between the first and second event, and so on. 
+    For a homogeneous Poisson process with rate λ one can show that:
+  </p>
+  <ul>
+    <li>T₁, T₂, ... are independent.</li>
+    <li>Each Tᵢ has an exponential distribution with parameter λ.</li>
+  </ul>
+  <p>
+    The exponential distribution with parameter λ greater than zero has density:
+  </p>
+  <p class="math">
+    f(t) = λ e^{−λt},  for t ≥ 0
+  </p>
+  <p>
+    and distribution function:
+  </p>
+  <p class="math">
+    F(t) = P(T ≤ t) = 1 − e^{−λt}.
+  </p>
+  <p>
+    The mean of T is 1 / λ. So if λ is large, events arrive quickly on average. If λ is small, 
+    the process is sparse and we wait longer. This is one of the standard ways to interpret the 
+    rate parameter.
+  </p>
+  <p>
+    An important feature of the exponential distribution is the memoryless property:
+  </p>
+  <p class="math">
+    P(T > s + t  |  T > s) = P(T > t).
+  </p>
+  <p>
+    In words, if we have already waited an amount of time s without seeing any event, the extra 
+    waiting time still has the same exponential distribution. For the Poisson process, this 
+    property can be seen in the fact that the future evolution after a given time does not 
+    depend on the detailed past, only on the current count.
+  </p>
 
-<p class="math">
-μₙ = μₙ₋₁ + (xₙ − μₙ₋₁) / n
-</p>
+  <div class="page-tag">Page 6</div>
 
-<p>
-This elegant formula shows how the mean shifts gradually toward the new value. 
-It is computationally efficient and numerically stable.
-</p>
+  <!-- From Bernoulli trials to Poisson -->
+  <h2 id="from-bernoulli">From Bernoulli Trials to Poisson</h2>
+  <p>
+    There is a classical and instructive way to obtain a Poisson process as a limit of a 
+    Bernoulli process on a fine time grid. Consider the interval [0, T] and divide it into n 
+    small subintervals of equal length Δt = T / n. On each subinterval we perform a Bernoulli 
+    trial with success probability:
+  </p>
+  <p class="math">
+    pₙ = λ Δt = λ T / n.
+  </p>
+  <p>
+    A success represents the occurrence of an event in that small interval. If we denote by 
+    Xᵢ the Bernoulli variable on subinterval i, then the total number of events in [0, T] is:
+  </p>
+  <p class="math">
+    Sₙ = X₁ + X₂ + ... + Xₙ.
+  </p>
+  <p>
+    Sₙ has a binomial distribution with parameters n and pₙ. A well known limit theorem states 
+    that when n grows, pₙ shrinks, and n pₙ tends to λT, the binomial distribution converges 
+    to the Poisson distribution with parameter λT. In our setting n pₙ equals λT exactly, so:
+  </p>
+  <p class="math">
+    Sₙ  →  Poisson(λT)
+  </p>
+  <p>
+    as n tends to infinity. This construction shows why the Poisson process is often described 
+    as the limit of a discrete time Bernoulli process, under a regime where events are rare in 
+    each small interval but the total expected number in a fixed time window remains finite.
+  </p>
 
-<div class="diagram">
-Streaming mean update:
+  <div class="diagram">
+Discrete time grid with Bernoulli trials:
 
-Old mean: μₙ₋₁  
-New value: xₙ  
-Adjustment: (xₙ − μₙ₋₁) / n  
-Updated mean: μₙ
-</div>
+Interval [0, T] split into n pieces, length Δt = T/n
 
-<div class="page-number">Page 4</div>
+Trial outcomes:  0  1  0  0  1  0  0  1  ...
+                 ↑     ↑        ↑
+               events at these grid cells
 
-<!-- ===== Streaming Variance ===== -->
-<h2 id="variance">Streaming Variance (Welford’s Algorithm)</h2>
-<p>
-The standard definition of variance is not suitable for streaming because it depends on the mean, which itself is changing. 
-Welford’s method resolves this by tracking an auxiliary quantity:
-</p>
+As n grows and Δt shrinks, the event times approach a Poisson process.
+  </div>
 
-<p class="math">
-M₂ₙ = Σ (xᵢ − μₙ)²
-</p>
+  <div class="page-tag">Page 7</div>
 
-<p>
-The recurrence is:
-</p>
+  <!-- Simulation study -->
+  <h2 id="simulation">Simulation Study</h2>
+  <p>
+    There are two common ways to simulate a homogeneous Poisson process on the interval 
+    [0, T]. One method uses exponential interarrival times. The other uses a fine time grid 
+    and Bernoulli trials.
+  </p>
 
-<p class="math">
-δ = xₙ − μₙ₋₁  
-μₙ = μₙ₋₁ + δ / n  
-M₂ₙ = M₂ₙ₋₁ + δ (xₙ − μₙ)
-</p>
+  <h3>Simulation via exponential interarrival times</h3>
+  <p>
+    In this method we start at time zero and repeatedly draw independent exponential 
+    variables with parameter λ. Each value is interpreted as the waiting time until the next 
+    event. We stop when we exceed T.
+  </p>
 
-<p>
-Variance is then:
-</p>
+  <div class="diagram">
+Algorithm (exponential interarrival times):
 
-<p class="math">σₙ² = M₂ₙ / n</p>
+time = 0
+N = 0
+while time < T:
+    draw U uniform in (0,1)
+    set W = -(1/λ) * log(U)
+    time = time + W
+    if time ≤ T:
+        N = N + 1
+        record an event at this time
+  </div>
 
-<p>
-This method is widely regarded as one of the most stable ways to compute variance online.
-</p>
+  <p>
+    The sequence of recorded times gives us one sample path of the Poisson process. Repeating 
+    the experiment several times allows us to study the distribution of N(T) and to estimate 
+    how often we see each value k.
+  </p>
 
-<div class="page-number">Page 5</div>
+  <h3>Simulation via Bernoulli approximation</h3>
+  <p>
+    Alternatively, we fix a large n and use the discrete time approximation described in the 
+    previous section. On each grid cell we simulate a Bernoulli variable with success 
+    probability λΔt, where Δt equals T divided by n. The total number of successes is compared 
+    with the Poisson law with parameter λT. For large n the two distributions match very 
+    closely.
+  </p>
 
-<!-- ===== Numerical Stability ===== -->
-<h2 id="stability">Numerical Stability</h2>
-<p>
-Online estimators must be resistant to rounding errors, especially when the data stream grows large. 
-The classical variance formula:
-</p>
-<p class="math">
-σ² = (Σ xᵢ² / n) − μ²
-</p>
-<p>
-is prone to catastrophic cancellation.  
-Welford’s recurrence avoids this because the updates rely on incremental differences rather than subtracting large numbers.
-</p>
+  <div class="page-tag">Page 8</div>
 
-<div class="diagram">
-Problematic: large numbers − large numbers → small difference  
-Stable: update via small corrections each step
-</div>
+  <!-- Applications -->
+  <h2 id="applications">Applications and Interpretation of λ</h2>
+  <p>
+    The rate parameter λ determines the typical speed of the process. Its interpretation is 
+    almost always:
+  </p>
+  <ul>
+    <li>Expected number of events per unit time.</li>
+  </ul>
+  <p>
+    For example, if λ equals three per hour, then on average we observe three events in each 
+    hour, six events in a two hour window, and so on. More formally:
+  </p>
+  <p class="math">
+    E[N(t)] = λ t.
+  </p>
+  <p>
+    In a network setting N(t) could count the number of packets arriving on a link or the 
+    number of connection requests observed by a server. In a cybersecurity context λ might be 
+    estimated from historical data and used as a baseline. Large deviations of N(t) from its 
+    expected value could indicate an attack or some unusual activity.
+  </p>
+  <p>
+    Of course, real data are often more complicated than the ideal Poisson model. Rates can 
+    change over time, events can be correlated, and the arrival process can have bursts. Even 
+    in those cases, the Poisson process remains a useful starting point. It provides a simple 
+    reference model against which more complex behavior can be compared.
+  </p>
 
-<div class="page-number">Page 6</div>
+  <div class="diagram">
+Examples of λ:
 
-<!-- ===== Simulation ===== -->
-<h2 id="simulation">Simulation Study</h2>
-<p>
-To understand the behavior of streaming estimators, we simulate a sequence of 5,000 values from a normal distribution:
-</p>
-<p class="math">
-xᵢ ~ N(0, 1)
-</p>
+λ = 0.5 per minute   → rare events
+λ = 5   per minute   → frequent arrivals
+λ = 100 per minute   → very dense traffic
 
-<p>
-At each step we record the streaming mean and compare it with the true mean.  
-The convergence pattern looks like:
-</p>
+E[N(10 min)] = λ * 10
+  </div>
 
-<div class="diagram">
-        μₙ
-        |
-      0.2|             ┌─ fluctuations ─┐
-      0.1|       ┌─────┘               └──────┐
-      0.0|───────┘                               Stable limit
-     −0.1|
-     −0.2|
-        +----------------------------------------------→ n
-         0      1000      2000      3000      4000
-</div>
+  <div class="page-tag">Page 9</div>
 
-<p>
-The variance estimator shows a similar stabilization once <span class="math">n</span> becomes sufficiently large.
-</p>
+  <!-- Conclusion -->
+  <h2 id="conclusion">Conclusion</h2>
+  <p>
+    In this thesis I have reviewed the basic concepts behind Poisson processes and counting 
+    processes. I started with the definition of a counting process, then introduced the 
+    homogeneous Poisson process through its increment properties and Poisson distribution. 
+    I discussed the exponential distribution of interarrival times and the memoryless 
+    property, which are key features of this model.
+  </p>
+  <p>
+    I also explained how a Poisson process can be obtained as a limit of a Bernoulli process 
+    on a fine time grid, under a regime of rare events with a fixed average rate. A simple 
+    simulation study showed how to implement the model using exponential waiting times or 
+    discrete Bernoulli approximations. Finally, I highlighted some practical interpretations 
+    of the rate parameter λ, especially in settings where arrivals correspond to events in 
+    networks or simple models of attack processes.
+  </p>
+  <p>
+    Although real systems often deviate from the ideal assumptions of the Poisson model, 
+    understanding this process is an important step towards more advanced stochastic models. 
+    It provides a first approximation that is mathematically tractable, easy to simulate, 
+    and conceptually clear.
+  </p>
 
-<div class="page-number">Page 7</div>
-
-<!-- ===== Applications ===== -->
-<h2 id="applications">Applications</h2>
-
-<h3>Sensor Streams</h3>
-<p>
-Temperature or vibration sensors produce rapid streams of measurements.  
-Online mean and variance track anomalies without storing large logs.</p>
-
-<h3>Network Monitoring</h3>
-<p>
-Packet arrival times, round-trip delays, or throughput measures are well suited to streaming statistics.</p>
-
-<h3>Cybersecurity</h3>
-<p>
-Anomaly detection systems often rely on streaming statistical estimators to identify unusual behavior in real time.</p>
-
-<div class="page-number">Page 8</div>
-
-<!-- ===== Conclusion ===== -->
-<h2 id="conclusion">Conclusion</h2>
-<p>
-Online algorithms provide an elegant and efficient way to compute statistics in real time. 
-The mean and variance can be updated using simple recurrence relations that avoid storing past data and reduce numerical errors. 
-As data streams continue to grow in importance, these methods remain fundamental tools for modern statistical analysis and real-time decision systems.
-</p>
-
-<footer>
-Online Algorithms for Real-Time Statistical Computation — Konstantinos Tziakouris — 2025 / 2026
-</footer>
+  <footer>
+    Poisson Processes and Counting Processes · Konstantinos Tziakouris · A.Y. 2025 / 2026
+  </footer>
 
 </div>
 </body>
