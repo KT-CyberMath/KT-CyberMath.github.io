@@ -8,7 +8,7 @@
 <style>
   body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Calibri, Arial, Helvetica, sans-serif;
     background: #f5f6fa;
     color: #111;
     line-height: 1.55;
@@ -83,11 +83,16 @@
     font-size: 13px;
     color: #666666;
   }
-  .page-tag {
-    text-align: center;
-    font-size: 11px;
-    color: #666666;
-    margin-top: 18px;
+
+  /* Force page breaks for print */
+  @media print {
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+    body {
+      background: #ffffff;
+    }
   }
 </style>
 </head>
@@ -118,60 +123,57 @@
     </ul>
   </div>
 
-  <div class="page-tag">Page 1</div>
-
   <!-- Abstract -->
-  <h2 id="abstract">Abstract</h2>
+  <div class="page-break" id="abstract"></div>
+  <h2>Abstract</h2>
   <p>
-    Poisson processes provide a simple and powerful model for random events that occur in time. 
-    They are used to describe arrivals of packets on a network link, calls in a call center, 
-    customers in a queue, or even certain models of cyber attacks. In this short thesis I 
-    introduce counting processes, define the homogeneous Poisson process, explain the role of 
-    the rate parameter λ, and discuss the link with the exponential distribution of interarrival 
-    times. I also show how a Poisson process can be obtained as the limit of a Bernoulli process, 
-    and I present a basic simulation experiment that illustrates the main properties.
+    Poisson processes provide a simple and powerful model for random events that occur in
+    time. They are used to describe arrivals of packets on a network link, calls in a call center,
+    customers in a queue, or even certain models of cyber attacks. In this short thesis I
+    introduce counting processes, define the homogeneous Poisson process, explain the role of
+    the rate parameter λ, and discuss the link with the exponential distribution of interarrival
+    times. I also show how a Poisson process can be obtained as the limit of a Bernoulli
+    process, and I present a basic simulation experiment that illustrates the main properties.
   </p>
 
-  <div class="page-tag">Page 2</div>
-
   <!-- Introduction -->
-  <h2 id="intro">Introduction</h2>
+  <div class="page-break" id="intro"></div>
+  <h2>Introduction</h2>
   <p>
-    One of the central questions in probability theory is how to model the occurrence of events 
-    in time. Sometimes we want to predict the number of login attempts per minute, the number 
-    of packets that arrive on a server during a fixed interval, or the number of alarms raised 
-    by a monitoring system. In many simple cases we only need a model that captures the average 
+    One of the central questions in probability theory is how to model the occurrence of events
+    in time. Sometimes we want to predict the number of login attempts per minute, the number
+    of packets that arrive on a server during a fixed interval, or the number of alarms raised by a
+    monitoring system. In many simple cases we only need a model that captures the average
     rate of events and some basic randomness around that rate.
   </p>
   <p>
-    The Poisson process is one of the most classical models for this purpose. It is simple 
-    enough to be taught in an introductory course, yet rich enough to provide intuition for 
-    more advanced stochastic processes. This project collects the main ideas regarding Poisson 
-    processes, with an eye on clarity and concrete examples, rather than on formal measure 
+    The Poisson process is one of the most classical models for this purpose. It is simple
+    enough to be taught in an introductory course, yet rich enough to provide intuition for more
+    advanced stochastic processes. This project collects the main ideas regarding Poisson
+    processes, with an eye on clarity and concrete examples, rather than on formal measure
     theoretic definitions.
   </p>
   <p>
-    I start with the general concept of a counting process, then move to the specific defining 
-    properties of the Poisson process. After that, I describe the connection with exponential 
-    interarrival times and with the Bernoulli process on a fine time grid. I also show a simple 
-    simulation scheme that can be implemented in any programming language and discuss how the 
-    parameter λ should be interpreted in practice.
+    I start with the general concept of a counting process, then move to the specific defining
+    properties of the Poisson process. After that, I describe the connection with exponential
+    interarrival times and with the Bernoulli process on a fine time grid. I also show a simple
+    simulation scheme that can be implemented in any programming language and discuss how
+    the parameter λ should be interpreted in practice.
   </p>
 
-  <div class="page-tag">Page 3</div>
-
   <!-- Counting Processes -->
-  <h2 id="counting">Counting Processes</h2>
+  <div class="page-break" id="counting"></div>
+  <h2>Counting Processes</h2>
   <p>
-    Informally, a counting process is a stochastic process that counts how many events have 
+    Informally, a counting process is a stochastic process that counts how many events have
     occurred up to a given time. We denote it by:
   </p>
   <p class="math">
     N(t),  t ≥ 0
   </p>
   <p>
-    where N(t) takes integer values. The interpretation is straightforward. For example N(5) 
-    could be the number of packets received in the first five seconds, or the number of 
+    where N(t) takes integer values. The interpretation is straightforward. For example N(5)
+    could be the number of packets received in the first five seconds, or the number of
     connection attempts recorded by a firewall in the first five minutes.
   </p>
   <p>
@@ -184,17 +186,17 @@
     <li>Events arrive one by one, so the process increases by jumps of size one.</li>
   </ul>
   <p>
-    These conditions describe many realistic systems. However, they do not yet specify a unique 
-    probability model. The Poisson process adds extra assumptions on how the increments behave.
+    These conditions describe many realistic systems. However, they do not yet specify a
+    unique probability model. The Poisson process adds extra assumptions on how the
+    increments behave.
   </p>
 
-  <div class="page-tag">Page 4</div>
-
-  <!-- Poisson Process -->
-  <h2 id="poisson">Poisson Processes</h2>
+  <!-- Poisson Processes -->
+  <div class="page-break" id="poisson"></div>
+  <h2>Poisson Processes</h2>
   <p>
-    A homogeneous Poisson process with rate λ greater than zero is a counting process N(t) that 
-    satisfies three key properties:
+    A homogeneous Poisson process with rate λ greater than zero is a counting process N(t)
+    that satisfies three key properties:
   </p>
   <ul>
     <li><b>Independent increments.</b> The numbers of events on disjoint time intervals are independent.</li>
@@ -208,8 +210,8 @@
     P(N(t) = k) = e^{−λt} (λt)^{k} / k!,  for k = 0, 1, 2, ...
   </p>
   <p>
-    Here λ is the average rate of events per unit time. For example, if λ = 5 per minute, then 
-    in a time interval of length two minutes the expected number of events is λt = 10.
+    Here λ is the average rate of events per unit time. For example, if λ = 5 per minute, then in a
+    time interval of length two minutes the expected number of events is λt = 10.
   </p>
 
   <div class="diagram">
@@ -226,18 +228,17 @@ Idealized Poisson sample path. The process N(t) jumps up by one at random times.
   </div>
 
   <p>
-    The figure above shows a schematic sample path of a Poisson process. The horizontal axis is 
-    time, and the vertical axis shows the value of N(t). The process stays flat between events 
+    The diagram above shows a schematic sample path of a Poisson process. The horizontal axis is
+    time, and the vertical axis shows the value of N(t). The process stays flat between events
     and jumps by one each time an event occurs.
   </p>
 
-  <div class="page-tag">Page 5</div>
-
-  <!-- Interarrival times -->
-  <h2 id="interarrival">Interarrival Times and Exponential Law</h2>
+  <!-- Interarrival Times -->
+  <div class="page-break" id="interarrival"></div>
+  <h2>Interarrival Times and Exponential Law</h2>
   <p>
-    Another way to describe a Poisson process is through its interarrival times. Let T₁ be the 
-    waiting time for the first event, T₂ the time between the first and second event, and so on. 
+    Another way to describe a Poisson process is through its interarrival times. Let T₁ be the
+    waiting time for the first event, T₂ the time between the first and second event, and so on.
     For a homogeneous Poisson process with rate λ one can show that:
   </p>
   <ul>
@@ -257,9 +258,9 @@ Idealized Poisson sample path. The process N(t) jumps up by one at random times.
     F(t) = P(T ≤ t) = 1 − e^{−λt}.
   </p>
   <p>
-    The mean of T is 1 / λ. So if λ is large, events arrive quickly on average. If λ is small, 
-    the process is sparse and we wait longer. This is one of the standard ways to interpret the 
-    rate parameter.
+    The mean of T is 1 / λ. So if λ is large, events arrive quickly on average. If λ is small, the
+    process is sparse and we wait longer. This is one of the standard ways to interpret the rate
+    parameter.
   </p>
   <p>
     An important feature of the exponential distribution is the memoryless property:
@@ -268,43 +269,42 @@ Idealized Poisson sample path. The process N(t) jumps up by one at random times.
     P(T > s + t  |  T > s) = P(T > t).
   </p>
   <p>
-    In words, if we have already waited an amount of time s without seeing any event, the extra 
-    waiting time still has the same exponential distribution. For the Poisson process, this 
-    property can be seen in the fact that the future evolution after a given time does not 
-    depend on the detailed past, only on the current count.
+    In words, if we have already waited an amount of time s without seeing any event, the extra
+    waiting time still has the same exponential distribution. For the Poisson process, this
+    property can be seen in the fact that the future evolution after a given time does not depend
+    on the detailed past, only on the current count.
   </p>
 
-  <div class="page-tag">Page 6</div>
-
-  <!-- From Bernoulli trials to Poisson -->
-  <h2 id="from-bernoulli">From Bernoulli Trials to Poisson</h2>
+  <!-- From Bernoulli to Poisson -->
+  <div class="page-break" id="from-bernoulli"></div>
+  <h2>From Bernoulli Trials to Poisson</h2>
   <p>
-    There is a classical and instructive way to obtain a Poisson process as a limit of a 
-    Bernoulli process on a fine time grid. Consider the interval [0, T] and divide it into n 
-    small subintervals of equal length Δt = T / n. On each subinterval we perform a Bernoulli 
-    trial with success probability:
+    There is a classical and instructive way to obtain a Poisson process as a limit of a Bernoulli
+    process on a fine time grid. Consider the interval [0, T] and divide it into n small subintervals
+    of equal length Δt = T / n. On each subinterval we perform a Bernoulli trial with success
+    probability:
   </p>
   <p class="math">
     pₙ = λ Δt = λ T / n.
   </p>
   <p>
-    A success represents the occurrence of an event in that small interval. If we denote by 
-    Xᵢ the Bernoulli variable on subinterval i, then the total number of events in [0, T] is:
+    A success represents the occurrence of an event in that small interval. If we denote by Xᵢ the
+    Bernoulli variable on subinterval i, then the total number of events in [0, T] is:
   </p>
   <p class="math">
     Sₙ = X₁ + X₂ + ... + Xₙ.
   </p>
   <p>
-    Sₙ has a binomial distribution with parameters n and pₙ. A well known limit theorem states 
-    that when n grows, pₙ shrinks, and n pₙ tends to λT, the binomial distribution converges 
-    to the Poisson distribution with parameter λT. In our setting n pₙ equals λT exactly, so:
+    Sₙ has a binomial distribution with parameters n and pₙ. A well known limit theorem states
+    that when n grows, pₙ shrinks, and n pₙ tends to λT, the binomial distribution converges to
+    the Poisson distribution with parameter λT. In our setting n pₙ equals λT exactly, so:
   </p>
   <p class="math">
     Sₙ  →  Poisson(λT)
   </p>
   <p>
-    as n tends to infinity. This construction shows why the Poisson process is often described 
-    as the limit of a discrete time Bernoulli process, under a regime where events are rare in 
+    as n tends to infinity. This construction shows why the Poisson process is often described as
+    the limit of a discrete time Bernoulli process, under a regime where events are rare in
     each small interval but the total expected number in a fixed time window remains finite.
   </p>
 
@@ -320,20 +320,19 @@ Trial outcomes:  0  1  0  0  1  0  0  1  ...
 As n grows and Δt shrinks, the event times approach a Poisson process.
   </div>
 
-  <div class="page-tag">Page 7</div>
-
-  <!-- Simulation study -->
-  <h2 id="simulation">Simulation Study</h2>
+  <!-- Simulation -->
+  <div class="page-break" id="simulation"></div>
+  <h2>Simulation Study</h2>
   <p>
-    There are two common ways to simulate a homogeneous Poisson process on the interval 
-    [0, T]. One method uses exponential interarrival times. The other uses a fine time grid 
-    and Bernoulli trials.
+    There are two common ways to simulate a homogeneous Poisson process on the interval
+    [0, T]. One method uses exponential interarrival times. The other uses a fine time grid and
+    Bernoulli trials.
   </p>
 
   <h3>Simulation via exponential interarrival times</h3>
   <p>
-    In this method we start at time zero and repeatedly draw independent exponential 
-    variables with parameter λ. Each value is interpreted as the waiting time until the next 
+    In this method we start at time zero and repeatedly draw independent exponential
+    variables with parameter λ. Each value is interpreted as the waiting time until the next
     event. We stop when we exceed T.
   </p>
 
@@ -352,48 +351,46 @@ while time < T:
   </div>
 
   <p>
-    The sequence of recorded times gives us one sample path of the Poisson process. Repeating 
-    the experiment several times allows us to study the distribution of N(T) and to estimate 
-    how often we see each value k.
+    The sequence of recorded times gives us one sample path of the Poisson process.
+    Repeating the experiment several times allows us to study the distribution of N(T) and to
+    estimate how often we see each value k.
   </p>
 
   <h3>Simulation via Bernoulli approximation</h3>
   <p>
-    Alternatively, we fix a large n and use the discrete time approximation described in the 
-    previous section. On each grid cell we simulate a Bernoulli variable with success 
-    probability λΔt, where Δt equals T divided by n. The total number of successes is compared 
-    with the Poisson law with parameter λT. For large n the two distributions match very 
-    closely.
+    Alternatively, we fix a large n and use the discrete time approximation described in the
+    previous section. On each grid cell we simulate a Bernoulli variable with success probability
+    λΔt, where Δt equals T divided by n. The total number of successes is compared with the
+    Poisson law with parameter λT. For large n the two distributions match very closely.
   </p>
 
-  <div class="page-tag">Page 8</div>
-
   <!-- Applications -->
-  <h2 id="applications">Applications and Interpretation of λ</h2>
+  <div class="page-break" id="applications"></div>
+  <h2>Applications and Interpretation of λ</h2>
   <p>
-    The rate parameter λ determines the typical speed of the process. Its interpretation is 
-    almost always:
+    The rate parameter λ determines the typical speed of the process. Its interpretation is almost
+    always:
   </p>
   <ul>
     <li>Expected number of events per unit time.</li>
   </ul>
   <p>
-    For example, if λ equals three per hour, then on average we observe three events in each 
+    For example, if λ equals three per hour, then on average we observe three events in each
     hour, six events in a two hour window, and so on. More formally:
   </p>
   <p class="math">
     E[N(t)] = λ t.
   </p>
   <p>
-    In a network setting N(t) could count the number of packets arriving on a link or the 
-    number of connection requests observed by a server. In a cybersecurity context λ might be 
-    estimated from historical data and used as a baseline. Large deviations of N(t) from its 
+    In a network setting N(t) could count the number of packets arriving on a link or the number
+    of connection requests observed by a server. In a cybersecurity context λ might be
+    estimated from historical data and used as a baseline. Large deviations of N(t) from its
     expected value could indicate an attack or some unusual activity.
   </p>
   <p>
-    Of course, real data are often more complicated than the ideal Poisson model. Rates can 
-    change over time, events can be correlated, and the arrival process can have bursts. Even 
-    in those cases, the Poisson process remains a useful starting point. It provides a simple 
+    Of course, real data are often more complicated than the ideal Poisson model. Rates can
+    change over time, events can be correlated, and the arrival process can have bursts. Even
+    in those cases, the Poisson process remains a useful starting point. It provides a simple
     reference model against which more complex behavior can be compared.
   </p>
 
@@ -407,30 +404,29 @@ Examples of λ:
 E[N(10 min)] = λ * 10
   </div>
 
-  <div class="page-tag">Page 9</div>
-
   <!-- Conclusion -->
-  <h2 id="conclusion">Conclusion</h2>
+  <div class="page-break" id="conclusion"></div>
+  <h2>Conclusion</h2>
   <p>
-    In this thesis I have reviewed the basic concepts behind Poisson processes and counting 
-    processes. I started with the definition of a counting process, then introduced the 
-    homogeneous Poisson process through its increment properties and Poisson distribution. 
-    I discussed the exponential distribution of interarrival times and the memoryless 
-    property, which are key features of this model.
+    In this thesis I have reviewed the basic concepts behind Poisson processes and counting
+    processes. I started with the definition of a counting process, then introduced the
+    homogeneous Poisson process through its increment properties and Poisson distribution.
+    I discussed the exponential distribution of interarrival times and the memoryless property,
+    which are key features of this model.
   </p>
   <p>
-    I also explained how a Poisson process can be obtained as a limit of a Bernoulli process 
-    on a fine time grid, under a regime of rare events with a fixed average rate. A simple 
-    simulation study showed how to implement the model using exponential waiting times or 
-    discrete Bernoulli approximations. Finally, I highlighted some practical interpretations 
-    of the rate parameter λ, especially in settings where arrivals correspond to events in 
-    networks or simple models of attack processes.
+    I also explained how a Poisson process can be obtained as a limit of a Bernoulli process on
+    a fine time grid, under a regime of rare events with a fixed average rate. A simple simulation
+    study showed how to implement the model using exponential waiting times or discrete
+    Bernoulli approximations. Finally, I highlighted some practical interpretations of the rate
+    parameter λ, especially in settings where arrivals correspond to events in networks or simple
+    models of attack processes.
   </p>
   <p>
-    Although real systems often deviate from the ideal assumptions of the Poisson model, 
-    understanding this process is an important step towards more advanced stochastic models. 
-    It provides a first approximation that is mathematically tractable, easy to simulate, 
-    and conceptually clear.
+    Although real systems often deviate from the ideal assumptions of the Poisson model,
+    understanding this process is an important step towards more advanced stochastic models.
+    It provides a first approximation that is mathematically tractable, easy to simulate, and
+    conceptually clear.
   </p>
 
   <footer>
