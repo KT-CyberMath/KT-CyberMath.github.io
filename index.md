@@ -77,4 +77,5 @@ A collection of assignments and research for the Statistics course, academic yea
 <li><a href="/homework8.html">Homework 8 — Bernoulli Process, Binomial & Combinatorics</a></li>
   <li><a href="/homework9.html">Homework 9 — Interpretations of Probability and Kolmogorov Axioms</a></li>
 <li><a href="/homework10.html">Homework 10 — From Bernoulli Trials to the Poisson Process</a></li>
+  <li><a href="/homework11.html">Homework 11 — Brownian Motion</a></li>
 </ul>
